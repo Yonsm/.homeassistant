@@ -1,0 +1,14 @@
+//curl "https://genie.applinzi.com/gate.php" -d '{"header":{"messageId":"74f141a4-4eeb-4111-81c8-357e12d05244","name":"DiscoveryDevices","namespace":"AliGenie.Iot.Device.Control","payLoadVersion":1},"payload":{"accessToken":"25ec6cb46565638b1d3f58c3230ce99742a23622"}}'
+{
+  "header": {
+    "namespace": "AliGenie.Iot.Device.Control",
+    "name": "DiscoveryDevicesResponse",
+    "messageId": "8a5f-a123-193b-ba4b184a132d",
+    "payLoadVersion": 1
+  },
+  "payload": {
+    "deviceId": "",
+    "errorCode": "not support",
+    "message": "action or device not support,name:DiscoveryDevices device:"
+  }
+}

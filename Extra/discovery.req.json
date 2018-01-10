@@ -1,0 +1,11 @@
+{
+  "header": {
+    "namespace": "AliGenie.Iot.Device.Discovery",
+    "name": "DiscoveryDevices",
+    "messageId": "1bd5d003-31b9-476f-ad03-71d471922820",
+    "payLoadVersion": 1
+  },
+  "payload": {
+    "accessToken": "token"
+  }
+}
