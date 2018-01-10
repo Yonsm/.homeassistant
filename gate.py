@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import json
-import urllib2
+import os, sys, json, urllib2
 
 def haCall(cmd):
-    url = 'http://xxx:8123/api/' + cmd
+    url = 'http://xxxx:8123/api/' + cmd
     #headers = {'x-ha-access': '', 'content-type': 'application/json'}
     return json.loads(urllib2.urlopen(url).read())
 
@@ -68,7 +67,7 @@ def getPropertyName(entity_id, attributes, state):
     #    return 'remotestatus'
     return None
 
-def discoveryDevice(request):
+def discoveryDevice():
     devices = []
     items = haCall('states')
     for item in items:
@@ -76,9 +75,10 @@ def discoveryDevice(request):
         attributes = item['attributes']
         entity_id = item['entity_id']
         device['deviceId'] = entity_id
-        device['deviceName'] = attributes['friendly_name'].encode("UTF-8")
+        #https://open.bot.tmall.com/oauth/api/aliaslist
+        device['deviceName'] = attributes['friendly_name']
         device['deviceType'] = item['entity_id'].split('.')[0]
-        device['zone'] = '客厅' #TODO import from HA GROUP
+        device['zone'] = '客厅' #TODO import from HA GROUP and https://open.bot.tmall.com/oauth/api/placelist
         device['brand'] = 'HomeAssistant'
         device['model'] = device['deviceType'] #TODO
         device['icon'] = 'https://home-assistant.io/demo/favicon-192x192.png'
@@ -87,24 +87,23 @@ def discoveryDevice(request):
         name = getPropertyName(entity_id, attributes, state)
         device['properties'] = [{'name': name, 'value': state}] if name else []
 
-        device['actions'] = ["Query"]
+        device['actions'] = ["Query"] #TODO
 
-        #device['extension'] = {"link": "https://www.baidu.com"}
         devices.append(device)
     return {'devices': devices}
 
 def controlDevice(name, request):
-    return errorResponse('DEVICE_IS_NOT_EXIST')
+    return errorResponse('IOT_DEVICE_OFFLINE')
 
 def queryDevice(name, request):
-    return errorResponse('DEVICE_IS_NOT_EXIST')
+    return errorResponse('IOT_DEVICE_OFFLINE')
 
 def handleRequest(header, request):
     name = header['name']
     if validateToken(request):
         namespace = header['namespace']
         if namespace == 'AliGenie.Iot.Device.Discovery':
-            response = discoveryDevice(request)
+            response = discoveryDevice()
         elif namespace == 'AliGenie.Iot.Device.Control':
             response = controlDevice(name, request)
         elif namespace == 'AliGenie.Iot.Device.Query':
@@ -123,19 +122,27 @@ def handleRequest(header, request):
 
     return response
 
+print 'Content-Type: application/json'
+print ''
+
 #
-if True:#try:
-    #json.load(sys.stdin)
-    _request = {
-        'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'payloadVersion':1},
-        'payload':{'accessToken':'25ec6cb46565638b1d3f58c3230ce99742a23622'}
-        }
+try:
+    if os.environ.has_key('REQUEST_METHOD') and os.environ['REQUEST_METHOD'] == 'POST':
+        _request = json.load(sys.stdin)
+        #print _request
+    else:
+        _request = {
+            'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'payloadVersion':1},
+            'payload':{'accessToken':'25ec6cb46565638b1d3f58c3230ce99742a23622'}
+            }
     _header = _request['header']
     _response = handleRequest(_header, _request['payload'])
-else:#except:
+except:
+    type, value, tb = sys.exc_info()
+    import traceback
+    print "".join(traceback.format_tb(tb))
+    del tb
     _header = {'name': 'ErrorResponse'}
     _response = errorResponse('SERVICE_ERROR', 'service exception')
 
-print 'Content-Type: application/json'
-print ''
-print json.dumps({"header": _header, "payload": _response}, indent=4, sort_keys=True)
+print json.dumps({"header": _header, "payload": _response}, indent=4, sort_keys=True)#, ensure_ascii=False)
