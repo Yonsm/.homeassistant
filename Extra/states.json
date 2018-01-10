@@ -1,0 +1,264 @@
+[
+  {
+    "attributes": {
+      "friendly_name": "空气质量",
+      "homebridge_sensor_type": "air_quality",
+      "unit_of_measurement": "ug/m3"
+    },
+    "entity_id": "sensor.pm25",
+    "last_changed": "2018-01-10T07:31:41.490930+00:00",
+    "last_updated": "2018-01-10T07:31:41.490930+00:00",
+    "state": "6"
+  },
+  {
+    "attributes": {
+      "friendly_name": "亮度",
+      "homebridge_sensor_type": "light",
+      "unit_of_measurement": "lm"
+    },
+    "entity_id": "sensor.illumination_34ce0090901a",
+    "last_changed": "2018-01-10T07:29:03.044765+00:00",
+    "last_updated": "2018-01-10T07:29:03.044765+00:00",
+    "state": "992.0"
+  },
+  {
+    "attributes": {
+      "friendly_name": "苹果遥控"
+    },
+    "entity_id": "remote.apple_tv",
+    "last_changed": "2018-01-10T03:07:10.758734+00:00",
+    "last_updated": "2018-01-10T03:07:10.758734+00:00",
+    "state": "on"
+  },
+  {
+    "attributes": {
+      "assumed_state": false,
+      "friendly_name": "插座",
+      "homebridge_switch_type": "outlet"
+    },
+    "entity_id": "switch.outlet",
+    "last_changed": "2018-01-10T03:06:58.256570+00:00",
+    "last_updated": "2018-01-10T03:06:58.256570+00:00",
+    "state": "on"
+  },
+  {
+    "attributes": {
+      "assumed_state": false,
+      "friendly_name": "过道灯",
+      "supported_features": 0
+    },
+    "entity_id": "light.sonoff1",
+    "last_changed": "2018-01-10T03:06:21.781622+00:00",
+    "last_updated": "2018-01-10T03:06:21.781622+00:00",
+    "state": "off"
+  },
+  {
+    "attributes": {
+      "assumed_state": false,
+      "auto": true,
+      "entity_id": [
+        "light.gateway_light_34ce0090901a",
+        "light.sonoff1"
+      ],
+      "friendly_name": "所有灯光",
+      "hidden": true,
+      "order": 0
+    },
+    "entity_id": "group.all_lights",
+    "last_changed": "2018-01-10T03:06:28.072995+00:00",
+    "last_updated": "2018-01-10T03:06:28.072995+00:00",
+    "state": "off"
+  },
+  {
+    "attributes": {
+      "friendly_name": "客厅电视",
+      "is_volume_muted": false,
+      "media_content_id": "HDMI 4",
+      "media_title": "HDMI 4",
+      "source": "extInput:hdmi",
+      "source_list": [
+        "HDMI 1",
+        "HDMI 2",
+        "HDMI 3/ARC",
+        "HDMI 4"
+      ],
+      "supported_features": 19901,
+      "volume_level": 0.36
+    },
+    "entity_id": "media_player.x9400e",
+    "last_changed": "2018-01-10T07:13:17.564057+00:00",
+    "last_updated": "2018-01-10T07:13:17.564057+00:00",
+    "state": "on"
+  },
+  {
+    "attributes": {
+      "assumed_state": false,
+      "auto": true,
+      "entity_id": [
+        "fan.purifier"
+      ],
+      "friendly_name": "所有风扇",
+      "hidden": true,
+      "order": 2
+    },
+    "entity_id": "group.all_fans",
+    "last_changed": "2018-01-10T03:06:58.086505+00:00",
+    "last_updated": "2018-01-10T03:06:58.086505+00:00",
+    "state": "on"
+  },
+  {
+    "attributes": {
+      "friendly_name": "湿度",
+      "homebridge_sensor_type": "humidity",
+      "unit_of_measurement": "%"
+    },
+    "entity_id": "sensor.hum",
+    "last_changed": "2018-01-10T07:36:06.737231+00:00",
+    "last_updated": "2018-01-10T07:36:06.737231+00:00",
+    "state": "31"
+  },
+  {
+    "attributes": {
+      "assumed_state": false,
+      "auto": true,
+      "entity_id": [
+        "switch.outlet"
+      ],
+      "friendly_name": "所有开关",
+      "hidden": true,
+      "order": 1
+    },
+    "entity_id": "group.all_switches",
+    "last_changed": "2018-01-10T03:06:58.261854+00:00",
+    "last_updated": "2018-01-10T03:06:58.261854+00:00",
+    "state": "on"
+  },
+  {
+    "attributes": {
+      "friendly_name": "氛围灯",
+      "supported_features": 17
+    },
+    "entity_id": "light.gateway_light_34ce0090901a",
+    "last_changed": "2018-01-10T03:06:28.025959+00:00",
+    "last_updated": "2018-01-10T03:06:28.025959+00:00",
+    "state": "off"
+  },
+  {
+    "attributes": {
+      "friendly_name": "苹果电视",
+      "media_duration": 0,
+      "media_position": 0,
+      "media_title": "Nothing playing",
+      "supported_features": 896
+    },
+    "entity_id": "media_player.apple_tv",
+    "last_changed": "2018-01-10T03:07:10.749509+00:00",
+    "last_updated": "2018-01-10T03:07:10.749509+00:00",
+    "state": "idle"
+  },
+  {
+    "attributes": {
+      "assumed_state": false,
+      "auto": true,
+      "entity_id": [
+        "remote.apple_tv"
+      ],
+      "friendly_name": "所有遥控器",
+      "hidden": true,
+      "order": 3
+    },
+    "entity_id": "group.all_remotes",
+    "last_changed": "2018-01-10T03:07:10.772072+00:00",
+    "last_updated": "2018-01-10T03:07:10.772072+00:00",
+    "state": "on"
+  },
+  {
+    "attributes": {
+      "friendly_name": "卧室电视",
+      "supported_features": 19901
+    },
+    "entity_id": "media_player.x9300d",
+    "last_changed": "2018-01-10T03:06:23.869570+00:00",
+    "last_updated": "2018-01-10T03:06:23.869570+00:00",
+    "state": "off"
+  },
+  {
+    "attributes": {
+      "friendly_name": "二氧化碳",
+      "homebridge_sensor_type": "co2",
+      "unit_of_measurement": "ppm"
+    },
+    "entity_id": "sensor.co2",
+    "last_changed": "2018-01-10T07:35:28.823659+00:00",
+    "last_updated": "2018-01-10T07:35:28.823659+00:00",
+    "state": "407"
+  },
+  {
+    "attributes": {
+      "azimuth": 230.37,
+      "elevation": 17.66,
+      "friendly_name": "日照",
+      "next_dawn": "2018-01-10T22:31:11+00:00",
+      "next_dusk": "2018-01-10T09:42:58+00:00",
+      "next_midnight": "2018-01-10T16:07:33+00:00",
+      "next_noon": "2018-01-11T04:07:28+00:00",
+      "next_rising": "2018-01-10T22:57:15+00:00",
+      "next_setting": "2018-01-10T09:16:52+00:00"
+    },
+    "entity_id": "sun.sun",
+    "last_changed": "2018-01-10T03:06:21.574530+00:00",
+    "last_updated": "2018-01-10T07:36:30.202453+00:00",
+    "state": "above_horizon"
+  },
+  {
+    "attributes": {
+      "friendly_name": "温度",
+      "unit_of_measurement": "°C"
+    },
+    "entity_id": "sensor.temp",
+    "last_changed": "2018-01-10T07:07:03.803828+00:00",
+    "last_updated": "2018-01-10T07:07:03.803828+00:00",
+    "state": "17"
+  },
+  {
+    "attributes": {
+      "aqi": 36,
+      "buzzer": true,
+      "child_lock": false,
+      "favorite_level": 5,
+      "filter_hours_used": 1620,
+      "filter_life_remaining": 53,
+      "friendly_name": "净化器",
+      "homebridge_hidden": true,
+      "humidity": 23,
+      "led": true,
+      "led_brightness": 0,
+      "mode": "favorite",
+      "motor_speed": 1099,
+      "speed": "Favorite",
+      "speed_list": [
+        "Auto",
+        "Silent",
+        "Favorite",
+        "Idle"
+      ],
+      "supported_features": 1,
+      "temperature": 13.0
+    },
+    "entity_id": "fan.purifier",
+    "last_changed": "2018-01-10T03:06:58.073302+00:00",
+    "last_updated": "2018-01-10T07:37:07.700711+00:00",
+    "state": "on"
+  },
+  {
+    "attributes": {
+      "attribution": "Weather forecast from yr.no, delivered by the Norwegian Meteorological Institute and the NRK.",
+      "entity_picture": "//api.met.no/weatherapi/weathericon/1.1/?symbol=1;content_type=image/png",
+      "friendly_name": "天气"
+    },
+    "entity_id": "sensor.yr_symbol",
+    "last_changed": "2018-01-10T03:06:27.516689+00:00",
+    "last_updated": "2018-01-10T03:06:27.516689+00:00",
+    "state": "1"
+  }
+]
