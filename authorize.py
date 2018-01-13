@@ -1,7 +1,15 @@
 #!/usr/bin/env python
 
-import os
+import os, sys
 
+# Log HTTP request
+REQUEST_METHOD = os.getenv('REQUEST_METHOD')
+if REQUEST_METHOD:
+	sys.stderr.write(REQUEST_METHOD + ' ' + os.environ['REQUEST_URI'])
+	if REQUEST_METHOD == 'POST':
+		sys.stderr.write('\n' + sys.stdin.read())
+
+# Print content
 print('Content-Type: text/html\r\n')
 print("""<html>
 <body>	
