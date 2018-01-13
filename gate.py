@@ -92,7 +92,9 @@ def guessProperties(entity_id, attributes, state):
     #    name = 'lefttime'
     #elif :
     #    name = 'remotestatus'
-    return [{'name': name, 'value': state}] if name else []
+    else:
+        return []
+    return [{'name': name, 'value': state}]
 
 def guessDeviceType(entity_id):
     deviceTypes = {
@@ -155,10 +157,10 @@ def discoveryDevice():
     items = haCall('states')
     for item in items:
         entity_id = item['entity_id']
-        attributes = item['attributes']
-        deviceType = guessDeviceType(entity_id, attributes)
+        deviceType = guessDeviceType(entity_id)
         if deviceType == None:
             continue
+        attributes = item['attributes']
         device = {}
         device['deviceId'] = entity_id
         device['deviceName'] = guessDeviceName(entity_id, attributes)
@@ -167,7 +169,7 @@ def discoveryDevice():
         device['brand'] = 'HomeAssistant'
         device['model'] = attributes['friendly_name']
         device['icon'] = 'https://home-assistant.io/demo/favicon-192x192.png'
-        device['properties'] = getProperties(entity_id, attributes, item['state'])
+        device['properties'] = guessProperties(entity_id, attributes, item['state'])
 
         device['actions'] = [
             'TurnOn',
@@ -237,9 +239,9 @@ try:
         # TEST only
         _payload = {
             'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'payloadVersion':1, 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            'payload':{'accessToken':'25ec6cb46565638b1d3f58c3230ce99742a23622'}
+            'payload':{'accessToken':'https://xxx.xxx.net:8123?password'}
             #'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'payloadVersion':1, 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            #'payload':{'accessToken':'https://x.xxx.com:8123?password', 'attribute': 'powerstate', 'value': 'on', 'deviceType': 'switch','deviceId': 'switch.outlet'}
+            #'payload':{'accessToken':'https://xxx.xxx.net:8123?password', 'attribute': 'powerstate', 'value': 'on', 'deviceType': 'switch','deviceId': 'switch.outlet'}
             }
     _header = _payload['header']
     _response = handleRequest(_header, _payload['payload'])
