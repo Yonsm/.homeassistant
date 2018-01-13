@@ -21,15 +21,10 @@ def validateToken(payload):
     return False
 
 def haCall(cmd, params=None):
-    index = _accessToken.find('?')
-    if index == -1:
-        client_id = _accessToken
-        client_scret = None
-        headers = None
-    else:
-        client_id = _accessToken[:index]
-        client_scret = _accessToken[index+1:]
-        headers = {'x-ha-access': client_scret}
+    index = _accessToken.index('?')
+    client_id = _accessToken[:index]
+    client_scret = _accessToken[index+1:]
+    headers = {'x-ha-access': client_scret}
     url = client_id + '/api/' + cmd
     method = 'POST' if params else 'GET'
     sys.stderr.write('\nHA ' + method + ' ' + url)
@@ -97,6 +92,21 @@ def guessProperties(entity_id, attributes, state):
     return [{'name': name, 'value': state}]
 
 def guessDeviceType(entity_id):
+    type = entity_id[:entity_id.find('.')] #if not entity_id.startswith('group.all_') else entity_id[10:-1]
+    #if type == 'switch':
+    #    return outlet if 'outlet' in entity_id else type
+    #elif type in ['sensor', 'light', 'fan']:
+    #    return type
+    if type == 'media_player':
+        return 'television'
+    elif type == 'vacuum':
+        return 'roboticvacuum'
+    elif 'purifier' in entity_id:
+        return 'airpurifier'
+
+    if entity_id.startswith('group.all_'):
+		return None
+
     deviceTypes = {
         'television',#: '电视',
         'light',#: '灯',
@@ -130,15 +140,7 @@ def guessDeviceType(entity_id):
         if deviceType in entity_id:
             return deviceType
 
-    type = entity_id[10:-1] if entity_id.startswith('group.all_') else entity_id[:entity_id.find('.')]
-    #if type == 'switch':
-    #    return outlet if 'outlet' in entity_id else type
-    #elif type in ['sensor', 'light', 'fan']:
-    #    return type
-    if type == 'media_player':
-        return 'television'
-    elif type == 'vacuum':
-        return 'roboticvacuum'
+
     return None
 
 # https://open.bot.tmall.com/oauth/api/aliaslist
@@ -191,9 +193,9 @@ def getControlService(action):
 
 #
 def controlDevice(name, payload):
-    domain = payload['deviceType']
-    service = getControlService(name)
     entity_id = payload['deviceId']
+    service = getControlService(name)
+    domain = entity_id[:entity_id.find('.')]
     params = {'entity_id': entity_id}
     items = haCall('services/' + domain + '/' + service, params)
     for item in items:
