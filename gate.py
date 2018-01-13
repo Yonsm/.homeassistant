@@ -32,15 +32,15 @@ def haCall(cmd, params=None):
         headers = {'x-ha-access': client_scret}
     url = client_id + '/api/' + cmd
     method = 'POST' if params else 'GET'
-    sys.stderr.write('HA ' + method + ' ' + url)
+    sys.stderr.write('\nHA ' + method + ' ' + url)
     if client_scret:
         sys.stderr.write('?api_password=' + client_scret)
     if params:
         sys.stderr.write('\n' + json.dumps(params, indent=2))
     response = requests.request(method, url, params=params, headers=headers, verify=False)
-    result = response.text
-    sys.stderr.write('HA RESPONSE: ' + result)
-    return json.loads(result)
+    result = json.loads(response.text)
+    sys.stderr.write('HA RESPONSE: ' + json.dumps(result, indent=2))
+    return result
 
 def errorResponse(errorCode, messsage=None):
     messages = {
@@ -195,9 +195,9 @@ except:
     _response = errorResponse('SERVICE_ERROR', 'service exception')
 
 # Process final result
-_result = json.dumps({'header': _header, 'payload': _response}, indent=2, sort_keys=True)
+_result = json.dumps({'header': _header, 'payload': _response}, indent=2)
 if REQUEST_METHOD:
-    sys.stderr.write('RESPONSE ' + _result)
+    sys.stderr.write('\nRESPONSE ' + _result)
 
 print('Content-Type: text/html\r\n')
 print(_result)
