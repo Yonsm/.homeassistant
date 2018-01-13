@@ -1,4 +1,9 @@
-<html>
+#!/usr/bin/env python
+
+import os
+
+print('Content-Type: text/html\r\n')
+print("""<html>
 <body>	
 	<script>
 		function getQueryString(name) {
@@ -11,4 +16,4 @@
 		document.write("Continue: <a href='" + url + "'>"  + url + "</a>");
 	</script>
 </body>
-<html>
+<html>""")
