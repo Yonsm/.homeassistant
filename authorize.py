@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os, sys
+# coding: utf-8
 
 # Log HTTP request
 REQUEST_METHOD = os.getenv('REQUEST_METHOD')

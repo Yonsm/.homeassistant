@@ -1,12 +1,46 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import os, sys, json, urllib2
+import os, sys, json
+import requests
 
-def haCall(cmd):
-    url = 'http://xxxx:8123/api/' + cmd
-    #headers = {'x-ha-access': '', 'content-type': 'application/json'}
-    return json.loads(urllib2.urlopen(url).read())
+# Log HTTP payload
+REQUEST_METHOD = os.getenv('REQUEST_METHOD')
+if REQUEST_METHOD:
+	sys.stderr.write(REQUEST_METHOD + ' ' + os.environ['REQUEST_URI'])
+	#if payload_METHOD == 'POST':
+	#	sys.stderr.write('\n' + sys.stdin.read())
+
+_accessToken = None
+def validateToken(payload):
+    #return 'accessToken' in payload and payload['accessToken'] == '25ec6cb46565638b1d3f58c3230ce99742a23622'
+    if 'accessToken' in payload:
+        global _accessToken
+        _accessToken = payload['accessToken']
+        return _accessToken.startswith('http')
+    return False
+
+def haCall(cmd, params=None):
+    index = _accessToken.find('?')
+    if index == -1:
+        client_id = _accessToken
+        client_scret = None
+        headers = None
+    else:
+        client_id = _accessToken[:index]
+        client_scret = _accessToken[index+1:]
+        headers = {'x-ha-access': client_scret}
+    url = client_id + '/api/' + cmd
+    method = 'POST' if params else 'GET'
+    sys.stderr.write('HA ' + method + ' ' + url)
+    if client_scret:
+        sys.stderr.write('?api_password=' + client_scret)
+    if params:
+        sys.stderr.write('\n' + json.dumps(params, indent=2))
+    response = requests.request(method, url, params=params, headers=headers, verify=False)
+    result = response.text
+    sys.stderr.write('HA RESPONSE: ' + result)
+    return json.loads(result)
 
 def errorResponse(errorCode, messsage=None):
     messages = {
@@ -20,18 +54,15 @@ def errorResponse(errorCode, messsage=None):
     }
     return {'errorCode': errorCode, 'message': messsage if messsage else messages[errorCode]}
 
-def validateToken(request):
-    return request.has_key('accessToken') and request['accessToken'] == '25ec6cb46565638b1d3f58c3230ce99742a23622'
-
 def getPropertyName(entity_id, attributes, state):
-    if attributes.has_key('hageinie_property_name'):
+    if 'hageinie_property_name' in attributes:
         return attributes['hageinie_property_name']
 
     if state == 'on' or state == 'off':
         return 'powerstate'
 
-    homebridge_sensor_type = attributes['homebridge_sensor_type'] if attributes.has_key('homebridge_sensor_type') else ''
-    unit_of_measurement = attributes['unit_of_measurement'] if attributes.has_key('unit_of_measurement') else ''
+    homebridge_sensor_type = attributes['homebridge_sensor_type'] if 'homebridge_sensor_type' in attributes else ''
+    unit_of_measurement = attributes['unit_of_measurement'] if 'unit_of_measurement' in attributes else ''
 
     #if :
     #    return 'color'
@@ -87,62 +118,86 @@ def discoveryDevice():
         name = getPropertyName(entity_id, attributes, state)
         device['properties'] = [{'name': name, 'value': state}] if name else []
 
-        device['actions'] = ["Query"] #TODO
+        device['actions'] = [
+            'TurnOn',
+            'TurnOff',
+            'Query'
+            ] #TODO
 
         devices.append(device)
     return {'devices': devices}
 
-def controlDevice(name, request):
+def getControlService(action):
+    i = 0
+    service = ''
+    for c in action:
+        service += (('_' if i else '') + c.lower()) if c.isupper() else c
+        i += 1
+    return service;
+
+def controlDevice(name, payload):
+    domain = payload['deviceType']
+    service = getControlService(name)
+    entity_id = payload['deviceId']
+    params = {'entity_id': entity_id}
+    items = haCall('services/' + domain + '/' + service, params)
+    for item in items:
+        if item['entity_id'] == entity_id:
+            return {}
     return errorResponse('IOT_DEVICE_OFFLINE')
 
-def queryDevice(name, request):
+def queryDevice(name, payload):
     return errorResponse('IOT_DEVICE_OFFLINE')
 
-def handleRequest(header, request):
+def handleRequest(header, payload):
     name = header['name']
-    if validateToken(request):
+    if validateToken(payload):
         namespace = header['namespace']
         if namespace == 'AliGenie.Iot.Device.Discovery':
             response = discoveryDevice()
         elif namespace == 'AliGenie.Iot.Device.Control':
-            response = controlDevice(name, request)
+            response = controlDevice(name, payload)
         elif namespace == 'AliGenie.Iot.Device.Query':
-            response = queryDevice(name, request)
+            response = queryDevice(name, payload)
         else:
             response = errorResponse('SERVICE_ERROR')
     else:
         response = errorResponse('ACCESS_TOKEN_INVALIDATE')
 
     # Check error and fill response name
-    header['name'] = ('Error' if response.has_key('errorCode') else name) + 'Response'
+    header['name'] = ('Error' if 'errorCode' in response else name) + 'Response'
 
     # Fill response deviceId
-    if request.has_key('deviceId'):
-        response['deviceId'] = request['deviceId']
+    if 'deviceId' in payload:
+        response['deviceId'] = payload['deviceId']
 
     return response
 
-print 'Content-Type: application/json'
-print ''
-
-#
+# Main process
 try:
-    if os.environ.has_key('REQUEST_METHOD') and os.environ['REQUEST_METHOD'] == 'POST':
-        _request = json.load(sys.stdin)
-        #print _request
+    if REQUEST_METHOD == 'POST':
+        _payload = json.load(sys.stdin)
+        sys.stderr.write('\n' + json.dumps(_payload, indent=2))
     else:
-        _request = {
-            'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'payloadVersion':1},
-            'payload':{'accessToken':'25ec6cb46565638b1d3f58c3230ce99742a23622'}
+        # TEST only
+        _payload = {
+            #'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'payloadVersion':1, 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
+            #'payload':{'accessToken':'25ec6cb46565638b1d3f58c3230ce99742a23622'}
+            'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'payloadVersion':1, 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
+            'payload':{'accessToken':'https://x.xxx.com:8123?password', 'attribute': 'powerstate', 'value': 'on', 'deviceType': 'switch','deviceId': 'switch.outlet'}
             }
-    _header = _request['header']
-    _response = handleRequest(_header, _request['payload'])
+    _header = _payload['header']
+    _response = handleRequest(_header, _payload['payload'])
 except:
-    type, value, tb = sys.exc_info()
     import traceback
-    print "".join(traceback.format_tb(tb))
-    del tb
+    sys.stderr.write(traceback.format_exc())
     _header = {'name': 'ErrorResponse'}
     _response = errorResponse('SERVICE_ERROR', 'service exception')
 
-print json.dumps({"header": _header, "payload": _response}, indent=4, sort_keys=True)#, ensure_ascii=False)
+# Process final result
+_result = json.dumps({'header': _header, 'payload': _response}, indent=2, sort_keys=True)
+if REQUEST_METHOD:
+    sys.stderr.write('RESPONSE ' + _result)
+
+print('Content-Type: text/html\r\n')
+print(_result)
