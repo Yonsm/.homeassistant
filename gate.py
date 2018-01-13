@@ -7,9 +7,9 @@ import requests
 # Log HTTP payload
 REQUEST_METHOD = os.getenv('REQUEST_METHOD')
 if REQUEST_METHOD:
-	sys.stderr.write(REQUEST_METHOD + ' ' + os.environ['REQUEST_URI'])
-	#if payload_METHOD == 'POST':
-	#	sys.stderr.write('\n' + sys.stdin.read())
+    sys.stderr.write(REQUEST_METHOD + ' ' + os.environ['REQUEST_URI'])
+    #if payload_METHOD == 'POST':
+    #    sys.stderr.write('\n' + sys.stdin.read())
 
 _accessToken = None
 def validateToken(payload):
@@ -37,7 +37,7 @@ def haCall(cmd, params=None):
     sys.stderr.write('HA RESPONSE: ' + json.dumps(result, indent=2))
     return result
 
-def errorResponse(errorCode, messsage=None):
+def errorResult(errorCode, messsage=None):
     messages = {
         'INVALIDATE_CONTROL_ORDER':    'invalidate control order',
         'SERVICE_ERROR': 'service error',
@@ -105,7 +105,7 @@ def guessDeviceType(entity_id):
         return 'airpurifier'
 
     if entity_id.startswith('group.all_'):
-		return None
+        return None
 
     deviceTypes = {
         'television',#: '电视',
@@ -139,8 +139,6 @@ def guessDeviceType(entity_id):
     for deviceType in deviceTypes:
         if deviceType in entity_id:
             return deviceType
-
-
     return None
 
 # https://open.bot.tmall.com/oauth/api/aliaslist
@@ -201,35 +199,46 @@ def controlDevice(name, payload):
     for item in items:
         if item['entity_id'] == entity_id:
             return {}
-    return errorResponse('IOT_DEVICE_OFFLINE')
+    return errorResult('IOT_DEVICE_OFFLINE')
 
 #
 def queryDevice(name, payload):
-    return errorResponse('IOT_DEVICE_OFFLINE')
+    entity_id = payload['deviceId']
+    item = haCall('states/' + entity_id)
+    if type(item) is dict:
+        return {'powerstate': item['state']} #TODO
+    return errorResult('IOT_DEVICE_OFFLINE')
 
 #
 def handleRequest(header, payload):
+    properties = None
     name = header['name']
     if validateToken(payload):
         namespace = header['namespace']
         if namespace == 'AliGenie.Iot.Device.Discovery':
-            response = discoveryDevice()
+            result = discoveryDevice()
         elif namespace == 'AliGenie.Iot.Device.Control':
-            response = controlDevice(name, payload)
+            result = controlDevice(name, payload)
         elif namespace == 'AliGenie.Iot.Device.Query':
-            response = queryDevice(name, payload)
+            result = queryDevice(name, payload)
+            if not 'errorCode' in result:
+                properties = result
+                result = {}
         else:
-            response = errorResponse('SERVICE_ERROR')
+            result = errorResult('SERVICE_ERROR')
     else:
-        response = errorResponse('ACCESS_TOKEN_INVALIDATE')
+        result = errorResult('ACCESS_TOKEN_INVALIDATE')
 
     # Check error and fill response name
-    header['name'] = ('Error' if 'errorCode' in response else name) + 'Response'
+    header['name'] = ('Error' if 'errorCode' in result else name) + 'Response'
 
     # Fill response deviceId
     if 'deviceId' in payload:
-        response['deviceId'] = payload['deviceId']
+        result['deviceId'] = payload['deviceId']
 
+    response = {'header': _header, 'payload': result}
+    if properties:
+        response['properties'] = properties
     return response
 
 # Main process
@@ -240,21 +249,20 @@ try:
     else:
         # TEST only
         _payload = {
-            'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'payloadVersion':1, 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            'payload':{'accessToken':'https://xxx.xxx.net:8123?password'}
+            #'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'payloadVersion':1, 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'payloadVersion':1, 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            #'payload':{'accessToken':'https://xxx.xxx.net:8123?password', 'attribute': 'powerstate', 'value': 'on', 'deviceType': 'switch','deviceId': 'switch.outlet'}
+            'header':{'namespace': 'AliGenie.Iot.Device.Query', 'name': 'Query', 'payloadVersion':1, 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
+            'payload':{'accessToken':'https://xxx.xxxx.net:8123?password''}
             }
     _header = _payload['header']
     _response = handleRequest(_header, _payload['payload'])
 except:
     import traceback
     sys.stderr.write(traceback.format_exc())
-    _header = {'name': 'ErrorResponse'}
-    _response = errorResponse('SERVICE_ERROR', 'service exception')
+    _response = {'header': {'name': 'errorResult'}, 'payload': errorResult('SERVICE_ERROR', 'service exception')}
 
 # Process final result
-_result = json.dumps({'header': _header, 'payload': _response}, indent=2)
+_result = json.dumps(_response, indent=2)
 if REQUEST_METHOD:
     sys.stderr.write('\nRESPONSE ' + _result)
 
