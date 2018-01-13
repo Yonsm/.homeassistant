@@ -54,69 +54,120 @@ def errorResponse(errorCode, messsage=None):
     }
     return {'errorCode': errorCode, 'message': messsage if messsage else messages[errorCode]}
 
-def getPropertyName(entity_id, attributes, state):
-    if 'hageinie_property_name' in attributes:
-        return attributes['hageinie_property_name']
+def guessProperties(entity_id, attributes, state):
+    unit = attributes['unit_of_measurement'] if 'unit_of_measurement' in attributes else ''
+    if 'hagenie_propertyName' in attributes:
+        name = attributes['attributes']
+    elif state == 'on' or state == 'off':
+        name = 'powerstate'
+    #elif :
+    #    name = 'color'
+    elif unit == u'°C' or unit == u'℃':
+        name = 'temperature'
+    #elif :
+    #    name = 'windspeed'
+    #elif :
+    #    name = 'brightness'
+    #elif :
+    #    name = 'fog'
+    elif ('hum' in entity_id) and (unit == '%'):
+        name = 'humidity'
+    elif ('pm25' in entity_id) and (unit == 'ug/m3'):
+        name = 'pm2.5'
+    #elif :
+    #    name = 'channel'
+    #elif :
+    #    name = 'number'
+    #elif :
+    #    name = 'direction'
+    #elif :
+    #    name = 'angle'
+    #elif :
+    #    name = 'anion'
+    #elif :
+    #    name = 'effluent'
+    #elif :
+    #    name = 'mode'
+    #elif :
+    #    name = 'lefttime'
+    #elif :
+    #    name = 'remotestatus'
+    return [{'name': name, 'value': state}] if name else []
 
-    if state == 'on' or state == 'off':
-        return 'powerstate'
+def guessDeviceType(entity_id):
+    deviceTypes = {
+        'television',#: '电视',
+        'light',#: '灯',
+        'aircondition',#: '空调',
+        'airpurifier',#: '空气净化器',
+        'outlet',#: '插座',
+        'switch',#: '开关',
+        'roboticvacuum',#: '扫地机器人',
+        'curtain',#: '窗帘',
+        'humidifier',#: '加湿器',
+        'fan',#: '风扇',
+        'bottlewarmer',#: '暖奶器',
+        'soymilkmaker',#: '豆浆机',
+        'kettle',#: '电热水壶',
+        'watercooler',#: '饮水机',
+        'cooker',#: '电饭煲',
+        'waterheater',#: '热水器',
+        'oven',#: '烤箱',
+        'waterpurifier',#: '净水器',
+        'fridge',#: '冰箱',
+        'STB',#: '机顶盒',
+        'sensor',#: '传感器',
+        'washmachine',#: '洗衣机',
+        'smartbed',#: '智能床',
+        'aromamachine',#: '香薰机',
+        'window',#: '窗',
+        'kitchenventilator',#: '抽油烟机',
+        'fingerprintlock'#: '指纹锁'
+    }
+    for deviceType in deviceTypes:
+        if deviceType in entity_id:
+            return deviceType
 
-    homebridge_sensor_type = attributes['homebridge_sensor_type'] if 'homebridge_sensor_type' in attributes else ''
-    unit_of_measurement = attributes['unit_of_measurement'] if 'unit_of_measurement' in attributes else ''
-
-    #if :
-    #    return 'color'
-    if unit_of_measurement == u'°C' or unit_of_measurement == u'℃':
-        return 'temperature'
-    #if :
-    #    return 'windspeed'
-    #if :
-    #    return 'brightness'
-    #if :
-    #    return 'fog'
-    if ('humidity' in entity_id) or (homebridge_sensor_type == 'humidity'):
-        return 'humidity'
-    if ('pm25' in entity_id) or (homebridge_sensor_type == 'air_qulity'):
-        return 'pm2.5'
-    #if :
-    #    return 'channel'
-    #if :
-    #    return 'number'
-    #if :
-    #    return 'direction'
-    #if :
-    #    return 'angle'
-    #if :
-    #    return 'anion'
-    #if :
-    #    return 'effluent'
-    #if :
-    #    return 'mode'
-    #if :
-    #    return 'lefttime'
-    #if :
-    #    return 'remotestatus'
+    type = entity_id[10:-1] if entity_id.startswith('group.all_') else entity_id[:entity_id.find('.')]
+    #if type == 'switch':
+    #    return outlet if 'outlet' in entity_id else type
+    #elif type in ['sensor', 'light', 'fan']:
+    #    return type
+    if type == 'media_player':
+        return 'television'
+    elif type == 'vacuum':
+        return 'roboticvacuum'
     return None
 
+# https://open.bot.tmall.com/oauth/api/aliaslist
+def guessDeviceName(entity_id, attributes):
+    if 'hagenie_deviceName' in attributes:
+        return attributes['hagenie_deviceName']
+    return attributes['friendly_name']
+
+# https://open.bot.tmall.com/oauth/api/placelist
+def guessZone(entity_id, attributes):
+    return '客厅' #TODO import from HA GROUP and
+
+#
 def discoveryDevice():
     devices = []
     items = haCall('states')
     for item in items:
-        device = {}
-        attributes = item['attributes']
         entity_id = item['entity_id']
+        attributes = item['attributes']
+        deviceType = guessDeviceType(entity_id, attributes)
+        if deviceType == None:
+            continue
+        device = {}
         device['deviceId'] = entity_id
-        #https://open.bot.tmall.com/oauth/api/aliaslist
-        device['deviceName'] = attributes['friendly_name']
-        device['deviceType'] = item['entity_id'].split('.')[0]
-        device['zone'] = '客厅' #TODO import from HA GROUP and https://open.bot.tmall.com/oauth/api/placelist
+        device['deviceName'] = guessDeviceName(entity_id, attributes)
+        device['deviceType'] = deviceType
+        device['zone'] = guessZone(entity_id, attributes)
         device['brand'] = 'HomeAssistant'
-        device['model'] = device['deviceType'] #TODO
+        device['model'] = attributes['friendly_name']
         device['icon'] = 'https://home-assistant.io/demo/favicon-192x192.png'
-
-        state = item['state']
-        name = getPropertyName(entity_id, attributes, state)
-        device['properties'] = [{'name': name, 'value': state}] if name else []
+        device['properties'] = getProperties(entity_id, attributes, item['state'])
 
         device['actions'] = [
             'TurnOn',
@@ -127,6 +178,7 @@ def discoveryDevice():
         devices.append(device)
     return {'devices': devices}
 
+#
 def getControlService(action):
     i = 0
     service = ''
@@ -135,6 +187,7 @@ def getControlService(action):
         i += 1
     return service;
 
+#
 def controlDevice(name, payload):
     domain = payload['deviceType']
     service = getControlService(name)
@@ -146,9 +199,11 @@ def controlDevice(name, payload):
             return {}
     return errorResponse('IOT_DEVICE_OFFLINE')
 
+#
 def queryDevice(name, payload):
     return errorResponse('IOT_DEVICE_OFFLINE')
 
+#
 def handleRequest(header, payload):
     name = header['name']
     if validateToken(payload):
@@ -181,10 +236,10 @@ try:
     else:
         # TEST only
         _payload = {
-            #'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'payloadVersion':1, 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            #'payload':{'accessToken':'25ec6cb46565638b1d3f58c3230ce99742a23622'}
-            'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'payloadVersion':1, 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            'payload':{'accessToken':'https://x.xxx.com:8123?password', 'attribute': 'powerstate', 'value': 'on', 'deviceType': 'switch','deviceId': 'switch.outlet'}
+            'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'payloadVersion':1, 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
+            'payload':{'accessToken':'25ec6cb46565638b1d3f58c3230ce99742a23622'}
+            #'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'payloadVersion':1, 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
+            #'payload':{'accessToken':'https://x.xxx.com:8123?password', 'attribute': 'powerstate', 'value': 'on', 'deviceType': 'switch','deviceId': 'switch.outlet'}
             }
     _header = _payload['header']
     _response = handleRequest(_header, _payload['payload'])
