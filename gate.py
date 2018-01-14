@@ -186,7 +186,7 @@ def discoveryDevice():
         device['zone'] = guessZone(entity_id, attributes, places)
         device['brand'] = 'HomeAssistant'
         device['model'] = attributes['friendly_name']
-        log(device['zone'] + ':' + device['deviceName'])
+        #log(device['zone'] + ':' + device['deviceName'])
         device['icon'] = 'https://home-assistant.io/demo/favicon-192x192.png'
         device['properties'] = guessProperties(entity_id, attributes, item['state'])
 
