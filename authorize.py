@@ -6,9 +6,9 @@ import os, sys
 # Log HTTP request
 REQUEST_METHOD = os.getenv('REQUEST_METHOD')
 if REQUEST_METHOD:
-	sys.stderr.write(REQUEST_METHOD + ' ' + os.environ['REQUEST_URI'])
+	sys.stderr.write(REQUEST_METHOD + ' ' + os.environ['REQUEST_URI'] + '\n')
 	if REQUEST_METHOD == 'POST':
-		sys.stderr.write('\n' + sys.stdin.read())
+		sys.stderr.write(sys.stdin.read() + '\n')
 
 # Print content
 print('Content-Type: text/html\r\n')

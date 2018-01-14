@@ -4,12 +4,16 @@
 import os, sys, json
 import requests
 
+#
+def log(message):
+    sys.stderr.write(message + '\n')
+
 # Log HTTP payload
 REQUEST_METHOD = os.getenv('REQUEST_METHOD')
 if REQUEST_METHOD:
-    sys.stderr.write(REQUEST_METHOD + ' ' + os.environ['REQUEST_URI'])
+    log(REQUEST_METHOD + ' ' + os.environ['REQUEST_URI'])
     #if payload_METHOD == 'POST':
-    #    sys.stderr.write('\n' + sys.stdin.read())
+    #    log(sys.stdin.read())
 
 _accessToken = None
 def validateToken(payload):
@@ -27,14 +31,12 @@ def haCall(cmd, params=None):
     headers = {'x-ha-access': client_scret}
     url = client_id + '/api/' + cmd
     method = 'POST' if params else 'GET'
-    sys.stderr.write('\nHA ' + method + ' ' + url)
-    if client_scret:
-        sys.stderr.write('?api_password=' + client_scret)
+    log('HA ' + method + ' ' + url + (('?api_password=' + client_scret) if client_scret else ''))
     if params:
-        sys.stderr.write('\n' + json.dumps(params, indent=2))
+        log(json.dumps(params, indent=2))
     response = requests.request(method, url, params=params, headers=headers, verify=False)
     result = json.loads(response.text)
-    sys.stderr.write('HA RESPONSE: ' + json.dumps(result, indent=2))
+    log('HA RESPONSE: ' + json.dumps(result, indent=2))
     return result
 
 def errorResult(errorCode, messsage=None):
@@ -142,19 +144,35 @@ def guessDeviceType(entity_id):
     return None
 
 # https://open.bot.tmall.com/oauth/api/aliaslist
-def guessDeviceName(entity_id, attributes):
+def guessDeviceName(entity_id, attributes, places):#, aliases):
     if 'hagenie_deviceName' in attributes:
         return attributes['hagenie_deviceName']
-    return attributes['friendly_name']
+
+    name = attributes['friendly_name']
+    for place in places:
+        if name.startswith(place):
+            name = name[len(place):]
+            break
+
+    #for key in aliases:
+    #    if name.startswith
+
+    return name
 
 # https://open.bot.tmall.com/oauth/api/placelist
-def guessZone(entity_id, attributes):
+def guessZone(entity_id, attributes, places):
+    name = attributes['friendly_name']
+    for place in places:
+        if name.startswith(place):
+            return place
     return '客厅' #TODO import from HA GROUP and
 
 #
 def discoveryDevice():
     devices = []
     items = haCall('states')
+    places = json.loads(requests.get('https://open.bot.tmall.com/oauth/api/placelist').text)['data']
+    #aliases = json.loads(requests.get('https://open.bot.tmall.com/oauth/api/aliaslist').text)['data']
     for item in items:
         entity_id = item['entity_id']
         deviceType = guessDeviceType(entity_id)
@@ -163,11 +181,12 @@ def discoveryDevice():
         attributes = item['attributes']
         device = {}
         device['deviceId'] = entity_id
-        device['deviceName'] = guessDeviceName(entity_id, attributes)
+        device['deviceName'] = guessDeviceName(entity_id, attributes, places)#, aliases)
         device['deviceType'] = deviceType
-        device['zone'] = guessZone(entity_id, attributes)
+        device['zone'] = guessZone(entity_id, attributes, places)
         device['brand'] = 'HomeAssistant'
         device['model'] = attributes['friendly_name']
+        log(device['zone'] + ':' + device['deviceName'])
         device['icon'] = 'https://home-assistant.io/demo/favicon-192x192.png'
         device['properties'] = guessProperties(entity_id, attributes, item['state'])
 
@@ -245,26 +264,26 @@ def handleRequest(header, payload):
 try:
     if REQUEST_METHOD == 'POST':
         _payload = json.load(sys.stdin)
-        sys.stderr.write('\n' + json.dumps(_payload, indent=2))
+        log(json.dumps(_payload, indent=2))
     else:
         # TEST only
         _payload = {
-            #'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'payloadVersion':1, 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            #'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'payloadVersion':1, 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            'header':{'namespace': 'AliGenie.Iot.Device.Query', 'name': 'Query', 'payloadVersion':1, 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            'payload':{'accessToken':'https://xxx.xxxx.net:8123?password''}
+            'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
+            #'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
+            #'header':{'namespace': 'AliGenie.Iot.Device.Query', 'name': 'Query', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
+            'payload':{'accessToken':'https://x.xxx.net:8123?password'}
             }
     _header = _payload['header']
     _response = handleRequest(_header, _payload['payload'])
 except:
     import traceback
-    sys.stderr.write(traceback.format_exc())
+    log(traceback.format_exc())
     _response = {'header': {'name': 'errorResult'}, 'payload': errorResult('SERVICE_ERROR', 'service exception')}
 
 # Process final result
 _result = json.dumps(_response, indent=2)
 if REQUEST_METHOD:
-    sys.stderr.write('\nRESPONSE ' + _result)
+    log('RESPONSE ' + _result)
 
-print('Content-Type: text/html\r\n')
-print(_result)
+#print('Content-Type: text/html\r\n')
+#print(_result)

@@ -6,13 +6,13 @@ import os, sys, cgi
 # Log HTTP request
 REQUEST_METHOD = os.getenv('REQUEST_METHOD')
 if REQUEST_METHOD:
-  sys.stderr.write(REQUEST_METHOD + ' ' + os.environ['REQUEST_URI'])
+  sys.stderr.write(REQUEST_METHOD + ' ' + os.environ['REQUEST_URI'] + '\n')
   #if REQUEST_METHOD == 'POST':
-  #  sys.stderr.write('\n' + sys.stdin.read())
+  #  sys.stderr.write(sys.stdin.read() + '\n')
   form = cgi.FieldStorage()
   access_token = form['client_id'].value + '?' + form['client_secret'].value # Trick: Use access_token to pass client_id and client_secret
   for key in form.keys():
-    sys.stderr.write(key + '=' + form[key].value)
+    sys.stderr.write(key + '=' + form[key].value + '\n')
 else:
   access_token = '25ec6cb46565638b1d3f58c3230ce99742a23622'
   
