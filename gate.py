@@ -31,7 +31,7 @@ def haCall(cmd, params=None):
     headers = {'x-ha-access': client_scret}
     url = client_id + '/api/' + cmd
     method = 'POST' if params else 'GET'
-    log('HA ' + method + ' ' + url + (('?api_password=' + client_scret) if client_scret else ''))
+    log('HA ' + method + ' ' + url)# + (('?api_password=' + client_scret) if client_scret else ''))
     if params:
         log(json.dumps(params, indent=2))
     response = requests.request(method, url, params=params, headers=headers, verify=False)
@@ -229,7 +229,9 @@ def queryDevice(name, payload):
     return errorResult('IOT_DEVICE_OFFLINE')
 
 #
-def handleRequest(header, payload):
+def handleRequest(request):
+    header = request['header']
+    payload = request['payload']
     properties = None
     name = header['name']
     if validateToken(payload):
@@ -255,7 +257,7 @@ def handleRequest(header, payload):
     if 'deviceId' in payload:
         result['deviceId'] = payload['deviceId']
 
-    response = {'header': _header, 'payload': result}
+    response = {'header': header, 'payload': result}
     if properties:
         response['properties'] = properties
     return response
@@ -263,18 +265,17 @@ def handleRequest(header, payload):
 # Main process
 try:
     if REQUEST_METHOD == 'POST':
-        _payload = json.load(sys.stdin)
-        log(json.dumps(_payload, indent=2))
+        _request = json.load(sys.stdin)
+        log(json.dumps(_request, indent=2))
     else:
         # TEST only
-        _payload = {
+        _request = {
             'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Query', 'name': 'Query', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            'payload':{'accessToken':'https://x.xxx.net:8123?password'}
+            'payload':{'accessToken':'https://xxx.xxx.net:8123?password'}
             }
-    _header = _payload['header']
-    _response = handleRequest(_header, _payload['payload'])
+    _response = handleRequest(_request)
 except:
     import traceback
     log(traceback.format_exc())
