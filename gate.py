@@ -285,5 +285,5 @@ _result = json.dumps(_response, indent=2)
 if REQUEST_METHOD:
     log('RESPONSE ' + _result)
 
-#print('Content-Type: text/html\r\n')
-#print(_result)
+print('Content-Type: text/json\r\n')
+print(_result)
