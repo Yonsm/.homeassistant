@@ -5,17 +5,18 @@ import os, sys, cgi
 
 # Log HTTP request
 REQUEST_METHOD = os.getenv('REQUEST_METHOD')
-if REQUEST_METHOD:
-  sys.stderr.write(REQUEST_METHOD + ' ' + os.environ['REQUEST_URI'] + '\n')
+#if REQUEST_METHOD:
+try:
+  sys.stderr.write(REQUEST_METHOD + ' ' + os.environ['SCRIPT_NAME'] + '?' + os.environ['QUERY_STRING'] + '\n')
   #if REQUEST_METHOD == 'POST':
   #  sys.stderr.write(sys.stdin.read() + '\n')
   form = cgi.FieldStorage()
-  access_token = form['client_id'].value + '?' + form['client_secret'].value # Trick: Use access_token to pass client_id and client_secret
   for key in form.keys():
     sys.stderr.write(key + '=' + form[key].value + '\n')
-else:
-  access_token = '25ec6cb46565638b1d3f58c3230ce99742a23622'
-  
+  access_token = form['client_id'].value + '?' + form['client_secret'].value # Trick: Use access_token to pass client_id and client_secret
+except:
+  access_token = 'https://192.168.1.10:8123?password'
+
 # Print content
 print('Content-Type: text/json\r\n')
 print('{\

@@ -11,7 +11,7 @@ def log(message):
 # Log HTTP payload
 REQUEST_METHOD = os.getenv('REQUEST_METHOD')
 if REQUEST_METHOD:
-    log(REQUEST_METHOD + ' ' + os.environ['REQUEST_URI'])
+    log(REQUEST_METHOD + ' ' + os.environ['SCRIPT_NAME'] + '?' + os.environ['QUERY_STRING'] + '\n')
     #if payload_METHOD == 'POST':
     #    log(sys.stdin.read())
 
@@ -273,7 +273,7 @@ try:
             'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Query', 'name': 'Query', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            'payload':{'accessToken':'https://xxx.xxx.net:8123?password'}
+            'payload':{'accessToken':'https://192.168.1.10:8123?password'}
             }
     _response = handleRequest(_request)
 except:
