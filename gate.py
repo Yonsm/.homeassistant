@@ -24,17 +24,17 @@ def validateToken(payload):
         return _accessToken.startswith('http')
     return False
 
-def haCall(cmd, params=None):
+def haCall(cmd, data=None):
     index = _accessToken.index('?')
     client_id = _accessToken[:index]
     client_scret = _accessToken[index+1:]
     headers = {'x-ha-access': client_scret}
     url = client_id + '/api/' + cmd
-    method = 'POST' if params else 'GET'
+    method = 'POST' if data else 'GET'
     log('HA ' + method + ' ' + url)# + (('?api_password=' + client_scret) if client_scret else ''))
-    if params:
-        log(json.dumps(params, indent=2))
-    response = requests.request(method, url, params=params, headers=headers, verify=False)
+    if data:
+        log(data)
+    response = requests.request(method, url, data=data, headers=headers, verify=False)
     result = json.loads(response.text)
     log('HA RESPONSE: ' + json.dumps(result, indent=2))
     return result
@@ -94,6 +94,8 @@ def guessProperties(entity_id, attributes, state):
     return [{'name': name, 'value': state}]
 
 def guessDeviceType(entity_id):
+    if entity_id.startswith('sensor.'):#TODO: We don't support sensor at this time
+        return None
     type = entity_id[:entity_id.find('.')] #if not entity_id.startswith('group.all_') else entity_id[10:-1]
     #if type == 'switch':
     #    return outlet if 'outlet' in entity_id else type
@@ -213,12 +215,14 @@ def controlDevice(name, payload):
     entity_id = payload['deviceId']
     service = getControlService(name)
     domain = entity_id[:entity_id.find('.')]
-    params = {'entity_id': entity_id}
-    items = haCall('services/' + domain + '/' + service, params)
-    for item in items:
-        if item['entity_id'] == entity_id:
-            return {}
-    return errorResult('IOT_DEVICE_OFFLINE')
+    data = '{"entity_id":"' + entity_id + '"}'
+    #global _accessToken
+    #_accessToken = 'http://192.168.1.3:8123?pass'
+    items = haCall('services/' + domain + '/' + service, data)
+    #for item in items:
+    #    if item['entity_id'] == entity_id:
+    #        return {}
+    return {} if (type(items) is list) else errorResult('IOT_DEVICE_OFFLINE')
 
 #
 def queryDevice(name, payload):
