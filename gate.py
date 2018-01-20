@@ -2,7 +2,10 @@
 # coding: utf-8
 
 import os, sys, json
-import requests
+try:
+    from urllib2 import urlopen
+except ImportError:
+    from urllib.request import urlopen
 
 #
 def log(message):
@@ -28,16 +31,20 @@ def haCall(cmd, data=None):
     index = _accessToken.index('?')
     client_id = _accessToken[:index]
     client_scret = _accessToken[index+1:]
-    headers = {'x-ha-access': client_scret}
-    url = client_id + '/api/' + cmd
+    url = client_id + '/api/' + cmd + '?api_password=' + client_scret
     method = 'POST' if data else 'GET'
-    log('HA ' + method + ' ' + url)# + (('?api_password=' + client_scret) if client_scret else ''))
+    log('HA ' + method + ' ' + url)# + 
     if data:
         log(data)
-    response = requests.request(method, url, data=data, headers=headers, verify=False)
-    result = json.loads(response.text)
-    log('HA RESPONSE: ' + json.dumps(result, indent=2))
-    return result
+
+    if url.startswith('https'): # We need extra requests lib for HTTPS POST
+        import requests
+        result = requests.request(method, url, data=data, verify=False).text
+    else:
+        result = urlopen(url, data=data).read()
+
+    log('HA RESPONSE: ' + result)
+    return json.loads(result)
 
 def errorResult(errorCode, messsage=None):
     messages = {
@@ -173,8 +180,8 @@ def guessZone(entity_id, attributes, places):
 def discoveryDevice():
     devices = []
     items = haCall('states')
-    places = json.loads(requests.get('https://open.bot.tmall.com/oauth/api/placelist').text)['data']
-    #aliases = json.loads(requests.get('https://open.bot.tmall.com/oauth/api/aliaslist').text)['data']
+    places = json.loads(urlopen('https://open.bot.tmall.com/oauth/api/placelist').read())['data']
+    #aliases = json.loads(urlopen('https://open.bot.tmall.com/oauth/api/aliaslist').read())['data']
     for item in items:
         entity_id = item['entity_id']
         deviceType = guessDeviceType(entity_id)
@@ -277,7 +284,7 @@ try:
             'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Query', 'name': 'Query', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            'payload':{'accessToken':'https://192.168.1.10:8123?password'}
+            'payload':{'accessToken':'http://192.168.1.10:8123?password'}
             }
     _response = handleRequest(_request)
 except:
