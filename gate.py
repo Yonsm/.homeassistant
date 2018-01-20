@@ -169,12 +169,20 @@ def guessDeviceName(entity_id, attributes, places):#, aliases):
     return name
 
 # https://open.bot.tmall.com/oauth/api/placelist
-def guessZone(entity_id, attributes, places):
+def guessZone(entity_id, attributes, places, items):
     name = attributes['friendly_name']
-    for place in places:
+    for place in places: # Guess from name
         if name.startswith(place):
             return place
-    return '客厅' #TODO import from HA GROUP and
+    for item in items: # Guess from HA group
+        group_entity_id = item['entity_id']
+        if group_entity_id.startswith('group.') and not group_entity_id.startswith('group.all_'):
+            group_attributes = item['attributes']
+            if 'entity_id' in group_attributes:
+                for child_entity_id in group_attributes['entity_id']:
+                    if child_entity_id == entity_id:
+                        return group_attributes['friendly_name']
+    return '我家'
 
 #
 def discoveryDevice():
@@ -192,7 +200,7 @@ def discoveryDevice():
         device['deviceId'] = entity_id
         device['deviceName'] = guessDeviceName(entity_id, attributes, places)#, aliases)
         device['deviceType'] = deviceType
-        device['zone'] = guessZone(entity_id, attributes, places)
+        device['zone'] = guessZone(entity_id, attributes, places, items)
         device['brand'] = 'HomeAssistant'
         device['model'] = attributes['friendly_name']
         #log(device['zone'] + ':' + device['deviceName'])
@@ -201,8 +209,8 @@ def discoveryDevice():
 
         device['actions'] = [
             'TurnOn',
-            'TurnOff',
-            'Query'
+            'TurnOff'#,
+            #'Query'
             ] #TODO
 
         devices.append(device)

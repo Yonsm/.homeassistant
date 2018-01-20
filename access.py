@@ -15,7 +15,7 @@ try:
     sys.stderr.write(key + '=' + form[key].value + '\n')
   access_token = form['client_id'].value + '?' + form['client_secret'].value # Trick: Use access_token to pass client_id and client_secret
 except:
-  access_token = 'https://192.168.1.10:8123?password'
+  access_token = 'http://192.168.1.10:8123?password'
 
 # Print content
 print('Content-Type: text/json\r\n')
