@@ -9,7 +9,8 @@ except ImportError:
 
 #
 def log(message):
-    sys.stderr.write(message + '\n')
+    pass
+    #sys.stderr.write(message + '\n')
 
 # Log HTTP payload
 REQUEST_METHOD = os.getenv('REQUEST_METHOD')
@@ -33,10 +34,9 @@ def haCall(cmd, data=None):
     client_scret = _accessToken[index+1:]
     url = client_id + '/api/' + cmd + '?api_password=' + client_scret
     method = 'POST' if data else 'GET'
-    log('HA ' + method + ' ' + url)# + 
+    log('HA ' + method + ' ' + url)# + (('?api_password=' + client_scret) if client_scret else ''))
     if data:
         log(data)
-
     if url.startswith('https'): # We need extra requests lib for HTTPS POST
         import requests
         result = requests.request(method, url, data=data, verify=False).text
@@ -170,8 +170,10 @@ def guessDeviceName(entity_id, attributes, places):#, aliases):
 
 # https://open.bot.tmall.com/oauth/api/placelist
 def guessZone(entity_id, attributes, places, items):
+    if 'hagenie_zone' in attributes:
+        return attributes['hagenie_zone']
     name = attributes['friendly_name']
-    for place in places: # Guess from name
+    for place in places:
         if name.startswith(place):
             return place
     for item in items: # Guess from HA group
@@ -181,15 +183,17 @@ def guessZone(entity_id, attributes, places, items):
             if 'entity_id' in group_attributes:
                 for child_entity_id in group_attributes['entity_id']:
                     if child_entity_id == entity_id:
+                        if 'hagenie_zone' in group_attributes:
+                            return group_attributes['hagenie_zone']
                         return group_attributes['friendly_name']
-    return '我家'
+    return '客厅'
 
 #
 def discoveryDevice():
     devices = []
     items = haCall('states')
     places = json.loads(urlopen('https://open.bot.tmall.com/oauth/api/placelist').read())['data']
-    #aliases = json.loads(urlopen('https://open.bot.tmall.com/oauth/api/aliaslist').read())['data']
+    #aliases = json.loads(requests.get('https://open.bot.tmall.com/oauth/api/aliaslist').text)['data']
     for item in items:
         entity_id = item['entity_id']
         deviceType = guessDeviceType(entity_id)
@@ -292,7 +296,7 @@ try:
             'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Query', 'name': 'Query', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            'payload':{'accessToken':'http://192.168.1.10:8123?password'}
+            'payload':{'accessToken':'https://192.168.1.10:8123?password'}
             }
     _response = handleRequest(_request)
 except:
