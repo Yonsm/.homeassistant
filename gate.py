@@ -9,8 +9,8 @@ except ImportError:
 
 #
 def log(message):
-    pass
-    #sys.stderr.write(message + '\n')
+    #pass
+    sys.stderr.write(message + '\n')
 
 # Log HTTP payload
 REQUEST_METHOD = os.getenv('REQUEST_METHOD')
@@ -118,7 +118,7 @@ def guessDeviceType(entity_id):
     if entity_id.startswith('group.all_'):
         return None
 
-    deviceTypes = {
+    deviceTypes = [
         'television',#: '电视',
         'light',#: '灯',
         'aircondition',#: '空调',
@@ -146,7 +146,7 @@ def guessDeviceType(entity_id):
         'window',#: '窗',
         'kitchenventilator',#: '抽油烟机',
         'fingerprintlock'#: '指纹锁'
-    }
+    ]
     for deviceType in deviceTypes:
         if deviceType in entity_id:
             return deviceType
