@@ -188,7 +188,7 @@ def guessZone(entity_id, attributes, places, items):
                         return group_attributes['friendly_name']
     return '客厅'
 
-def guessActions(entity_id, services):
+def guessActions(entity_id, services=None):
     '''type = entity_id[:entity_id.find('.')]
     gactions = [
         'TurnOn',
@@ -265,7 +265,7 @@ def discoveryDevice():
         #log(device['zone'] + ':' + device['deviceName'])
         device['icon'] = 'https://home-assistant.io/demo/favicon-192x192.png'
         device['properties'] = guessProperties(entity_id, attributes, item['state'])
-        device['actions'] = guessActions(entity_id）#, services)
+        device['actions'] = guessActions(entity_id)#, services)
         devices.append(device)
     return {'devices': devices}
 
@@ -345,7 +345,7 @@ try:
             'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Query', 'name': 'Query', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            'payload':{'accessToken':'https://115.206.44.81:8123?password'}
+            'payload':{'accessToken':'https://xxxx:8123?gjz'}
             }
     _response = handleRequest(_request)
 except:
