@@ -188,18 +188,73 @@ def guessZone(entity_id, attributes, places, items):
                         return group_attributes['friendly_name']
     return '客厅'
 
+def guessActions(entity_id, services):
+    '''type = entity_id[:entity_id.find('.')]
+    gactions = [
+        'TurnOn',
+        'TurnOff',
+        'SelectChannel',
+        'AdjustUpChannel',
+        'AdjustDownChannel',
+        'AdjustUpVolume',
+        'AdjustDownVolume',
+        'SetVolume',
+        'SetMute',
+        'CancelMute',
+        'Play',
+        'Pause',
+        'Continue',
+        'Next',
+        'Previous',
+        'SetBrightness',
+        'AdjustUpBrightness',
+        'AdjustDownBrightness',
+        'SetTemperature',
+        'AdjustUpTemperature',
+        'AdjustDownTemperature',
+        'SetWindSpeed',
+        'AdjustUpWindSpeed',
+        'AdjustDownWindSpeed',
+        'SetMode',
+        'SetColor',
+        'OpenFunction',
+        'CloseFunction',
+        'Query',
+        'QueryColor',
+        'QueryPowerState',
+        'QueryTemperature',
+        'QueryHumidity',
+        'QueryWindSpeed',
+        'QueryBrightness',
+        'QueryFog',
+        'QueryMode',
+        'QueryPM25',
+        'QueryDirection',
+        'QueryAngle'
+    ]'''
+    #for service in services:
+    #    if type == service['domain']:
+    #        for action in service['services']:
+    return [
+            'TurnOn',
+            'TurnOff'
+            ]#TODO
+
 #
 def discoveryDevice():
     devices = []
     items = haCall('states')
+    #services = haCall('services')
     places = json.loads(urlopen('https://open.bot.tmall.com/oauth/api/placelist').read())['data']
     #aliases = json.loads(requests.get('https://open.bot.tmall.com/oauth/api/aliaslist').text)['data']
     for item in items:
+        attributes = item['attributes']
+        if ('hidden' in attributes) and attributes['hidden']:
+            continue
         entity_id = item['entity_id']
         deviceType = guessDeviceType(entity_id)
         if deviceType == None:
             continue
-        attributes = item['attributes']
         device = {}
         device['deviceId'] = entity_id
         device['deviceName'] = guessDeviceName(entity_id, attributes, places)#, aliases)
@@ -210,13 +265,7 @@ def discoveryDevice():
         #log(device['zone'] + ':' + device['deviceName'])
         device['icon'] = 'https://home-assistant.io/demo/favicon-192x192.png'
         device['properties'] = guessProperties(entity_id, attributes, item['state'])
-
-        device['actions'] = [
-            'TurnOn',
-            'TurnOff'#,
-            #'Query'
-            ] #TODO
-
+        device['actions'] = guessActions(entity_id）#, services)
         devices.append(device)
     return {'devices': devices}
 
@@ -296,7 +345,7 @@ try:
             'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Query', 'name': 'Query', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            'payload':{'accessToken':'https://192.168.1.10:8123?password'}
+            'payload':{'accessToken':'https://115.206.44.81:8123?password'}
             }
     _response = handleRequest(_request)
 except:
