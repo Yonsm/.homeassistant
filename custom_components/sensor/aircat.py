@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 #encoding:utf8
 
-import logging, os, time
+import logging, os
 import requests, json
 
 # Const
-DEFAULT_NAME = 'AirCat'
 TOKEN_PATH = '.aircat.token'
 AUTH_CODE = 'feixun.SH_1'
 USER_AGENT = 'zhilian/5.7.0 (iPhone; iOS 10.0.2; Scale/3.00)'
@@ -14,15 +13,13 @@ USER_AGENT = 'zhilian/5.7.0 (iPhone; iOS 10.0.2; Scale/3.00)'
 LOGGER = logging.getLogger(__name__)
 
 # Get homeassistant configuration path to store token
-#TOKEN_PATH = os.path.split(os.path.split(os.path.split(os.path.realpath(__file__))[0])[0])[0] + '/' + TOKEN_PATH
+TOKEN_PATH = os.path.split(os.path.split(os.path.split(os.path.realpath(__file__))[0])[0])[0] + '/' + TOKEN_PATH
 
 class AirCatData():
-    def __init__(self, username, password, scan_interval=0):
+    def __init__(self, username, password):
         self._devs = None
         self._username = username
         self._password = password
-        self._lastime = 0
-        self._scan_interval = scan_interval
         try:
             with open(TOKEN_PATH) as f:
                 self._token = f.read()
@@ -30,16 +27,6 @@ class AirCatData():
         except:
             self._token = None
             pass
-
-    def check(self):
-        curtime = time.time()
-        scan_interval = curtime - self._lastime
-        if scan_interval < self._scan_interval:
-            LOGGER.debug('updateIgnore: lastime=%d, elapse=%d', self._lastime, scan_interval)
-        else:
-            LOGGER.debug('updateData: curtime=%d, elapse=%d', curtime, scan_interval)
-            self.update()
-            self._lastime = curtime# time.time()
 
     def update(self):
         try:
@@ -87,7 +74,7 @@ if __name__ == '__main__':
 
 # Import homeassistant
 from homeassistant.helpers.entity import Entity
-from homeassistant.const import (CONF_NAME, CONF_USERNAME, CONF_PASSWORD, CONF_SENSORS, CONF_OPTIMISTIC, CONF_SCAN_INTERVAL)
+from homeassistant.const import (CONF_NAME, CONF_USERNAME, CONF_PASSWORD, CONF_SENSORS, CONF_OPTIMISTIC)
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
@@ -95,10 +82,9 @@ import voluptuous as vol
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_USERNAME): cv.string,
     vol.Required(CONF_PASSWORD): cv.string,
-    vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
-    vol.Optional(CONF_SENSORS, default=1): vol.Coerce(int),
+    vol.Optional(CONF_NAME, default='AirCat'): cv.string,
+    vol.Optional(CONF_SENSORS, default=1): cv.positive_int,
     vol.Optional(CONF_OPTIMISTIC, default=True): cv.boolean,
-    vol.Optional(CONF_SCAN_INTERVAL, default=0): vol.Coerce(int),
 })
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
@@ -107,10 +93,9 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     password = config.get(CONF_PASSWORD)
     sensors = config.get(CONF_SENSORS)
     optimistic = config.get(CONF_OPTIMISTIC)
-    scan_interval = config.get(CONF_SCAN_INTERVAL)
-    LOGGER.debug('setup_platform: name=%s, username=%s, password=%s, sensors=%d, optimistic=%s, scan_interval=%d', name, username, password, sensors, optimistic, scan_interval)
+    LOGGER.debug('setup_platform: name=%s, username=%s, password=%s, sensors=%d, optimistic=%s', name, username, password, sensors, optimistic)
 
-    AirCatSensor._data = AirCatData(username, password, scan_interval)
+    AirCatSensor._data = AirCatData(username, password)
     AirCatSensor._optimistic = optimistic
 
     i = 0
@@ -125,8 +110,6 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     add_devices(devices, True)
 
 class AirCatSensor(Entity):
-    _data = None
-    _optimistic = True
 
     def __init__(self, name, index, prop, unit, icon):
         if index:
@@ -173,5 +156,5 @@ class AirCatSensor(Entity):
 
     def update(self):
         if self._index == 0 and self._prop == 'pm25':
-            AirCatSensor._data.check()
-
+            LOGGER.debug('update: name=%s', self._name)
+            AirCatSensor._data.update()
