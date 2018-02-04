@@ -8,7 +8,7 @@ YAML Example:
 sensor:
   - platform: caiyun
     name: CaiYun # Optional
-    scan_interval: 600 # Optional
+    scan_interval: 1200 # Optional
     monitored_conditions: # Optional
       - weather
       - temperature
@@ -103,13 +103,13 @@ if __name__ == '__main__':
 
 # Import homeassistant
 from homeassistant.helpers.entity import Entity
-from homeassistant.const import (CONF_NAME, CONF_LATITUDE, CONF_LONGITUDE, CONF_MONITORED_CONDITIONS)
+from homeassistant.const import (CONF_NAME, CONF_LONGITUDE, CONF_LATITUDE, CONF_MONITORED_CONDITIONS)
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 
 from datetime import timedelta
-SCAN_INTERVAL = timedelta(seconds=60)
+SCAN_INTERVAL = timedelta(seconds=1200)
 
 SENSOR_TYPES = {
     'weather': ('Weather', None, 'help-circle-outline'),
@@ -134,25 +134,25 @@ SENSOR_TYPES = {
     'so2': ('SO2', None, 'blur-radial')
 }
 
-DEFAULT_NAME='CaiYun'
-DEFAULT_MONITORED_CONDITIONS = ['weather', 'temperature', 'humidity', 'local_precipitation', 'aqi', 'pm25']
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
-    vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
-    vol.Optional(CONF_LATITUDE): cv.latitude,
+    vol.Optional(CONF_NAME, default='CaiYun'): cv.string,
     vol.Optional(CONF_LONGITUDE): cv.longitude,
-    vol.Optional(CONF_MONITORED_CONDITIONS, default=DEFAULT_MONITORED_CONDITIONS): vol.All(cv.ensure_list, vol.Length(min=1), [vol.In(SENSOR_TYPES)]),
+    vol.Optional(CONF_LATITUDE): cv.latitude,
+    vol.Optional(CONF_MONITORED_CONDITIONS, default=['weather', 'temperature', 'humidity', 'local_precipitation', 'aqi', 'pm25']): vol.All(cv.ensure_list, vol.Length(min=1), [vol.In(SENSOR_TYPES)]),
 })
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
     name = config.get(CONF_NAME)
+    longitude = str(config.get(CONF_LONGITUDE, hass.config.longitude))
+    latitude = str(config.get(CONF_LATITUDE, hass.config.latitude))
     monitored_conditions = config[CONF_MONITORED_CONDITIONS]
+    LOGGER.debug('setup_platform: name=%s, longitude=%s, latitude=%s', name, longitude, latitude)
+
     CaiYunSensor._data = {}
     CaiYunSensor._update_index = 0
     CaiYunSensor._conditions_count = len(monitored_conditions)
-    CaiYunSensor._longitude = str(config.get(CONF_LONGITUDE, hass.config.longitude))
-    CaiYunSensor._latitude = str(config.get(CONF_LATITUDE, hass.config.latitude))
-
-    LOGGER.debug('setup_platform: name=%s, longitude=%s, latitude=%s, conditions=%d', name, CaiYunSensor._longitude, CaiYunSensor._latitude, CaiYunSensor._conditions_count)
+    CaiYunSensor._longitude = longitude
+    CaiYunSensor._latitude = latitude
 
     devices = []
     for type in monitored_conditions:
@@ -196,7 +196,7 @@ class CaiYunSensor(Entity):
         return CaiYunSensor._data if self._type == 'weather' else None
 
     def update(self):
-        LOGGER.info('update: name=%s', self._name)
+        LOGGER.debug('update: name=%s', self._name)
         if CaiYunSensor._update_index % CaiYunSensor._conditions_count == 0:
             CaiYunSensor._data = getWeatherData(CaiYunSensor._longitude, CaiYunSensor._latitude)
         CaiYunSensor._update_index += 1

@@ -1,6 +1,23 @@
 #!/usr/bin/env python
 #encoding:utf8
 
+'''
+YAML Example:
+sensors:
+  - platform: aircat
+    #name: AirCat
+    username: 139********
+    password: ********
+    #sensors: 1
+    #scan_interval: 60
+    monitored_conditions: # Optional
+      - temperature
+      - humidity
+      - pm25
+      - pm10
+      - hcho
+'''
+
 import logging, os
 import requests, json
 
@@ -74,17 +91,27 @@ if __name__ == '__main__':
 
 # Import homeassistant
 from homeassistant.helpers.entity import Entity
-from homeassistant.const import (CONF_NAME, CONF_USERNAME, CONF_PASSWORD, CONF_SENSORS, CONF_OPTIMISTIC)
+from homeassistant.const import (CONF_NAME, CONF_USERNAME, CONF_PASSWORD, CONF_SENSORS, CONF_MONITORED_CONDITIONS)
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 
+from datetime import timedelta
+SCAN_INTERVAL = timedelta(seconds=60)
+
+SENSOR_TYPES = {
+    'pm25': ('pm25', 'μg/m³', 'blur'),
+    'hcho': ('hcho', 'mg/m³', 'biohazard'),
+    'temperature': ('temperature', '℃', 'thermometer'),
+    'humidity': ('humidity', '%', 'water-percent')
+}
+
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
+    vol.Optional(CONF_NAME, default='AirCat'): cv.string,
     vol.Required(CONF_USERNAME): cv.string,
     vol.Required(CONF_PASSWORD): cv.string,
-    vol.Optional(CONF_NAME, default='AirCat'): cv.string,
     vol.Optional(CONF_SENSORS, default=1): cv.positive_int,
-    vol.Optional(CONF_OPTIMISTIC, default=True): cv.boolean,
+    vol.Optional(CONF_MONITORED_CONDITIONS, default=['pm25', 'hcho', 'temperature', 'humidity']): vol.All(cv.ensure_list, vol.Length(min=1), [vol.In(SENSOR_TYPES)]),
 })
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
@@ -92,33 +119,31 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     username = config.get(CONF_USERNAME)
     password = config.get(CONF_PASSWORD)
     sensors = config.get(CONF_SENSORS)
-    optimistic = config.get(CONF_OPTIMISTIC)
-    LOGGER.debug('setup_platform: name=%s, username=%s, password=%s, sensors=%d, optimistic=%s', name, username, password, sensors, optimistic)
+    monitored_conditions = config[CONF_MONITORED_CONDITIONS]
+
+    LOGGER.debug('setup_platform: name=%s, username=%s, password=%s, sensors=%d', name, username, password, sensors)
 
     AirCatSensor._data = AirCatData(username, password)
-    AirCatSensor._optimistic = optimistic
+    AirCatSensor._update_index = 0
+    AirCatSensor._conditions_count = len(monitored_conditions)
 
     i = 0
     devices = []
-    prop_unit_icons = [('pm25', 'μg/m³', 'blur'), ('hcho', 'mg/m³', 'biohazard'), ('temperature', '℃', 'thermometer'), ('humidity', '%', 'water-percent')]
     while i < sensors:
-        for prop,unit,icon in prop_unit_icons:
-            devices.append(AirCatSensor(name, i, prop, unit, icon))
-            if not optimistic:
-                break
+        for type in monitored_conditions:
+            devices.append(AirCatSensor(name, i, type))
         i += 1
     add_devices(devices, True)
 
 class AirCatSensor(Entity):
 
-    def __init__(self, name, index, prop, unit, icon):
+    def __init__(self, name, index, type):
+        tname,unit,icon = SENSOR_TYPES[type]
         if index:
-            name += str(index + 1)
-        if AirCatSensor._optimistic:
-            name += ' ' + prop
-        self._name = name
+            name += str(index + 1)        
+        self._name = name + ' ' + tname
         self._index = index
-        self._prop = prop
+        self._type = type
         self._unit = unit
         self._icon = 'mdi:' + icon
 
@@ -142,11 +167,11 @@ class AirCatSensor(Entity):
     @property
     def state(self):
         attributes = self.attributes
-        return attributes[self._prop] if attributes else None
+        return attributes[self._type] if attributes else None
 
     @property
     def state_attributes(self):
-        return None if AirCatSensor._optimistic else self.attributes
+        return self.attributes if self._type == 'pm25' else None
 
     @property
     def attributes(self):
@@ -155,6 +180,8 @@ class AirCatSensor(Entity):
         return None
 
     def update(self):
-        if self._index == 0 and self._prop == 'pm25':
-            LOGGER.debug('update: name=%s', self._name)
+        LOGGER.debug('update: name=%s', self._name)
+        if AirCatSensor._update_index % AirCatSensor._conditions_count == 0:
             AirCatSensor._data.update()
+        AirCatSensor._update_index += 1
+        LOGGER.info('End update: name=%s', self._name)
