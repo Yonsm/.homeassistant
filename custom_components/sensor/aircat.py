@@ -48,7 +48,7 @@ class AirCatData():
                 self._token = None
                 result = self.fetch()
             self._devs = result['data']['devs']
-            LOGGER.debug('getIndexData: devs=%s', self._devs)
+            #LOGGER.debug('getIndexData: devs=%s', self._devs)
         except:
             import traceback
             LOGGER.error('exception: %s', traceback.format_exc())
