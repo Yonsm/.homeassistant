@@ -134,23 +134,27 @@ SENSOR_TYPES = {
     'so2': ('SO2', None, 'blur-radial')
 }
 
+DEFAULT_NAME='CaiYun'
+DEFAULT_MONITORED_CONDITIONS = ['weather', 'temperature', 'humidity', 'local_precipitation', 'aqi', 'pm25']
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
-    vol.Optional(CONF_NAME, default='CaiYun'): cv.string,
+    vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
     vol.Optional(CONF_LATITUDE): cv.latitude,
     vol.Optional(CONF_LONGITUDE): cv.longitude,
-    vol.Optional(CONF_MONITORED_CONDITIONS, default=['weather']): vol.All(cv.ensure_list, vol.Length(min=1)),#, [vol.In(SENSOR_TYPES)]),
+    vol.Optional(CONF_MONITORED_CONDITIONS, default=DEFAULT_MONITORED_CONDITIONS): vol.All(cv.ensure_list, vol.Length(min=1), [vol.In(SENSOR_TYPES)]),
 })
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
+    name = config.get(CONF_NAME)
     monitored_conditions = config[CONF_MONITORED_CONDITIONS]
     CaiYunSensor._data = {}
     CaiYunSensor._update_index = 0
     CaiYunSensor._conditions_count = len(monitored_conditions)
     CaiYunSensor._longitude = str(config.get(CONF_LONGITUDE, hass.config.longitude))
     CaiYunSensor._latitude = str(config.get(CONF_LATITUDE, hass.config.latitude))
-    devices = []
-    name = config.get(CONF_NAME)
+
     LOGGER.debug('setup_platform: name=%s, longitude=%s, latitude=%s, conditions=%d', name, CaiYunSensor._longitude, CaiYunSensor._latitude, CaiYunSensor._conditions_count)
+
+    devices = []
     for type in monitored_conditions:
         devices.append(CaiYunSensor(name, type))
     add_devices(devices, True)
