@@ -10,12 +10,7 @@ sensors:
     password: ********
     #sensors: 1
     #scan_interval: 60
-    monitored_conditions: # Optional
-      - temperature
-      - humidity
-      - pm25
-      - pm10
-      - hcho
+    #monitored_conditions: [pm25,hcho,temperature,humidity]
 '''
 
 import logging, os

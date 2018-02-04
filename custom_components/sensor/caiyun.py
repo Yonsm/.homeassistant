@@ -7,8 +7,8 @@ API Ref: http://wiki.swarma.net/index.php/%E5%BD%A9%E4%BA%91%E5%A4%A9%E6%B0%94AP
 YAML Example:
 sensor:
   - platform: caiyun
-    name: CaiYun # Optional
-    scan_interval: 1200 # Optional
+    #name: CaiYun
+    #scan_interval: 1200
     monitored_conditions: # Optional
       - weather
       - temperature
