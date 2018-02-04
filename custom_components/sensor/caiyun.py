@@ -72,7 +72,7 @@ def getWeatherData(longitude, latitude, metricv2=False):
         data['temperature'] = result['temperature']
         data['humidity'] = int(result['humidity'] * 100)
 
-        data['aqi'] = result['aqi']
+        data['aqi'] = int(result['aqi'])
         data['pm25'] = int(result['pm25'])
 
         # Optional action
