@@ -57,9 +57,9 @@ def getWeatherData(longitude, latitude, metricv2=False):
         url = 'http://api.caiyunapp.com/v2/UR8ASaplvIwavDfR/' + longitude + ',' + latitude + '/realtime.json'
         if metricv2:
             url += '?unit=metric:v2'
-        LOGGER.error('getWeatherData: %s', url)
+        LOGGER.debug('getWeatherData: %s', url)
         response = requests.get(url, headers=headers).json()
-        LOGGER.error('gotWeatherData: %s', response)
+        LOGGER.info('gotWeatherData: %s', response)
         result = response['result']
         if result['status'] != 'ok':
             raise
@@ -150,6 +150,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     CaiYunSensor._latitude = str(config.get(CONF_LATITUDE, hass.config.latitude))
     devices = []
     name = config.get(CONF_NAME)
+    LOGGER.debug('setup_platform: name=%s, longitude=%s, latitude=%s, conditions=%d', name, CaiYunSensor._longitude, CaiYunSensor._latitude, CaiYunSensor._conditions_count)
     for type in monitored_conditions:
         devices.append(CaiYunSensor(name, type))
     add_devices(devices, True)
@@ -191,9 +192,9 @@ class CaiYunSensor(Entity):
         return CaiYunSensor._data if self._type == 'weather' else None
 
     def update(self):
-        #LOGGER.debug('update: name=%s', self._name)
+        LOGGER.info('update: name=%s', self._name)
         if CaiYunSensor._update_index % CaiYunSensor._conditions_count == 0:
             CaiYunSensor._data = getWeatherData(CaiYunSensor._longitude, CaiYunSensor._latitude)
         CaiYunSensor._update_index += 1
-        #LOGGER.debug('End update: name=%s', self._name)
+        LOGGER.info('End update: name=%s', self._name)
  
