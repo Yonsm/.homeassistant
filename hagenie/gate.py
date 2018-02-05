@@ -25,7 +25,7 @@ def validateToken(payload):
     if 'accessToken' in payload:
         global _accessToken
         _accessToken = payload['accessToken']
-        return _accessToken.startswith('http')
+        return _accessToken.startswith('http') and (not 'xx.' in _accessToken)
     return False
 
 def haCall(cmd, data=None):
@@ -345,7 +345,7 @@ try:
             'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Query', 'name': 'Query', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            'payload':{'accessToken':'https://xxxx.xxxx.xxxx:8123?password'}
+            'payload':{'accessToken':'https://192.168.1.3:8123?password'}
             }
     _response = handleRequest(_request)
 except:
