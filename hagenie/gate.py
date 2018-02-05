@@ -43,7 +43,7 @@ def haCall(cmd, data=None):
     else:
         result = urlopen(url, data=data).read()
 
-    log('HA RESPONSE: ' + result)
+    #log('HA RESPONSE: ' + result)
     return json.loads(result)
 
 def errorResult(errorCode, messsage=None):
@@ -251,6 +251,8 @@ def discoveryDevice():
         attributes = item['attributes']
         if ('hidden' in attributes) and attributes['hidden']:
             continue
+        if not 'friendly_name' in attributes:
+            continue
         entity_id = item['entity_id']
         deviceType = guessDeviceType(entity_id)
         if deviceType == None:
@@ -284,8 +286,6 @@ def controlDevice(name, payload):
     service = getControlService(name)
     domain = entity_id[:entity_id.find('.')]
     data = '{"entity_id":"' + entity_id + '"}'
-    #global _accessToken
-    #_accessToken = 'http://192.168.1.3:8123?pass'
     items = haCall('services/' + domain + '/' + service, data)
     #for item in items:
     #    if item['entity_id'] == entity_id:
@@ -345,7 +345,7 @@ try:
             'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Query', 'name': 'Query', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            'payload':{'accessToken':'https://xxxx:8123?gjz'}
+            'payload':{'accessToken':'https://xxxx.xxxx.xxxx:8123?password'}
             }
     _response = handleRequest(_request)
 except:
