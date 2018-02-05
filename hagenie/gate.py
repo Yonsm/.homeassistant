@@ -39,9 +39,9 @@ def haCall(cmd, data=None):
         log(data)
     if url.startswith('https'): # We need extra requests lib for HTTPS POST
         import requests
-        result = requests.request(method, url, data=data, verify=False).text
+        result = requests.request(method, url, data=data, verify=False, timeout=10).text
     else:
-        result = urlopen(url, data=data).read()
+        result = urlopen(url, data=data, timeout=10).read()
 
     #log('HA RESPONSE: ' + result)
     return json.loads(result)
@@ -345,7 +345,7 @@ try:
             'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Query', 'name': 'Query', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            'payload':{'accessToken':'https://192.168.1.3:8123?password'}
+            'payload':{'accessToken':'https://xxx.xxx.x.xx:8123?password'}
             }
     _response = handleRequest(_request)
 except:
