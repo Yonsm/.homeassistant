@@ -100,7 +100,9 @@ def guessProperties(entity_id, attributes, state):
         return []
     return [{'name': name, 'value': state}]
 
-def guessDeviceType(entity_id):
+def guessDeviceType(entity_id, attributes):
+    if 'hagenie_deviceType' in attributes:
+        return attributes['hagenie_deviceType']
     if entity_id.startswith('sensor.'):#TODO: We don't support sensor at this time
         return None
     type = entity_id[:entity_id.find('.')] #if not entity_id.startswith('group.all_') else entity_id[10:-1]
@@ -254,7 +256,7 @@ def discoveryDevice():
         if not 'friendly_name' in attributes:
             continue
         entity_id = item['entity_id']
-        deviceType = guessDeviceType(entity_id)
+        deviceType = guessDeviceType(entity_id, attributes)
         if deviceType == None:
             continue
         device = {}
