@@ -97,7 +97,7 @@ SCAN_INTERVAL = timedelta(seconds=60)
 SENSOR_TYPES = {
     'pm25': ('pm25', 'μg/m³', 'blur'),
     'hcho': ('hcho', 'mg/m³', 'biohazard'),
-    'temperature': ('temperature', '℃', 'thermometer'),
+    'temperature': ('temperature', '°C', 'thermometer'),
     'humidity': ('humidity', '%', 'water-percent')
 }
 

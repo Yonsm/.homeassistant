@@ -115,7 +115,7 @@ SCAN_INTERVAL = timedelta(seconds=1200)
 
 SENSOR_TYPES = {
     'weather': ('Weather', None, 'help-circle-outline'),
-    'temperature': ('Temperature', '℃', 'thermometer'),
+    'temperature': ('Temperature', '°C', 'thermometer'),
     'humidity': ('Humidity', '%', 'water-percent'),
 
     'cloud_rate': ('Cloud Rate', None, 'cloud-outline'),
