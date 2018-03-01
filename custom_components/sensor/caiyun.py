@@ -140,7 +140,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_NAME, default='CaiYun'): cv.string,
     vol.Optional(CONF_LONGITUDE): cv.longitude,
     vol.Optional(CONF_LATITUDE): cv.latitude,
-    vol.Optional(CONF_MONITORED_CONDITIONS, default=['weather', 'temperature', 'humidity', 'local_precipitation', 'aqi', 'pm25']): vol.All(cv.ensure_list, vol.Length(min=1), [vol.In(SENSOR_TYPES)]),
+    vol.Optional(CONF_MONITORED_CONDITIONS, default=['weather', 'temperature', 'humidity', 'pm25']): vol.All(cv.ensure_list, vol.Length(min=1), [vol.In(SENSOR_TYPES)]),
 })
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
