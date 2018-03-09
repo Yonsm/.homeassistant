@@ -3,6 +3,8 @@
 
 import os, sys, cgi
 
+print('Content-Type: text/json\r\n')
+
 # Log HTTP request
 REQUEST_METHOD = os.getenv('REQUEST_METHOD')
 #if REQUEST_METHOD:
@@ -15,10 +17,11 @@ try:
     sys.stderr.write(key + '=' + form[key].value + '\n')
   access_token = form['client_id'].value + '?' + form['client_secret'].value # Trick: Use access_token to pass client_id and client_secret
 except:
+  import traceback
+  sys.stderr.write(traceback.format_exc())
   access_token = 'http://192.168.1.10:8123?password'
 
 # Print content
-print('Content-Type: text/json\r\n')
 print('{\
 "access_token": "' + access_token + '",\
 "expires_in": 3600,\

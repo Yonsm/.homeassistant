@@ -25,7 +25,12 @@ def validateToken(payload):
     if 'accessToken' in payload:
         global _accessToken
         _accessToken = payload['accessToken']
-        return _accessToken.startswith('http') and (not 'xx.' in _accessToken)
+        if _accessToken.startswith('http') and (not 'xx.' in _accessToken):
+            parts = _accessToken.split(':')
+            if not parts[1].startswith('//'):
+                _accessToken = parts[0] + '://' + parts[1] + ':' + parts[2]
+                #log('Rebuild accessToken: ' + _accessToken)
+            return True
     return False
 
 def haCall(cmd, data=None):
