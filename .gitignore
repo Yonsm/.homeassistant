@@ -2,3 +2,4 @@
 server.pem
 
 __pycache__
+.aircat.token
