@@ -7,9 +7,12 @@ https://home-assistant.io/components/climate/saswell
 
 
 from datetime import timedelta
-from homeassistant.components.climate import (ClimateDevice, SUPPORT_TARGET_TEMPERATURE, SUPPORT_AWAY_MODE, SUPPORT_ON_OFF)
+from homeassistant.components.climate import (
+    ClimateDevice, SUPPORT_TARGET_TEMPERATURE, SUPPORT_AWAY_MODE,
+    SUPPORT_ON_OFF, SUPPORT_OPERATION_MODE)
 from homeassistant.components.sensor import PLATFORM_SCHEMA
-from homeassistant.const import (CONF_NAME, CONF_USERNAME, CONF_PASSWORD, CONF_DEVICES,TEMP_CELSIUS, ATTR_TEMPERATURE)
+from homeassistant.const import (CONF_NAME, CONF_USERNAME, CONF_PASSWORD,
+    CONF_DEVICES,TEMP_CELSIUS, ATTR_TEMPERATURE)
 
 import homeassistant.helpers.config_validation as cv
 import logging
@@ -70,7 +73,8 @@ class SaswellClimate(ClimateDevice):
     @property
     def supported_features(self):
         """Return the list of supported features."""
-        return SUPPORT_TARGET_TEMPERATURE | SUPPORT_AWAY_MODE | SUPPORT_ON_OFF
+        return SUPPORT_TARGET_TEMPERATURE | SUPPORT_AWAY_MODE | \
+            SUPPORT_ON_OFF | SUPPORT_OPERATION_MODE
 
     #@property
     #def should_poll(self):
@@ -111,6 +115,24 @@ class SaswellClimate(ClimateDevice):
     def is_on(self):
         """Return true if the device is on."""
         return self.get_prop('on', False)
+
+    @property
+    def current_operation(self):
+        """Return current operation ie. heat, cool, idle."""
+        return 'heat' if self.is_on else 'off'
+
+    @property
+    def operation_list(self):
+        """Return the list of available operation modes."""
+        return ['heat', 'off']
+
+    def set_operation_mode(self, operation_mode):
+        """Set new target temperature."""
+        if operation_mode == 'off':
+            self.turn_off()
+        else:
+            self.turn_on()
+        self.schedule_update_ha_state()
 
     def set_temperature(self, **kwargs):
         """Set new target temperatures."""
@@ -249,6 +271,7 @@ class SaswellData():
             else:
                 return None
         headers = {'User-Agent': USER_AGENT}
-        url += "&timestamp=%s&token=%s" % (time.strftime('%Y-%m-%d%%20%H%%3A%M%%3A%S'), self._token)
+        url += "&timestamp=%s&token=%s" % \
+            (time.strftime('%Y-%m-%d%%20%H%%3A%M%%3A%S'), self._token)
         _LOGGER.debug("URL: %s", url)
         return requests.get(url, headers=headers).json()
