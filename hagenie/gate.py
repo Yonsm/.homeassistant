@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# http://doc-bot.tmall.com/docs/doc.htm?treeId=393&articleId=107674&docType=1
+
 import os, sys, json
 try:
     from urllib2 import urlopen
@@ -105,6 +107,7 @@ def guessProperties(entity_id, attributes, state):
         return []
     return [{'name': name, 'value': state}]
 
+# http://doc-bot.tmall.com/docs/doc.htm?treeId=393&articleId=108271&docType=1
 def guessDeviceType(entity_id, attributes):
     if 'hagenie_deviceType' in attributes:
         return attributes['hagenie_deviceType']
@@ -114,48 +117,13 @@ def guessDeviceType(entity_id, attributes):
         'fan': 'fan',
         'light': 'light',
         'switch': 'switch',
-        'remote': 'switch',
-        'climate': 'aircondition',
+        'remote': 'telecontroller',
+        'climate': 'switch',
         'vacuum': 'roboticvacuum',
         'media_player': 'television',
         }
-    if domain not in domainTypes:
-        return None
 
-    genieTypes = [
-        'television',#: '电视',
-        'light',#: '灯',
-        'aircondition',#: '空调',
-        'airpurifier',#: '空气净化器',
-        'outlet',#: '插座',
-        'switch',#: '开关',
-        'roboticvacuum',#: '扫地机器人',
-        'curtain',#: '窗帘',
-        'humidifier',#: '加湿器',
-        'fan',#: '风扇',
-        'bottlewarmer',#: '暖奶器',
-        'soymilkmaker',#: '豆浆机',
-        'kettle',#: '电热水壶',
-        'watercooler',#: '饮水机',
-        'cooker',#: '电饭煲',
-        'waterheater',#: '热水器',
-        'oven',#: '烤箱',
-        'waterpurifier',#: '净水器',
-        'fridge',#: '冰箱',
-        'STB',#: '机顶盒',
-        'sensor',#: '传感器',
-        'washmachine',#: '洗衣机',
-        'smartbed',#: '智能床',
-        'aromamachine',#: '香薰机',
-        'window',#: '窗',
-        'kitchenventilator',#: '抽油烟机',
-        'fingerprintlock'#: '指纹锁'
-    ]
-    for genieType in genieTypes:
-        if genieType in entity_id:
-            return genieType
-
-    return domainTypes[domain]
+    return domainTypes[domain] if domain in domainTypes else None
 
 # https://open.bot.tmall.com/oauth/api/aliaslist
 def guessDeviceName(entity_id, attributes, places):#, aliases):
