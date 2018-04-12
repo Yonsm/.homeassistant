@@ -108,24 +108,21 @@ def guessProperties(entity_id, attributes, state):
 def guessDeviceType(entity_id, attributes):
     if 'hagenie_deviceType' in attributes:
         return attributes['hagenie_deviceType']
-    if entity_id.startswith('sensor.'):#TODO: We don't support sensor at this time
-        return None
-    type = entity_id[:entity_id.find('.')] #if not entity_id.startswith('group.all_') else entity_id[10:-1]
-    #if type == 'switch':
-    #    return outlet if 'outlet' in entity_id else type
-    #elif type in ['sensor', 'light', 'fan']:
-    #    return type
-    if type == 'media_player':
-        return 'television'
-    elif type == 'vacuum':
-        return 'roboticvacuum'
-    elif 'purifier' in entity_id:
-        return 'airpurifier'
 
-    if entity_id.startswith('group.all_'):
+    domain = entity_id[:entity_id.find('.')]
+    domainTypes = {
+        'fan': 'fan',
+        'light': 'light',
+        'switch': 'switch',
+        'remote': 'switch',
+        'climate': 'aircondition',
+        'vacuum': 'roboticvacuum',
+        'media_player': 'television',
+        }
+    if domain not in domainTypes:
         return None
 
-    deviceTypes = [
+    genieTypes = [
         'television',#: '电视',
         'light',#: '灯',
         'aircondition',#: '空调',
@@ -154,10 +151,11 @@ def guessDeviceType(entity_id, attributes):
         'kitchenventilator',#: '抽油烟机',
         'fingerprintlock'#: '指纹锁'
     ]
-    for deviceType in deviceTypes:
-        if deviceType in entity_id:
-            return deviceType
-    return None
+    for genieType in genieTypes:
+        if genieType in entity_id:
+            return genieType
+
+    return domainTypes[domain]
 
 # https://open.bot.tmall.com/oauth/api/aliaslist
 def guessDeviceName(entity_id, attributes, places):#, aliases):
