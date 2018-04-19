@@ -32,10 +32,10 @@ sensor:
 '''
 
 import logging, time
-import requests, json
+import requests, json, random
 
 # Const
-USER_AGENT = 'ColorfulCloudsPro/3.2.0 (iPhone; iOS 11.2.2; Scale/2.00)'
+USER_AGENT = 'ColorfulCloudsPro/3.2.2 (iPhone; iOS 11.3; Scale/3.00)'
 LOGGER = logging.getLogger(__name__)
 WEATHER_ICONS = {
     'CLEAR_DAY': ('晴天','sunny'),
@@ -55,14 +55,15 @@ WEATHER_ICONS = {
 def getWeatherData(longitude, latitude, metricv2=False):
     data = {}
     try:
-        headers = {'User-Agent': USER_AGENT}
-        url = 'http://api.caiyunapp.com/v2/UR8ASaplvIwavDfR/' + longitude + ',' + latitude + '/realtime.json'
+        headers = {'User-Agent': USER_AGENT, 'Accept': 'application/json', 'Accept-Language': 'zh-Hans-CN;q=1'}
+        #url = 'http://api.caiyunapp.com/v2/UR8ASaplvIwavDfR/' + longitude + ',' + latitude + '/realtime.json'
+        url = 'http://api.caiyunapp.com/v2/UR8ASaplvIwavDfR/%s,%s/weather?lang=zh_CN&tzshift=28800&timestamp=%d&hourlysteps=384&dailysteps=16&alert=true&device_id=5F544F93-44F1-43C9-94B2-%12X' % (longitude, latitude, int(time.time()), random.randint(0,0xffffffffffff))
         if metricv2:
             url += '?unit=metric:v2'
         #LOGGER.debug('getWeatherData: %s', url)
         response = requests.get(url, headers=headers).json()
         #LOGGER.info('gotWeatherData: %s', response)
-        result = response['result']
+        result = response['result']['realtime']
         if result['status'] != 'ok':
             raise
 
@@ -203,4 +204,3 @@ class CaiYunSensor(Entity):
             CaiYunSensor._data = getWeatherData(CaiYunSensor._longitude, CaiYunSensor._latitude)
         CaiYunSensor._update_index += 1
         #LOGGER.info('End update: name=%s', self._name)
- 
