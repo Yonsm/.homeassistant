@@ -9,10 +9,12 @@ try:
 except ImportError:
     from urllib.request import urlopen
 
+
 #
 def log(message):
     #pass
     sys.stderr.write(message + '\n')
+
 
 # Log HTTP payload
 REQUEST_METHOD = os.getenv('REQUEST_METHOD')
@@ -20,6 +22,7 @@ if REQUEST_METHOD:
     log(REQUEST_METHOD + ' ' + os.environ['SCRIPT_NAME'] + '?' + os.environ['QUERY_STRING'] + '\n')
     #if payload_METHOD == 'POST':
     #    log(sys.stdin.read())
+
 
 _accessToken = None
 def validateToken(payload):
@@ -34,6 +37,7 @@ def validateToken(payload):
                 #log('Rebuild accessToken: ' + _accessToken)
             return True
     return False
+
 
 def haCall(cmd, data=None):
     index = _accessToken.index('?')
@@ -53,6 +57,7 @@ def haCall(cmd, data=None):
     #log('HA RESPONSE: ' + result)
     return json.loads(result)
 
+
 def errorResult(errorCode, messsage=None):
     messages = {
         'INVALIDATE_CONTROL_ORDER':    'invalidate control order',
@@ -65,6 +70,133 @@ def errorResult(errorCode, messsage=None):
     }
     return {'errorCode': errorCode, 'message': messsage if messsage else messages[errorCode]}
 
+
+DEVICE_TYPES = [
+    'television',#: '电视',
+    'light',#: '灯',
+    'aircondition',#: '空调',
+    'airpurifier',#: '空气净化器',
+    'outlet',#: '插座',
+    'switch',#: '开关',
+    'roboticvacuum',#: '扫地机器人',
+    'curtain',#: '窗帘',
+    'humidifier',#: '加湿器',
+    'fan',#: '风扇',
+    'bottlewarmer',#: '暖奶器',
+    'soymilkmaker',#: '豆浆机',
+    'kettle',#: '电热水壶',
+    'watercooler',#: '饮水机',
+    'cooker',#: '电饭煲',
+    'waterheater',#: '热水器',
+    'oven',#: '烤箱',
+    'waterpurifier',#: '净水器',
+    'fridge',#: '冰箱',
+    'STB',#: '机顶盒',
+    'sensor',#: '传感器',
+    'washmachine',#: '洗衣机',
+    'smartbed',#: '智能床',
+    'aromamachine',#: '香薰机',
+    'window',#: '窗',
+    'kitchenventilator',#: '抽油烟机',
+    'fingerprintlock',#: '指纹锁'
+    'telecontroller',#: '万能遥控器'
+    'dishwasher',#: '洗碗机'
+    'dehumidifier',#: '除湿机'
+]
+
+INCLUDE_DOMAINS = {
+    'climate': 'switch',
+    'fan': 'fan',
+    'light': 'light',
+    'media_player': 'television',
+    'remote': 'telecontroller',
+    'switch': 'switch',
+    'vacuum': 'roboticvacuum',
+    }
+
+EXCLUDE_DOMAINS = [
+    'automation',
+    'binary_sensor',
+    'device_tracker',
+    'group',
+    'sensor',
+    'zone',
+    ]
+
+# http://doc-bot.tmall.com/docs/doc.htm?treeId=393&articleId=108271&docType=1
+def guessDeviceType(entity_id, attributes):
+    if 'hagenie_deviceType' in attributes:
+        return attributes['hagenie_deviceType']
+
+    # Exclude with domain
+    domain = entity_id[:entity_id.find('.')]
+    if domain in EXCLUDE_DOMAINS:
+        return None
+
+    # Guess from entity_id
+    for deviceType in DEVICE_TYPES:
+        if deviceType in entity_id:
+            return deviceType
+
+    # Map from domain
+    return INCLUDE_DOMAINS[domain] if domain in INCLUDE_DOMAINS else None
+
+
+# https://open.bot.tmall.com/oauth/api/aliaslist
+def guessDeviceName(entity_id, attributes, places, aliases):
+    if 'hagenie_deviceName' in attributes:
+        return attributes['hagenie_deviceName']
+
+    # Remove place prefix
+    name = attributes['friendly_name']
+    for place in places:
+        if name.startswith(place):
+            name = name[len(place):]
+            break
+
+    # Name validation
+    for alias in aliases:
+        if name == alias['key'] or name in alias['value']:
+        	return name
+
+    return None
+
+
+#
+def groupsAttributes(items):
+    groups_attributes = []
+    for item in items:
+        group_entity_id = item['entity_id']
+        if group_entity_id.startswith('group.') and not group_entity_id.startswith('group.all_'):
+            group_attributes = item['attributes']
+            if 'entity_id' in group_attributes:
+                groups_attributes.append(group_attributes)
+    return groups_attributes
+
+
+# https://open.bot.tmall.com/oauth/api/placelist
+def guessZone(entity_id, attributes, places, groups_attributes):
+    if 'hagenie_zone' in attributes:
+        return attributes['hagenie_zone']
+
+    # Guess with friendly_name prefix
+    name = attributes['friendly_name']
+    for place in places:
+        if name.startswith(place):
+            return place
+
+    # Guess from HomeAssistant group
+    for group_attributes in groups_attributes:
+        for child_entity_id in group_attributes['entity_id']:
+            if child_entity_id == entity_id:
+                if 'hagenie_zone' in group_attributes:
+                    return group_attributes['hagenie_zone']
+                return group_attributes['friendly_name']
+
+    return None
+
+
+#
 def guessProperties(entity_id, attributes, state):
     unit = attributes['unit_of_measurement'] if 'unit_of_measurement' in attributes else ''
     if 'hagenie_propertyName' in attributes:
@@ -107,60 +239,8 @@ def guessProperties(entity_id, attributes, state):
         return []
     return [{'name': name, 'value': state}]
 
-# http://doc-bot.tmall.com/docs/doc.htm?treeId=393&articleId=108271&docType=1
-def guessDeviceType(entity_id, attributes):
-    if 'hagenie_deviceType' in attributes:
-        return attributes['hagenie_deviceType']
 
-    domain = entity_id[:entity_id.find('.')]
-    domainTypes = {
-        'fan': 'fan',
-        'light': 'light',
-        'switch': 'switch',
-        'remote': 'telecontroller',
-        'climate': 'switch',
-        'vacuum': 'roboticvacuum',
-        'media_player': 'television',
-        }
-
-    return domainTypes[domain] if domain in domainTypes else None
-
-# https://open.bot.tmall.com/oauth/api/aliaslist
-def guessDeviceName(entity_id, attributes, places):#, aliases):
-    if 'hagenie_deviceName' in attributes:
-        return attributes['hagenie_deviceName']
-
-    name = attributes['friendly_name']
-    for place in places:
-        if name.startswith(place):
-            name = name[len(place):]
-            break
-
-    #for key in aliases:
-    #    if name.startswith
-
-    return name
-
-# https://open.bot.tmall.com/oauth/api/placelist
-def guessZone(entity_id, attributes, places, items):
-    if 'hagenie_zone' in attributes:
-        return attributes['hagenie_zone']
-    name = attributes['friendly_name']
-    for place in places:
-        if name.startswith(place):
-            return place
-    for item in items: # Guess from HA group
-        group_entity_id = item['entity_id']
-        if group_entity_id.startswith('group.') and not group_entity_id.startswith('group.all_'):
-            group_attributes = item['attributes']
-            if 'entity_id' in group_attributes:
-                for child_entity_id in group_attributes['entity_id']:
-                    if child_entity_id == entity_id:
-                        if 'hagenie_zone' in group_attributes:
-                            return group_attributes['hagenie_zone']
-                        return group_attributes['friendly_name']
-    return '客厅'
-
+#
 def guessActions(entity_id, services=None):
     '''type = entity_id[:entity_id.find('.')]
     gactions = [
@@ -208,41 +288,60 @@ def guessActions(entity_id, services=None):
     #for service in services:
     #    if type == service['domain']:
     #        for action in service['services']:
-    return [
-            'TurnOn',
-            'TurnOff'
-            ]#TODO
+    return ['TurnOn', 'TurnOff']#TODO
+
 
 #
 def discoveryDevice():
-    devices = []
+
     items = haCall('states')
     #services = haCall('services')
+
     places = json.loads(urlopen('https://open.bot.tmall.com/oauth/api/placelist').read())['data']
-    #aliases = json.loads(requests.get('https://open.bot.tmall.com/oauth/api/aliaslist').text)['data']
+    aliases = json.loads(urlopen('https://open.bot.tmall.com/oauth/api/aliaslist').read())['data']
+    aliases.append({'key': '电视', 'value': ['电视机']})
+    groups_ttributes = groupsAttributes(items)
+
+    devices = []
     for item in items:
         attributes = item['attributes']
-        if ('hidden' in attributes) and attributes['hidden']:
+
+        if attributes.get('hidden'):
             continue
-        if not 'friendly_name' in attributes:
+
+        friendly_name = attributes.get('friendly_name')
+        if friendly_name is None:
             continue
+
         entity_id = item['entity_id']
         deviceType = guessDeviceType(entity_id, attributes)
-        if deviceType == None:
+        if deviceType is None:
             continue
-        device = {}
-        device['deviceId'] = entity_id
-        device['deviceName'] = guessDeviceName(entity_id, attributes, places)#, aliases)
-        device['deviceType'] = deviceType
-        device['zone'] = guessZone(entity_id, attributes, places, items)
-        device['brand'] = 'HomeAssistant'
-        device['model'] = attributes['friendly_name']
-        #log(device['zone'] + ':' + device['deviceName'])
-        device['icon'] = 'https://home-assistant.io/demo/favicon-192x192.png'
-        device['properties'] = guessProperties(entity_id, attributes, item['state'])
-        device['actions'] = guessActions(entity_id)#, services)
-        devices.append(device)
+
+        deviceName = guessDeviceName(entity_id, attributes, places, aliases)
+        if deviceName is None:
+            continue
+
+        zone = guessZone(entity_id, attributes, places, groups_ttributes)
+        if zone is None:
+            continue
+
+        devices.append({
+            'deviceId': entity_id,
+            'deviceName': deviceName,
+            'deviceType': deviceType,
+            'zone': zone,
+            'model': friendly_name,
+            'brand': 'HomeAssistant',
+            'icon': 'https://home-assistant.io/demo/favicon-192x192.png',
+            'properties': guessProperties(entity_id, attributes, item['state']),
+            'actions': guessActions(entity_id)#, services)
+            })
+
+        #log(str(len(devices)) + '. ' + deviceType + ':' + zone + '/' + deviceName + ((' <= ' + friendly_name) if friendly_name != deviceName else ''))
+
     return {'devices': devices}
+
 
 #
 def getControlService(action):
@@ -252,6 +351,7 @@ def getControlService(action):
         service += (('_' if i else '') + c.lower()) if c.isupper() else c
         i += 1
     return service;
+
 
 #
 def controlDevice(name, payload):
@@ -265,6 +365,7 @@ def controlDevice(name, payload):
     #        return {}
     return {} if (type(items) is list) else errorResult('IOT_DEVICE_OFFLINE')
 
+
 #
 def queryDevice(name, payload):
     entity_id = payload['deviceId']
@@ -272,6 +373,7 @@ def queryDevice(name, payload):
     if type(item) is dict:
         return {'powerstate': item['state']} #TODO
     return errorResult('IOT_DEVICE_OFFLINE')
+
 
 #
 def handleRequest(request):
@@ -306,6 +408,7 @@ def handleRequest(request):
     if properties:
         response['properties'] = properties
     return response
+
 
 # Main process
 try:
