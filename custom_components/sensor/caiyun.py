@@ -36,7 +36,8 @@ import requests, json, random
 
 # Const
 USER_AGENT = 'ColorfulCloudsPro/3.2.2 (iPhone; iOS 11.3; Scale/3.00)'
-LOGGER = logging.getLogger(__name__)
+DEVIEC_ID = '5F544F93-44F1-43C9-94B2-%12X' % random.randint(0,0xffffffffffff)
+
 WEATHER_ICONS = {
     'CLEAR_DAY': ('晴天','sunny'),
     'CLEAR_NIGHT': ('晴夜','night'),
@@ -51,7 +52,8 @@ WEATHER_ICONS = {
     'SLEET': ('冻雨','snowy-rainy')
 }
 
-DEVIEC_ID = random.randint(0,0xffffffffffff)
+LOGGER = logging.getLogger(__name__)
+
 
 #
 def getWeatherData(longitude, latitude, metricv2=False):
@@ -59,7 +61,7 @@ def getWeatherData(longitude, latitude, metricv2=False):
     try:
         headers = {'User-Agent': USER_AGENT, 'Accept': 'application/json', 'Accept-Language': 'zh-Hans-CN;q=1'}
         #url = 'http://api.caiyunapp.com/v2/UR8ASaplvIwavDfR/' + longitude + ',' + latitude + '/realtime.json'
-        url = 'http://api.caiyunapp.com/v2/UR8ASaplvIwavDfR/%s,%s/weather?lang=zh_CN&tzshift=28800&timestamp=%d&hourlysteps=384&dailysteps=16&alert=true&device_id=5F544F93-44F1-43C9-94B2-%12X' % (longitude, latitude, int(time.time()), DEVIEC_ID)
+        url = 'http://api.caiyunapp.com/v2/UR8ASaplvIwavDfR/%s,%s/weather?lang=zh_CN&tzshift=28800&timestamp=%d&hourlysteps=384&dailysteps=16&alert=true&device_id=%s' % (longitude, latitude, int(time.time()), DEVIEC_ID)
         if metricv2:
             url += '?unit=metric:v2'
         #LOGGER.debug('getWeatherData: %s', url)
