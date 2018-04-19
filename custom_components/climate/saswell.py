@@ -12,7 +12,7 @@ from homeassistant.components.climate import (
     SUPPORT_ON_OFF, SUPPORT_OPERATION_MODE)
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import (CONF_NAME, CONF_USERNAME, CONF_PASSWORD,
-    CONF_DEVICES,TEMP_CELSIUS, ATTR_TEMPERATURE)
+    CONF_DEVICES, ATTR_TEMPERATURE)
 
 import homeassistant.helpers.config_validation as cv
 import logging
@@ -89,7 +89,12 @@ class SaswellClimate(ClimateDevice):
     @property
     def temperature_unit(self):
         """Return the unit of measurement."""
-        return TEMP_CELSIUS
+        return self.unit_of_measurement
+
+    @property
+    def target_temperature_step(self):
+        """Return the supported step of target temperature."""
+        return 1
 
     @property
     def available(self):
@@ -132,33 +137,28 @@ class SaswellClimate(ClimateDevice):
             self.turn_off()
         else:
             self.turn_on()
-        self.schedule_update_ha_state()
 
     def set_temperature(self, **kwargs):
         """Set new target temperatures."""
-        if kwargs.get(ATTR_TEMPERATURE) is not None:
-            self.set_prop('target', kwargs.get(ATTR_TEMPERATURE))
-        self.schedule_update_ha_state()
+        temperature = kwargs.get(ATTR_TEMPERATURE)
+        if temperature is not None:
+            self.set_prop('target', temperature)
 
     def turn_away_mode_on(self):
         """Turn away mode on."""
         self.set_prop('away', True)
-        self.schedule_update_ha_state()
 
     def turn_away_mode_off(self):
         """Turn away mode off."""
         self.set_prop('away', False)
-        self.schedule_update_ha_state()
 
     def turn_on(self):
         """Turn on."""
         self.set_prop('on', True)
-        self.schedule_update_ha_state()
 
     def turn_off(self):
         """Turn off."""
         self.set_prop('on', False)
-        self.schedule_update_ha_state()
 
     def update(self):
         """Get the latest data from Phicomm server and update the state."""
@@ -175,6 +175,7 @@ class SaswellClimate(ClimateDevice):
     def set_prop(self, prop, value):
         """Set property with current device index."""
         self.saswell.control(self._index, prop, value)
+        self.schedule_update_ha_state()
 
 
 class SaswellData():

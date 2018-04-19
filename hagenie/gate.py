@@ -108,7 +108,7 @@ DEVICE_TYPES = [
 ]
 
 INCLUDE_DOMAINS = {
-    'climate': 'switch',
+    'climate': 'aircondition',
     'fan': 'fan',
     'light': 'light',
     'media_player': 'television',
