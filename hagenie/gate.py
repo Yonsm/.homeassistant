@@ -25,13 +25,16 @@ if REQUEST_METHOD:
 
 
 _accessToken = None
+_ignoreAlias = False
 def validateToken(payload):
     #return 'accessToken' in payload and payload['accessToken'] == '25ec6cb46565638b1d3f58c3230ce99742a23622'
     if 'accessToken' in payload:
         global _accessToken
+        global _ignoreAlias
         _accessToken = payload['accessToken']
         if _accessToken.startswith('http') and (not 'xx.' in _accessToken):
             parts = _accessToken.split(':')
+            _ignoreAlias = parts[1][-1:].isupper()   # Trick
             if not parts[1].startswith('//'):
                 _accessToken = parts[0] + '://' + parts[1] + ':' + parts[2]
                 #log('Rebuild accessToken: ' + _accessToken)
@@ -153,6 +156,9 @@ def guessDeviceName(entity_id, attributes, places, aliases):
         if name.startswith(place):
             name = name[len(place):]
             break
+
+    if aliases is None:
+        return name
 
     # Name validation
     for alias in aliases:
@@ -298,8 +304,12 @@ def discoveryDevice():
     #services = haCall('services')
 
     places = json.loads(urlopen('https://open.bot.tmall.com/oauth/api/placelist').read())['data']
-    aliases = json.loads(urlopen('https://open.bot.tmall.com/oauth/api/aliaslist').read())['data']
-    aliases.append({'key': '电视', 'value': ['电视机']})
+    if not _ignoreAlias:
+        aliases = json.loads(urlopen('https://open.bot.tmall.com/oauth/api/aliaslist').read())['data']
+        aliases.append({'key': '电视', 'value': ['电视机']})
+    else:
+        aliases = None
+        log('Ignore alias checking to speed up!')
     groups_ttributes = groupsAttributes(items)
 
     devices = []
@@ -338,7 +348,8 @@ def discoveryDevice():
             'actions': guessActions(entity_id)#, services)
             })
 
-        #log(str(len(devices)) + '. ' + deviceType + ':' + zone + '/' + deviceName + ((' <= ' + friendly_name) if friendly_name != deviceName else ''))
+        if not REQUEST_METHOD:
+            log(str(len(devices)) + '. ' + deviceType + ':' + zone + '/' + deviceName + ((' <= ' + friendly_name) if friendly_name != deviceName else ''))
 
     return {'devices': devices}
 
@@ -421,7 +432,7 @@ try:
             'header':{'namespace': 'AliGenie.Iot.Device.Discovery', 'name': 'DiscoveryDevices', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Control', 'name': 'TurnOn', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
             #'header':{'namespace': 'AliGenie.Iot.Device.Query', 'name': 'Query', 'messageId': 'd0c17289-55df-4c8c-955f-b735e9bdd305'},
-            'payload':{'accessToken':'https://xxx.xxx.x.xx:8123?password'}
+            'payload':{'accessToken':'https://xxx.xxx.x.xxX:8123?password'}
             }
     _response = handleRequest(_request)
 except:
@@ -434,5 +445,5 @@ _result = json.dumps(_response, indent=2)
 if REQUEST_METHOD:
     log('RESPONSE ' + _result)
 
-print('Content-Type: text/json\r\n')
-print(_result)
+    print('Content-Type: text/json\r\n')
+    print(_result)
