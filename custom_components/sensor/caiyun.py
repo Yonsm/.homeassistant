@@ -51,13 +51,15 @@ WEATHER_ICONS = {
     'SLEET': ('冻雨','snowy-rainy')
 }
 
+DEVIEC_ID = random.randint(0,0xffffffffffff)
+
 #
 def getWeatherData(longitude, latitude, metricv2=False):
     data = {}
     try:
         headers = {'User-Agent': USER_AGENT, 'Accept': 'application/json', 'Accept-Language': 'zh-Hans-CN;q=1'}
         #url = 'http://api.caiyunapp.com/v2/UR8ASaplvIwavDfR/' + longitude + ',' + latitude + '/realtime.json'
-        url = 'http://api.caiyunapp.com/v2/UR8ASaplvIwavDfR/%s,%s/weather?lang=zh_CN&tzshift=28800&timestamp=%d&hourlysteps=384&dailysteps=16&alert=true&device_id=5F544F93-44F1-43C9-94B2-%12X' % (longitude, latitude, int(time.time()), random.randint(0,0xffffffffffff))
+        url = 'http://api.caiyunapp.com/v2/UR8ASaplvIwavDfR/%s,%s/weather?lang=zh_CN&tzshift=28800&timestamp=%d&hourlysteps=384&dailysteps=16&alert=true&device_id=5F544F93-44F1-43C9-94B2-%12X' % (longitude, latitude, int(time.time()), DEVIEC_ID)
         if metricv2:
             url += '?unit=metric:v2'
         #LOGGER.debug('getWeatherData: %s', url)
