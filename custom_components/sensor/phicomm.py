@@ -7,12 +7,15 @@ https://home-assistant.io/components/sensor.phicomm/
 
 import asyncio
 import logging
-import requests
-import voluptuous as vol
+
 from datetime import timedelta
 
+import requests
+import voluptuous as vol
+
 from homeassistant.components.sensor import PLATFORM_SCHEMA
-from homeassistant.const import (CONF_NAME, CONF_USERNAME, CONF_PASSWORD,
+from homeassistant.const import (
+    CONF_NAME, CONF_USERNAME, CONF_PASSWORD,
     CONF_SENSORS, CONF_SCAN_INTERVAL, TEMP_CELSIUS)
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.event import async_track_time_interval
@@ -65,9 +68,11 @@ def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
 
     phicomm = PhicommData(hass, username, password)
     devices = yield from phicomm.make_sensors(name, sensors)
-    async_add_devices(devices)
-
-    async_track_time_interval(hass, phicomm.async_update, scan_interval)
+    if devices:
+        async_add_devices(devices)
+        async_track_time_interval(hass, phicomm.async_update, scan_interval)
+    else:
+        _LOGGER.error("No sensors added: %s.", name)
 
 
 class PhicommSensor(Entity):
@@ -109,8 +114,7 @@ class PhicommSensor(Entity):
     @property
     def state(self):
         """Return the state of the device."""
-        data = self.data
-        return data.get(self._sensor_type) if data else None
+        return self.state_from_devs(self.phicomm.devs)
 
     @property
     def device_state_attributes(self):
@@ -130,6 +134,12 @@ class PhicommSensor(Entity):
             return devs[self._index].get('catDev')
         return None
 
+    def state_from_devs(self, devs):
+        """Get state from Phicomm devs."""
+        if devs and self._index < len(devs):
+            return devs[self._index].get('catDev').get(self._sensor_type)
+        return None
+
 
 class PhicommData():
     """Class for handling the data retrieval."""
@@ -140,6 +150,8 @@ class PhicommData():
         self._username = username
         self._password = password
         self._token_path = hass.config.path(TOKEN_FILE + username)
+        self._token = None
+        self._devices = None
         self.devs = None
 
     @asyncio.coroutine
@@ -150,13 +162,11 @@ class PhicommData():
                 self._token = file.read()
                 _LOGGER.debug("Load: %s => %s", self._token_path, self._token)
         except BaseException:
-            self._token = None
+            pass
 
         self.update_data()
-
         if not self.devs:
-            _LOGGER.error("No sensors added: %s.", name)
-            return
+            return None
 
         devices = []
         for index in range(len(self.devs)):
@@ -168,18 +178,13 @@ class PhicommData():
     @asyncio.coroutine
     def async_update(self, time):
         """Update online data and update ha state."""
-        _LOGGER.debug("BEGIN update %s ...", time)
-        devs = self.devs
+        old_devs = self.devs
         self.update_data()
 
         tasks = []
         for device in self._devices:
-            state = devs[device._index].get('catDev').get(device._sensor_type) \
-                if devs and device._index < len(devs) else None
-            if state == device.state:
-                _LOGGER.info('%s: %s', device.name, state)
-            else:
-                _LOGGER.info('%s: %s => %s', device.name, state, device.state)
+            if device.state != device.state_from_devs(old_devs):
+                _LOGGER.info('%s: => %s', device.name, device.state)
                 tasks.append(device.async_update_ha_state())
 
         if tasks:
