@@ -31,6 +31,7 @@ sensor:
       - so2
 '''
 
+import asyncio
 import logging, time
 import requests, json, random
 
@@ -59,7 +60,9 @@ LOGGER = logging.getLogger(__name__)
 def getWeatherData(longitude, latitude, metricv2=False):
     data = {}
     try:
-        headers = {'User-Agent': USER_AGENT, 'Accept': 'application/json', 'Accept-Language': 'zh-Hans-CN;q=1'}
+        headers = {'User-Agent': USER_AGENT,
+                   'Accept': 'application/json',
+                   'Accept-Language': 'zh-Hans-CN;q=1'}
         #url = 'http://api.caiyunapp.com/v2/UR8ASaplvIwavDfR/' + longitude + ',' + latitude + '/realtime.json'
         url = 'http://api.caiyunapp.com/v2/UR8ASaplvIwavDfR/%s,%s/weather?lang=zh_CN&tzshift=28800&timestamp=%d&hourlysteps=384&dailysteps=16&alert=true&device_id=%s' % (longitude, latitude, int(time.time()), DEVIEC_ID)
         if metricv2:
@@ -166,6 +169,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
         devices.append(CaiYunSensor(name, type))
     add_devices(devices, True)
 
+
 class CaiYunSensor(Entity):
 
     def __init__(self, name, type):
@@ -202,7 +206,8 @@ class CaiYunSensor(Entity):
     def state_attributes(self):
         return CaiYunSensor._data if self._type == 'weather' else None
 
-    def update(self):
+    @asyncio.coroutine
+    def async_update(self):
         #LOGGER.debug('update: name=%s', self._name)
         if CaiYunSensor._update_index % CaiYunSensor._conditions_count == 0:
             CaiYunSensor._data = getWeatherData(CaiYunSensor._longitude, CaiYunSensor._latitude)
