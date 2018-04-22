@@ -53,7 +53,7 @@ WEATHER_ICONS = {
     'SLEET': ('冻雨','snowy-rainy')
 }
 
-LOGGER = logging.getLogger(__name__)
+_LOGGER = logging.getLogger(__name__)
 
 
 #
@@ -67,9 +67,9 @@ def getWeatherData(longitude, latitude, metricv2=False):
         url = 'http://api.caiyunapp.com/v2/UR8ASaplvIwavDfR/%s,%s/weather?lang=zh_CN&tzshift=28800&timestamp=%d&hourlysteps=384&dailysteps=16&alert=true&device_id=%s' % (longitude, latitude, int(time.time()), DEVIEC_ID)
         if metricv2:
             url += '?unit=metric:v2'
-        #LOGGER.debug('getWeatherData: %s', url)
+        #_LOGGER.debug('getWeatherData: %s', url)
         response = requests.get(url, headers=headers).json()
-        #LOGGER.info('gotWeatherData: %s', response)
+        #_LOGGER.info('gotWeatherData: %s', response)
         result = response['result']['realtime']
         if result['status'] != 'ok':
             raise
@@ -100,14 +100,14 @@ def getWeatherData(longitude, latitude, metricv2=False):
         data['so2'] = result['so2']
     except:
         import traceback
-        LOGGER.error('exception: %s', traceback.format_exc())
+        _LOGGER.error('exception: %s', traceback.format_exc())
     return data
 
 if __name__ == '__main__':
     # For local call
     import sys
-    LOGGER.addHandler(logging.StreamHandler(sys.stderr))
-    LOGGER.setLevel(logging.DEBUG)
+    _LOGGER.addHandler(logging.StreamHandler(sys.stderr))
+    _LOGGER.setLevel(logging.DEBUG)
     print(getWeatherData('120.00', '30.00', True))
     exit(0)
 
@@ -156,7 +156,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     longitude = str(config.get(CONF_LONGITUDE, hass.config.longitude))
     latitude = str(config.get(CONF_LATITUDE, hass.config.latitude))
     monitored_conditions = config[CONF_MONITORED_CONDITIONS]
-    LOGGER.debug('setup_platform: name=%s, longitude=%s, latitude=%s', name, longitude, latitude)
+    _LOGGER.debug('setup_platform: name=%s, longitude=%s, latitude=%s', name, longitude, latitude)
 
     CaiYunSensor._data = {}
     CaiYunSensor._update_index = 0
@@ -208,8 +208,7 @@ class CaiYunSensor(Entity):
 
     @asyncio.coroutine
     def async_update(self):
-        #LOGGER.debug('update: name=%s', self._name)
         if CaiYunSensor._update_index % CaiYunSensor._conditions_count == 0:
+            _LOGGER.info('Update: name=%s', self._name)
             CaiYunSensor._data = getWeatherData(CaiYunSensor._longitude, CaiYunSensor._latitude)
         CaiYunSensor._update_index += 1
-        #LOGGER.info('End update: name=%s', self._name)

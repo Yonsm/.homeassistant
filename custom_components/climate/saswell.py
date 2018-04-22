@@ -14,6 +14,7 @@ from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import (CONF_NAME, CONF_USERNAME, CONF_PASSWORD,
     CONF_DEVICES, ATTR_TEMPERATURE)
 
+import asyncio
 import homeassistant.helpers.config_validation as cv
 import logging
 import requests
@@ -197,7 +198,8 @@ class SaswellData():
         except BaseException:
             self._token = None
 
-    def update(self):
+    @asyncio.coroutine
+    def async_update(self):
         """Update and handle data from Phicomm server."""
         if self._update_times % self._update_cycle == 0:
             try:
