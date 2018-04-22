@@ -21,12 +21,13 @@ from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import (
     CONF_NAME, CONF_USERNAME, CONF_PASSWORD, CONF_SCAN_INTERVAL,
     ATTR_TEMPERATURE)
-from homeassistant.helpers.event import async_track_time_interval
+from homeassistant.helpers.event import (
+    async_track_time_interval, async_call_later)
 import homeassistant.helpers.config_validation as cv
 
 _LOGGER = logging.getLogger(__name__)
 
-TOKEN_FILE = ".saswell.token."
+TOKEN_FILE = "._saswell.token."
 USER_AGENT = "Thermostat/3.1.0 (iPhone; iOS 11.3; Scale/3.00)"
 
 AUTH_URL = "http://api.scinan.com/oauth2/authorize?client_id=100002&passwd=%s" \
@@ -75,7 +76,7 @@ class SaswellClimate(ClimateDevice):
             name += str(index + 1)
         self._name = name
         self._index = index
-        self.saswell = saswell
+        self._saswell = saswell
 
     @property
     def supported_features(self):
@@ -133,63 +134,68 @@ class SaswellClimate(ClimateDevice):
         """Return the list of available operation modes."""
         return ['heat', 'off']
 
-    @asyncio.coroutine
-    def async_update(self):
-        """Get the latest data from Phicomm server and update the state."""
-        _LOGGER.info("Begin update: %s", self.name)
-        self.saswell.update()
+    @property
+    def should_poll(self):  # pylint: disable=no-self-use
+        """No polling needed."""
+        return False
 
-    def set_operation_mode(self, operation_mode):
+    @asyncio.coroutine
+    def async_set_operation_mode(self, operation_mode):
         """Set new target temperature."""
         if operation_mode == 'off':
             self.turn_off()
         else:
             self.turn_on()
 
-    def set_temperature(self, **kwargs):
+    @asyncio.coroutine
+    def async_set_temperature(self, **kwargs):
         """Set new target temperatures."""
         temperature = kwargs.get(ATTR_TEMPERATURE)
         if temperature is not None:
             self.set_prop('target', temperature)
 
-    def turn_away_mode_on(self):
+    @asyncio.coroutine
+    def async_turn_away_mode_on(self):
         """Turn away mode on."""
         self.set_prop('away', True)
 
-    def turn_away_mode_off(self):
+    @asyncio.coroutine
+    def async_turn_away_mode_off(self):
         """Turn away mode off."""
         self.set_prop('away', False)
 
-    def turn_on(self):
+    @asyncio.coroutine
+    def async_turn_on(self):
         """Turn on."""
         self.set_prop('on', True)
 
-    def turn_off(self):
+    @asyncio.coroutine
+    def async_turn_off(self):
         """Turn off."""
         self.set_prop('on', False)
 
     def get_prop(self, prop, default):
         """Get property with current device index."""
-        devs = self.saswell.devs
+        devs = self._saswell.devs
         if devs and self._index < len(devs):
             return devs[self._index][prop]
         return default
 
     def set_prop(self, prop, value):
         """Set property with current device index."""
-        self.saswell.control(self._index, prop, value)
-        self.schedule_update_ha_state()
-
+        if self._saswell.control(self._index, prop, value):
+            self.async_schedule_update_ha_state()
 
 class SaswellData():
     """Class for handling the data retrieval."""
 
     def __init__(self, hass, username, password):
         """Initialize the data object."""
-        self._hass = hass
+        self.hass = hass
         self._username = username.replace('@', '%40')
         self._password = password
         self._token_path = hass.config.path(TOKEN_FILE + username)
+        self._token = None
         self.devs = None
 
     @asyncio.coroutine
@@ -225,7 +231,7 @@ class SaswellData():
                 tasks.append(device.async_update_ha_state())
 
         if tasks:
-            yield from asyncio.wait(tasks, loop=self._hass.loop)
+            yield from asyncio.wait(tasks, loop=self.hass.loop)
 
     def update_data(self):
         """Update online data."""
@@ -271,10 +277,9 @@ class SaswellData():
 
             device_id = self.devs[index]['id']
             json = self.request(CTRL_URL % (data, device_id, sensor_id))
-            _LOGGER.debug("Control device: json=%s", json)
+            _LOGGER.debug("Control device: prop=%s, json=%s", prop, json)
             if json['result']:
                 self.devs[index][prop] = value
-                time.sleep(1)
                 return True
             return False
         except BaseException:
