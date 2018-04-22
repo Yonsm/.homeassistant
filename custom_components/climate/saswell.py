@@ -77,11 +77,6 @@ class SaswellClimate(ClimateDevice):
         return SUPPORT_TARGET_TEMPERATURE | SUPPORT_AWAY_MODE | \
             SUPPORT_ON_OFF | SUPPORT_OPERATION_MODE
 
-    #@property
-    #def should_poll(self):
-        """Return the polling state."""
-    #    return True
-
     @property
     def name(self):
         """Return the name of the climate device."""
@@ -132,6 +127,12 @@ class SaswellClimate(ClimateDevice):
         """Return the list of available operation modes."""
         return ['heat', 'off']
 
+    @asyncio.coroutine
+    def async_update(self):
+        """Get the latest data from Phicomm server and update the state."""
+        _LOGGER.info("Begin update: %s", self.name)
+        self.saswell.update()
+
     def set_operation_mode(self, operation_mode):
         """Set new target temperature."""
         if operation_mode == 'off':
@@ -160,11 +161,6 @@ class SaswellClimate(ClimateDevice):
     def turn_off(self):
         """Turn off."""
         self.set_prop('on', False)
-
-    def update(self):
-        """Get the latest data from Phicomm server and update the state."""
-        _LOGGER.info("Begin update: %s", self.name)
-        self.saswell.update()
 
     def get_prop(self, prop, default):
         """Get property with current device index."""
@@ -198,8 +194,7 @@ class SaswellData():
         except BaseException:
             self._token = None
 
-    @asyncio.coroutine
-    def async_update(self):
+    def update(self):
         """Update and handle data from Phicomm server."""
         if self._update_times % self._update_cycle == 0:
             try:
