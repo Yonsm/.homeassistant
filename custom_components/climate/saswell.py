@@ -21,8 +21,7 @@ from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import (
     CONF_NAME, CONF_USERNAME, CONF_PASSWORD, CONF_SCAN_INTERVAL,
     ATTR_TEMPERATURE)
-from homeassistant.helpers.event import (
-    async_track_time_interval, async_call_later)
+from homeassistant.helpers.event import async_track_time_interval
 import homeassistant.helpers.config_validation as cv
 
 _LOGGER = logging.getLogger(__name__)
@@ -30,9 +29,9 @@ _LOGGER = logging.getLogger(__name__)
 TOKEN_FILE = "._saswell.token."
 USER_AGENT = "Thermostat/3.1.0 (iPhone; iOS 11.3; Scale/3.00)"
 
-AUTH_URL = "http://api.scinan.com/oauth2/authorize?client_id=100002&passwd=%s" \
-    "&redirect_uri=http%%3A//localhost.com%%3A8080/testCallBack.action" \
-    "&response_type=token&userId=%s"
+AUTH_URL = "http://api.scinan.com/oauth2/authorize?client_id=100002" \
+    "&passwd=%s&redirect_uri=http%%3A//localhost.com%%3A8080" \
+    "/testCallBack.action&response_type=token&userId=%s"
 LIST_URL = "http://api.scinan.com/v1.0/devices/list?format=json"
 CTRL_URL = "http://api.scinan.com/v1.0/sensors/control?" \
     "control_data=%%7B%%22value%%22%%3A%%22%s%%22%%7D&device_id=%s" \
@@ -86,7 +85,7 @@ class SaswellClimate(ClimateDevice):
     @property
     def available(self):
         """Return if the sensor data are available."""
-        return self.get_prop('online', False)
+        return self.get_value('online')
 
     @property
     def supported_features(self):
@@ -107,22 +106,12 @@ class SaswellClimate(ClimateDevice):
     @property
     def current_temperature(self):
         """Return the current temperature."""
-        return self.get_prop('current', 0)
+        return self.get_value('temperature')
 
     @property
     def target_temperature(self):
         """Return the temperature we try to reach."""
-        return self.get_prop('target', 20)
-
-    @property
-    def is_away_mode_on(self):
-        """Return if away mode is on."""
-        return self.get_prop('away', False)
-
-    @property
-    def is_on(self):
-        """Return true if the device is on."""
-        return self.get_prop('on', False)
+        return self.get_value('target_temperature')
 
     @property
     def current_operation(self):
@@ -135,9 +124,26 @@ class SaswellClimate(ClimateDevice):
         return ['heat', 'off']
 
     @property
+    def is_away_mode_on(self):
+        """Return if away mode is on."""
+        return self.get_value('away')
+
+    @property
+    def is_on(self):
+        """Return true if the device is on."""
+        return self.get_value('is_on')
+
+    @property
     def should_poll(self):  # pylint: disable=no-self-use
         """No polling needed."""
         return False
+
+    @asyncio.coroutine
+    def async_set_temperature(self, **kwargs):
+        """Set new target temperatures."""
+        temperature = kwargs.get(ATTR_TEMPERATURE)
+        if temperature is not None:
+            self.set_value('target_temperature', temperature)
 
     @asyncio.coroutine
     def async_set_operation_mode(self, operation_mode):
@@ -148,41 +154,34 @@ class SaswellClimate(ClimateDevice):
             self.turn_on()
 
     @asyncio.coroutine
-    def async_set_temperature(self, **kwargs):
-        """Set new target temperatures."""
-        temperature = kwargs.get(ATTR_TEMPERATURE)
-        if temperature is not None:
-            self.set_prop('target', temperature)
-
-    @asyncio.coroutine
     def async_turn_away_mode_on(self):
         """Turn away mode on."""
-        self.set_prop('away', True)
+        self.set_value('away', True)
 
     @asyncio.coroutine
     def async_turn_away_mode_off(self):
         """Turn away mode off."""
-        self.set_prop('away', False)
+        self.set_value('away', False)
 
     @asyncio.coroutine
     def async_turn_on(self):
         """Turn on."""
-        self.set_prop('on', True)
+        self.set_value('is_on', True)
 
     @asyncio.coroutine
     def async_turn_off(self):
         """Turn off."""
-        self.set_prop('on', False)
+        self.set_value('is_on', False)
 
-    def get_prop(self, prop, default):
-        """Get property with current device index."""
+    def get_value(self, prop):
+        """Get property value"""
         devs = self._saswell.devs
         if devs and self._index < len(devs):
             return devs[self._index][prop]
-        return default
+        return None
 
-    def set_prop(self, prop, value):
-        """Set property with current device index."""
+    def set_value(self, prop, value):
+        """Set property value"""
         if self._saswell.control(self._index, prop, value):
             self.async_schedule_update_ha_state()
 
@@ -225,8 +224,10 @@ class SaswellData():
         self.update_data()
 
         tasks = []
+        index = 0
         for device in self._devices:
-            #if device.state != device.state_from_devs(old_devs):
+            if not old_devs or not self.devs \
+                    or old_devs[index] != self.devs[index]:
                 _LOGGER.info('%s: => %s', device.name, device.state)
                 tasks.append(device.async_update_ha_state())
 
@@ -244,10 +245,10 @@ class SaswellData():
             devs = []
             for dev in json:
                 status = dev['status'].split(',')
-                devs.append({'on': status[1] == '1',
+                devs.append({'is_on': status[1] == '1',
                              'away': status[5] == '1', #8?
-                             'current': float(status[2]),
-                             'target': float(status[3]),
+                             'temperature': float(status[2]),
+                             'target_temperature': float(status[3]),
                              'online': dev['online'] == '1',
                              'id': dev['id']})
             self.devs = devs
@@ -263,10 +264,10 @@ class SaswellData():
     def control(self, index, prop, value):
         """Control device via server."""
         try:
-            if prop == 'on':
+            if prop == 'is_on':
                 sensor_id = '01'
                 data = '1' if value else '0'
-            elif prop == 'target':
+            elif prop == 'target_temperature':
                 sensor_id = '02'
                 data = value
             elif prop == 'away':
