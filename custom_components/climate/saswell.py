@@ -68,7 +68,7 @@ def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
 
 
 class SaswellClimate(ClimateDevice):
-    """Representation of a demo climate device."""
+    """Representation of a Saswell climate device."""
 
     def __init__(self, saswell, name, index):
         """Initialize the climate device."""
@@ -79,15 +79,20 @@ class SaswellClimate(ClimateDevice):
         self._saswell = saswell
 
     @property
+    def name(self):
+        """Return the name of the climate device."""
+        return self._name
+
+    @property
+    def available(self):
+        """Return if the sensor data are available."""
+        return self.get_prop('online', False)
+
+    @property
     def supported_features(self):
         """Return the list of supported features."""
         return SUPPORT_TARGET_TEMPERATURE | SUPPORT_AWAY_MODE | \
             SUPPORT_ON_OFF | SUPPORT_OPERATION_MODE
-
-    @property
-    def name(self):
-        """Return the name of the climate device."""
-        return self._name
 
     @property
     def temperature_unit(self):
@@ -98,11 +103,6 @@ class SaswellClimate(ClimateDevice):
     def target_temperature_step(self):
         """Return the supported step of target temperature."""
         return 1
-
-    @property
-    def available(self):
-        """Return if the sensor data are available."""
-        return self.get_prop('online', False)
 
     @property
     def current_temperature(self):
