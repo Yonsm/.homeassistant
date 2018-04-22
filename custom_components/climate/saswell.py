@@ -1,63 +1,69 @@
 """
-Saswell platform that offers a fake climate device.
+Saswell platform that offers a Saswell climate device.
 
 For more details about this platform, please refer to the documentation
 https://home-assistant.io/components/climate/saswell
 """
 
+import asyncio
+import logging
 
 from datetime import timedelta
-from homeassistant.components.climate import (
-    ClimateDevice, SUPPORT_TARGET_TEMPERATURE, SUPPORT_AWAY_MODE,
-    SUPPORT_ON_OFF, SUPPORT_OPERATION_MODE)
-from homeassistant.components.sensor import PLATFORM_SCHEMA
-from homeassistant.const import (CONF_NAME, CONF_USERNAME, CONF_PASSWORD,
-    CONF_DEVICES, ATTR_TEMPERATURE)
 
-import asyncio
-import homeassistant.helpers.config_validation as cv
-import logging
 import requests
 import time
 import voluptuous as vol
+
+from homeassistant.components.climate import (
+    ClimateDevice, SUPPORT_TARGET_TEMPERATURE, SUPPORT_AWAY_MODE,
+     SUPPORT_ON_OFF, SUPPORT_OPERATION_MODE)
+from homeassistant.components.sensor import PLATFORM_SCHEMA
+from homeassistant.const import (
+    CONF_NAME, CONF_USERNAME, CONF_PASSWORD, CONF_SCAN_INTERVAL,
+    ATTR_TEMPERATURE)
+from homeassistant.helpers.event import async_track_time_interval
+import homeassistant.helpers.config_validation as cv
 
 _LOGGER = logging.getLogger(__name__)
 
 TOKEN_FILE = ".saswell.token."
 USER_AGENT = "Thermostat/3.1.0 (iPhone; iOS 11.3; Scale/3.00)"
 
-AUTH_URL = "http://api.scinan.com/oauth2/authorize?client_id=100002&passwd=%s&redirect_uri=http%%3A//localhost.com%%3A8080/testCallBack.action&response_type=token&userId=%s"
+AUTH_URL = "http://api.scinan.com/oauth2/authorize?client_id=100002&passwd=%s" \
+    "&redirect_uri=http%%3A//localhost.com%%3A8080/testCallBack.action" \
+    "&response_type=token&userId=%s"
 LIST_URL = "http://api.scinan.com/v1.0/devices/list?format=json"
-CTRL_URL = "http://api.scinan.com/v1.0/sensors/control?control_data=%%7B%%22value%%22%%3A%%22%s%%22%%7D&device_id=%s&format=json&sensor_id=%s&sensor_type=1"
+CTRL_URL = "http://api.scinan.com/v1.0/sensors/control?" \
+    "control_data=%%7B%%22value%%22%%3A%%22%s%%22%%7D&device_id=%s" \
+    "&format=json&sensor_id=%s&sensor_type=1"
 
 DEFAULT_NAME = 'Saswell'
 
-SCAN_INTERVAL = timedelta(seconds=300)
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
     vol.Required(CONF_USERNAME): cv.string,
     vol.Required(CONF_PASSWORD): cv.string,
-    vol.Optional(CONF_DEVICES, default=1): cv.positive_int,
+    vol.Optional(CONF_SCAN_INTERVAL, default=timedelta(seconds=120)): (
+        vol.All(cv.time_period, cv.positive_timedelta)),
 })
 
 
-def setup_platform(hass, config, add_devices, discovery_info=None):
+@asyncio.coroutine
+def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
     """Set up the Saswell climate devices."""
     name = config.get(CONF_NAME)
     username = config.get(CONF_USERNAME)
     password = config.get(CONF_PASSWORD)
-    count = config.get(CONF_DEVICES)
+    scan_interval = config.get(CONF_SCAN_INTERVAL)
 
-    saswell = SaswellData(hass.config.path(TOKEN_FILE + username),
-                          username, password, count)
-
-    index = 0
-    devices = []
-    while index < count:
-        devices.append(SaswellClimate(saswell, name, index))
-        index += 1
-    add_devices(devices, True)
+    saswell = SaswellData(hass, username, password)
+    devices = yield from saswell.make_sensors(name)
+    if devices:
+        async_add_devices(devices)
+        async_track_time_interval(hass, saswell.async_update, scan_interval)
+    else:
+        _LOGGER.error("No sensors added: %s.", name)
 
 
 class SaswellClimate(ClimateDevice):
@@ -178,47 +184,71 @@ class SaswellClimate(ClimateDevice):
 class SaswellData():
     """Class for handling the data retrieval."""
 
-    def __init__(self, token_path, username, password, update_cycle):
+    def __init__(self, hass, username, password):
         """Initialize the data object."""
-        self._username = username
+        self._hass = hass
+        self._username = username.replace('@', '%40')
         self._password = password
-        self._token_path = token_path
-        self._update_cycle = update_cycle
-        self._update_times = 0
+        self._token_path = hass.config.path(TOKEN_FILE + username)
         self.devs = None
 
+    @asyncio.coroutine
+    def make_sensors(self, name):
+        """Make sensors with online data."""
         try:
             with open(self._token_path) as file:
                 self._token = file.read()
                 _LOGGER.debug("Load: %s => %s", self._token_path, self._token)
         except BaseException:
-            self._token = None
+            pass
 
-    def update(self):
-        """Update and handle data from Phicomm server."""
-        if self._update_times % self._update_cycle == 0:
-            try:
+        self.update_data()
+        if not self.devs:
+            return None
+
+        devices = []
+        for index in range(len(self.devs)):
+            devices.append(SaswellClimate(self, name, index))
+        self._devices = devices
+        return devices
+
+    @asyncio.coroutine
+    def async_update(self, time):
+        """Update online data and update ha state."""
+        old_devs = self.devs
+        self.update_data()
+
+        tasks = []
+        for device in self._devices:
+            #if device.state != device.state_from_devs(old_devs):
+                _LOGGER.info('%s: => %s', device.name, device.state)
+                tasks.append(device.async_update_ha_state())
+
+        if tasks:
+            yield from asyncio.wait(tasks, loop=self._hass.loop)
+
+    def update_data(self):
+        """Update online data."""
+        try:
+            json = self.list()
+            if ('error' in json) and (json['error'] != '0'):
+                _LOGGER.debug("Reset token: error=%s", json['error'])
+                self._token = None
                 json = self.list()
-                if ('error' in json) and (json['error'] != '0'):
-                    _LOGGER.debug("Reset token: error=%s", json['error'])
-                    self._token = None
-                    json = self.list()
-                devs = []
-                for dev in json:
-                    status = dev['status'].split(',')
-                    devs.append({'on': status[1] == '1',
-                                 'away': status[5] == '1', #8?
-                                 'current': float(status[2]),
-                                 'target': float(status[3]),
-                                 'online': dev['online'] == '1',
-                                 'id': dev['id']})
-                self.devs = devs
-                _LOGGER.info("List device: devs=%s", self.devs)
-            except BaseException:
-                import traceback
-                _LOGGER.error('Exception: %s', traceback.format_exc())
-
-        self._update_times += 1
+            devs = []
+            for dev in json:
+                status = dev['status'].split(',')
+                devs.append({'on': status[1] == '1',
+                             'away': status[5] == '1', #8?
+                             'current': float(status[2]),
+                             'target': float(status[3]),
+                             'online': dev['online'] == '1',
+                             'id': dev['id']})
+            self.devs = devs
+            _LOGGER.info("List device: devs=%s", self.devs)
+        except BaseException:
+            import traceback
+            _LOGGER.error('Exception: %s', traceback.format_exc())
 
     def list(self):
         """Fetch the latest data from server."""
@@ -256,7 +286,7 @@ class SaswellData():
         """Request from server."""
         if self._token is None:
             headers = {'User-Agent': USER_AGENT}
-            url = AUTH_URL % (self._password, self._username.replace('@', '%40'))
+            url = AUTH_URL % (self._password, self._username)
             text = requests.get(url, headers=headers).text
             _LOGGER.info("Get token: %s", text)
             start = text.find('token:')
