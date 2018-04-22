@@ -1,9 +1,6 @@
-#!/usr/bin/env python
-#encoding:utf8
-
 '''
-API Web: http://www.caiyunapp.com/map
-API Ref: http://wiki.swarma.net/index.php/%E5%BD%A9%E4%BA%91%E5%A4%A9%E6%B0%94API/v2
+Web: http://www.caiyunapp.com/map
+Ref: http://wiki.swarma.net/index.php/%E5%BD%A9%E4%BA%91%E5%A4%A9%E6%B0%94API/v2
 YAML Example:
 sensor:
   - platform: caiyun
@@ -32,10 +29,28 @@ sensor:
 '''
 
 import asyncio
-import logging, time
-import requests, json, random
+import json
+import logging
+import random
+import requests
 
-# Const
+from datetime import timedelta
+
+import time
+import voluptuous as vol
+
+from homeassistant.components.sensor import PLATFORM_SCHEMA
+from homeassistant.const import (
+    CONF_NAME, CONF_LONGITUDE, CONF_LATITUDE, CONF_MONITORED_CONDITIONS,
+	CONF_SCAN_INTERVAL)
+from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.event import async_track_time_interval
+import homeassistant.helpers.config_validation as cv
+
+_LOGGER = logging.getLogger(__name__)
+
+SCAN_INTERVAL = timedelta(seconds=1200)
+
 USER_AGENT = 'ColorfulCloudsPro/3.2.2 (iPhone; iOS 11.3; Scale/3.00)'
 DEVIEC_ID = '5F544F93-44F1-43C9-94B2-%12X' % random.randint(0,0xffffffffffff)
 
@@ -52,74 +67,6 @@ WEATHER_ICONS = {
     'HAZE': ('霾','hail'),
     'SLEET': ('冻雨','snowy-rainy')
 }
-
-_LOGGER = logging.getLogger(__name__)
-
-
-#
-def getWeatherData(longitude, latitude, metricv2=False):
-    data = {}
-    try:
-        headers = {'User-Agent': USER_AGENT,
-                   'Accept': 'application/json',
-                   'Accept-Language': 'zh-Hans-CN;q=1'}
-        #url = 'http://api.caiyunapp.com/v2/UR8ASaplvIwavDfR/' + longitude + ',' + latitude + '/realtime.json'
-        url = 'http://api.caiyunapp.com/v2/UR8ASaplvIwavDfR/%s,%s/weather?lang=zh_CN&tzshift=28800&timestamp=%d&hourlysteps=384&dailysteps=16&alert=true&device_id=%s' % (longitude, latitude, int(time.time()), DEVIEC_ID)
-        if metricv2:
-            url += '?unit=metric:v2'
-        #_LOGGER.debug('getWeatherData: %s', url)
-        response = requests.get(url, headers=headers).json()
-        #_LOGGER.info('gotWeatherData: %s', response)
-        result = response['result']['realtime']
-        if result['status'] != 'ok':
-            raise
-
-        weather,icon = WEATHER_ICONS[result['skycon']]
-        data['weather'] = weather
-        if icon:
-            data['skycon'] = icon
-
-        data['temperature'] = result['temperature']
-        data['humidity'] = int(result['humidity'] * 100)
-
-        data['aqi'] = int(result['aqi'])
-        data['pm25'] = int(result['pm25'])
-
-        # Optional action
-        data['cloud_rate'] = result['cloudrate']
-        data['pressure'] = int(result['pres'])
-        data['nearest_precipitation'] = result['precipitation']['nearest']['intensity']
-        data['precipitation_distance'] = result['precipitation']['nearest']['distance']
-        data['local_precipitation'] = result['precipitation']['local']['intensity']
-        data['wind_direction'] = result['wind']['direction']
-        data['wind_speed'] = result['wind']['speed']
-        data['pm10'] = result['pm10']
-        data['o3'] = result['o3']
-        data['co'] = result['co']
-        data['no2'] = result['no2']
-        data['so2'] = result['so2']
-    except:
-        import traceback
-        _LOGGER.error('exception: %s', traceback.format_exc())
-    return data
-
-if __name__ == '__main__':
-    # For local call
-    import sys
-    _LOGGER.addHandler(logging.StreamHandler(sys.stderr))
-    _LOGGER.setLevel(logging.DEBUG)
-    print(getWeatherData('120.00', '30.00', True))
-    exit(0)
-
-# Import homeassistant
-from homeassistant.helpers.entity import Entity
-from homeassistant.const import (CONF_NAME, CONF_LONGITUDE, CONF_LATITUDE, CONF_MONITORED_CONDITIONS)
-from homeassistant.components.sensor import PLATFORM_SCHEMA
-import homeassistant.helpers.config_validation as cv
-import voluptuous as vol
-
-from datetime import timedelta
-SCAN_INTERVAL = timedelta(seconds=1200)
 
 SENSOR_TYPES = {
     'weather': ('Weather', None, 'help-circle-outline'),
@@ -148,36 +95,41 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_NAME, default='CaiYun'): cv.string,
     vol.Optional(CONF_LONGITUDE): cv.longitude,
     vol.Optional(CONF_LATITUDE): cv.latitude,
-    vol.Optional(CONF_MONITORED_CONDITIONS, default=['weather', 'temperature', 'humidity', 'pm25']): vol.All(cv.ensure_list, vol.Length(min=1), [vol.In(SENSOR_TYPES)]),
+    vol.Optional(CONF_MONITORED_CONDITIONS,
+        default=['weather', 'temperature', 'humidity', 'pm25']):
+        vol.All(cv.ensure_list, vol.Length(min=1), [vol.In(SENSOR_TYPES)]),
+    vol.Optional(CONF_SCAN_INTERVAL, default=timedelta(seconds=120)): (
+        vol.All(cv.time_period, cv.positive_timedelta)),
 })
 
-def setup_platform(hass, config, add_devices, discovery_info=None):
+
+@asyncio.coroutine
+def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
+    """Set up the Caiyun sensor."""
     name = config.get(CONF_NAME)
     longitude = str(config.get(CONF_LONGITUDE, hass.config.longitude))
     latitude = str(config.get(CONF_LATITUDE, hass.config.latitude))
     monitored_conditions = config[CONF_MONITORED_CONDITIONS]
-    _LOGGER.debug('setup_platform: name=%s, longitude=%s, latitude=%s', name, longitude, latitude)
+    scan_interval = config.get(CONF_SCAN_INTERVAL)
 
-    CaiYunSensor._data = {}
-    CaiYunSensor._update_index = 0
-    CaiYunSensor._conditions_count = len(monitored_conditions)
-    CaiYunSensor._longitude = longitude
-    CaiYunSensor._latitude = latitude
-
-    devices = []
-    for type in monitored_conditions:
-        devices.append(CaiYunSensor(name, type))
-    add_devices(devices, True)
+    caiyun = CaiYunData(hass, longitude, latitude)
+    sensors = yield from caiyun.make_sensors(name, monitored_conditions)
+    if sensors:
+        async_add_devices(sensors)
+        async_track_time_interval(hass, caiyun.async_update, scan_interval)
+    else:
+        _LOGGER.error("No sensors added: %s.", name)
 
 
 class CaiYunSensor(Entity):
 
-    def __init__(self, name, type):
+    def __init__(self, name, type, caiyun):
         tname,unit,icon = SENSOR_TYPES[type]
         self._name = name + ' ' + tname
         self._type = type
         self._unit = unit
         self._icon = icon
+        self._caiyun = caiyun
 
     @property
     def name(self):
@@ -186,8 +138,8 @@ class CaiYunSensor(Entity):
     @property
     def icon(self):
         icon = self._icon
-        if self._type == 'weather' and 'skycon' in CaiYunSensor._data:
-            icon = 'weather-' + CaiYunSensor._data['skycon']
+        if self._type == 'weather' and 'skycon' in self._caiyun.data:
+            icon = 'weather-' + self._caiyun.data['skycon']
         return 'mdi:' + icon
 
     @property
@@ -196,19 +148,110 @@ class CaiYunSensor(Entity):
 
     @property
     def available(self):
-        return self._type in CaiYunSensor._data
+        return self._type in self._caiyun.data
 
     @property
     def state(self):
-        return CaiYunSensor._data[self._type] if self._type in CaiYunSensor._data else None
+        return self.state_from_data(self._caiyun.data)
 
     @property
     def state_attributes(self):
-        return CaiYunSensor._data if self._type == 'weather' else None
+        return self._caiyun.data if self._type == 'weather' else None
+
+    @property
+    def should_poll(self):  # pylint: disable=no-self-use
+        """No polling needed."""
+        return False
+
+    def state_from_data(self, data):
+        return data[self._type] if self._type in data else None
+
+
+class CaiYunData:
+    """Class for handling the data retrieval."""
+
+    def __init__(self, hass, longitude, latitude):
+        """Initialize the data object."""
+        self._hass = hass
+        self._longitude = longitude
+        self._latitude = latitude
+        self._sensors = None
+        self.data = {}
 
     @asyncio.coroutine
-    def async_update(self):
-        if CaiYunSensor._update_index % CaiYunSensor._conditions_count == 0:
-            _LOGGER.info('Update: name=%s', self._name)
-            CaiYunSensor._data = getWeatherData(CaiYunSensor._longitude, CaiYunSensor._latitude)
-        CaiYunSensor._update_index += 1
+    def make_sensors(self, name, monitored_conditions):
+        """Make sensors."""
+        self.update_data()
+        if not self.data:
+            return None
+
+        sensors = []
+        for type in monitored_conditions:
+            sensors.append(CaiYunSensor(name, type, self))
+        self._sensors = sensors
+        return sensors
+
+    @asyncio.coroutine
+    def async_update(self, time):
+        """Update online data and update ha state."""
+        old_data = self.data
+        self.update_data()
+
+        tasks = []
+        for sensor in self._sensors:
+            if sensor.state != sensor.state_from_data(old_data):
+                _LOGGER.info('%s: => %s', sensor.name, sensor.state)
+                tasks.append(sensor.async_update_ha_state())
+
+        if tasks:
+            yield from asyncio.wait(tasks, loop=self._hass.loop)
+
+    def update_data(self):
+        """Update online data."""
+        data = {}
+
+        try:
+            headers = {'User-Agent': USER_AGENT,
+                       'Accept': 'application/json',
+                       'Accept-Language': 'zh-Hans-CN;q=1'}
+            url = "http://api.caiyunapp.com/v2/UR8ASaplvIwavDfR/%s,%s/" \
+                "weather?lang=zh_CN&tzshift=28800&timestamp=%d" \
+                "&hourlysteps=384&dailysteps=16&alert=true&device_id=%s" % \
+                (self._longitude, self._latitude, int(time.time()), DEVIEC_ID)
+            _LOGGER.info('getWeatherData: %s', url)
+            response = requests.get(url, headers=headers).json()
+            #_LOGGER.info('gotWeatherData: %s', response)
+            result = response['result']['realtime']
+            if result['status'] != 'ok':
+                raise
+
+            weather,icon = WEATHER_ICONS[result['skycon']]
+            data['weather'] = weather
+            if icon:
+                data['skycon'] = icon
+
+            data['temperature'] = result['temperature']
+            data['humidity'] = int(result['humidity'] * 100)
+
+            data['aqi'] = int(result['aqi'])
+            data['pm25'] = int(result['pm25'])
+
+            data['cloud_rate'] = result['cloudrate']
+            data['pressure'] = int(result['pres'])
+            nearest = result['precipitation']['nearest']
+            local = result['precipitation']['local']
+            data['nearest_precipitation'] = nearest['intensity']
+            data['precipitation_distance'] = nearest['distance']
+            data['local_precipitation'] = local['intensity']
+            data['wind_direction'] = result['wind']['direction']
+            data['wind_speed'] = result['wind']['speed']
+            data['pm10'] = result['pm10']
+            data['o3'] = result['o3']
+            data['co'] = result['co']
+            data['no2'] = result['no2']
+            data['so2'] = result['so2']
+        except:
+            import traceback
+            _LOGGER.error('exception: %s', traceback.format_exc())
+
+        self.data = data
