@@ -8,7 +8,6 @@ https://home-assistant.io/components/climate.modbus/
 import asyncio
 import logging
 import struct
-import time
 import voluptuous as vol
 
 from homeassistant.components.climate import (
