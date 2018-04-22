@@ -18,6 +18,7 @@ from homeassistant.components.climate import (
     SUPPORT_TARGET_HUMIDITY_HIGH, SUPPORT_TARGET_HUMIDITY_LOW,
     PLATFORM_SCHEMA)
 from homeassistant.const import (CONF_NAME, ATTR_TEMPERATURE)
+from homeassistant.helpers.event import async_call_later
 import homeassistant.components.modbus as modbus
 import homeassistant.helpers.config_validation as cv
 
@@ -198,7 +199,7 @@ class ModbusClimate(ClimateDevice):
     def current_operation(self):
         """Return current operation ie. heat, cool, idle."""
         operation = self.get_value('operation')
-        if operation and  operation < len(self._operation_list):
+        if operation is not None and  operation < len(self._operation_list):
             return self._operation_list[operation]
         return None
 
@@ -211,7 +212,7 @@ class ModbusClimate(ClimateDevice):
     def current_fan_mode(self):
         """Return the fan setting."""
         fan = self.get_value('fan')
-        if fan and fan < len(self._fan_list):
+        if fan is not None and fan < len(self._fan_list):
             return self._fan_list[fan]
         return None
 
@@ -224,7 +225,7 @@ class ModbusClimate(ClimateDevice):
     def current_swing_mode(self):
         """Return the swing setting."""
         swing = self.get_value('swing')
-        if swing and swing < len(self._swing_list):
+        if swing is not None and swing < len(self._swing_list):
             return self._swing_list[swing]
         return None
 
@@ -388,4 +389,5 @@ class ModbusClimate(ClimateDevice):
             modbus.HUB.write_register(slave, register, int(value))
 
         self._values[prop] = value
-        self.async_schedule_update_ha_state()
+
+        async_call_later(self.hass, 2, self.async_schedule_update_ha_state)

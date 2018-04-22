@@ -190,7 +190,7 @@ class SaswellData():
 
     def __init__(self, hass, username, password):
         """Initialize the data object."""
-        self.hass = hass
+        self._hass = hass
         self._username = username.replace('@', '%40')
         self._password = password
         self._token_path = hass.config.path(TOKEN_FILE + username)
@@ -232,7 +232,7 @@ class SaswellData():
                 tasks.append(device.async_update_ha_state())
 
         if tasks:
-            yield from asyncio.wait(tasks, loop=self.hass.loop)
+            yield from asyncio.wait(tasks, loop=self._hass.loop)
 
     def update_data(self):
         """Update online data."""
