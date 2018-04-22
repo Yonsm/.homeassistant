@@ -5,18 +5,17 @@ For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/sensor.phicomm/
 """
 
+import asyncio
 import logging
-
-from datetime import timedelta
-
 import requests
 import voluptuous as vol
+from datetime import timedelta
 
 from homeassistant.components.sensor import PLATFORM_SCHEMA
-from homeassistant.const import (
-    CONF_NAME, CONF_USERNAME, CONF_PASSWORD, CONF_DEVICES, CONF_SENSORS,
-    TEMP_CELSIUS)
+from homeassistant.const import (CONF_NAME, CONF_USERNAME, CONF_PASSWORD,
+    CONF_SENSORS, CONF_SCAN_INTERVAL, TEMP_CELSIUS)
 from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.event import async_track_time_interval
 import homeassistant.helpers.config_validation as cv
 
 _LOGGER = logging.getLogger(__name__)
@@ -44,36 +43,31 @@ SENSOR_MAP = {
     SENSOR_HUMIDITY: ('Humidity', '%', 'water-percent')
 }
 
-SCAN_INTERVAL = timedelta(seconds=120)
-
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
     vol.Required(CONF_USERNAME): cv.string,
     vol.Required(CONF_PASSWORD): cv.string,
-    vol.Optional(CONF_DEVICES, default=1): cv.positive_int,
     vol.Optional(CONF_SENSORS, default=DEFAULT_SENSORS):
         vol.All(cv.ensure_list, vol.Length(min=1), [vol.In(SENSOR_MAP)]),
+    vol.Optional(CONF_SCAN_INTERVAL, default=timedelta(seconds=120)): (
+        vol.All(cv.time_period, cv.positive_timedelta)),
 })
 
 
-def setup_platform(hass, config, add_devices, discovery_info=None):
+@asyncio.coroutine
+def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
     """Set up the Phicomm sensor."""
     name = config.get(CONF_NAME)
     username = config.get(CONF_USERNAME)
     password = config.get(CONF_PASSWORD)
-    count = config.get(CONF_DEVICES)
-    sensors = config[CONF_SENSORS]
+    sensors = config.get(CONF_SENSORS)
+    scan_interval = config.get(CONF_SCAN_INTERVAL)
 
-    phicomm = PhicommData(hass.config.path(TOKEN_FILE + username),
-                          username, password, count * len(sensors))
+    phicomm = PhicommData(hass, username, password)
+    devices = yield from phicomm.make_sensors(name, sensors)
+    async_add_devices(devices)
 
-    index = 0
-    devices = []
-    while index < count:
-        for sensor_type in sensors:
-            devices.append(PhicommSensor(phicomm, name, index, sensor_type))
-        index += 1
-    add_devices(devices, True)
+    async_track_time_interval(hass, phicomm.async_update, scan_interval)
 
 
 class PhicommSensor(Entity):
@@ -123,10 +117,10 @@ class PhicommSensor(Entity):
         """Return the state attributes."""
         return self.data if self._sensor_type == SENSOR_PM25 else None
 
-    def update(self):
-        """Get the latest data from Phicomm server and update the state."""
-        _LOGGER.info("Begin update: %s", self.name)
-        self.phicomm.update()
+    @property
+    def should_poll(self):  # pylint: disable=no-self-use
+        """No polling needed."""
+        return False
 
     @property
     def data(self):
@@ -140,15 +134,17 @@ class PhicommSensor(Entity):
 class PhicommData():
     """Class for handling the data retrieval."""
 
-    def __init__(self, token_path, username, password, update_cycle):
+    def __init__(self, hass, username, password):
         """Initialize the data object."""
+        self._hass = hass
         self._username = username
         self._password = password
-        self._token_path = token_path
-        self._update_cycle = update_cycle
-        self._update_times = 0
+        self._token_path = hass.config.path(TOKEN_FILE + username)
         self.devs = None
 
+    @asyncio.coroutine
+    def make_sensors(self, name, sensors):
+        """Make sensors with online data."""
         try:
             with open(self._token_path) as file:
                 self._token = file.read()
@@ -156,24 +152,54 @@ class PhicommData():
         except BaseException:
             self._token = None
 
-    def update(self):
-        """Update and handle data from Phicomm server."""
-        if self._update_times % self._update_cycle == 0:
-            try:
-                json = self.fetch()
-                if ('error' in json) and (json['error'] != '0'):
-                    _LOGGER.debug("Reset token: error=%s", json['error'])
-                    self._token = None
-                    json = self.fetch()
-                self.devs = json['data']['devs']
-                _LOGGER.info("Get data: devs=%s", self.devs)
-            except BaseException:
-                import traceback
-                _LOGGER.error('Exception: %s', traceback.format_exc())
+        self.update_data()
 
-        self._update_times += 1
+        if not self.devs:
+            _LOGGER.error("No sensors added: %s.", name)
+            return
 
-    def fetch(self):
+        devices = []
+        for index in range(len(self.devs)):
+            for sensor_type in sensors:
+                devices.append(PhicommSensor(self, name, index, sensor_type))
+        self._devices = devices
+        return devices
+
+    @asyncio.coroutine
+    def async_update(self, time):
+        """Update online data and update ha state."""
+        _LOGGER.debug("BEGIN update %s ...", time)
+        devs = self.devs
+        self.update_data()
+
+        tasks = []
+        for device in self._devices:
+            state = devs[device._index].get('catDev').get(device._sensor_type) \
+                if devs and device._index < len(devs) else None
+            if state == device.state:
+                _LOGGER.info('%s: %s', device.name, state)
+            else:
+                _LOGGER.info('%s: %s => %s', device.name, state, device.state)
+                tasks.append(device.async_update_ha_state())
+
+        if tasks:
+            yield from asyncio.wait(tasks, loop=self._hass.loop)
+
+    def update_data(self):
+        """Update online data."""
+        try:
+            json = self.fetch_data()
+            if ('error' in json) and (json['error'] != '0'):
+                _LOGGER.debug("Reset token: error=%s", json['error'])
+                self._token = None
+                json = self.fetch_data()
+            self.devs = json['data']['devs']
+            _LOGGER.info("Get data: devs=%s", self.devs)
+        except BaseException:
+            import traceback
+            _LOGGER.error('Exception: %s', traceback.format_exc())
+
+    def fetch_data(self):
         """Fetch the latest data from Phicomm server."""
         if self._token is None:
             import hashlib
