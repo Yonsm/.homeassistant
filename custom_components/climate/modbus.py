@@ -5,6 +5,12 @@ For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/climate.modbus/
 """
 
+import asyncio
+import logging
+import struct
+import time
+import voluptuous as vol
+
 from homeassistant.components.climate import (
     ClimateDevice, SUPPORT_TARGET_TEMPERATURE, SUPPORT_TARGET_HUMIDITY,
     SUPPORT_OPERATION_MODE, SUPPORT_FAN_MODE, SUPPORT_SWING_MODE,
@@ -12,13 +18,8 @@ from homeassistant.components.climate import (
     SUPPORT_TARGET_HUMIDITY_HIGH, SUPPORT_TARGET_HUMIDITY_LOW,
     PLATFORM_SCHEMA)
 from homeassistant.const import (CONF_NAME, ATTR_TEMPERATURE)
-
 import homeassistant.components.modbus as modbus
 import homeassistant.helpers.config_validation as cv
-import logging
-import struct
-import time
-import voluptuous as vol
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,10 +28,10 @@ DEPENDENCIES = ['modbus']
 DEFAULT_NAME = 'Modbus'
 
 CONF_FEATURES = {
-    'current_temperature': 0,
-    'temperature': SUPPORT_TARGET_TEMPERATURE,
-    'current_humidity': 0,
-    'humidity': SUPPORT_TARGET_HUMIDITY |
+    'temperature': 0,
+    'target_temperature': SUPPORT_TARGET_TEMPERATURE,
+    'humidity': 0,
+    'target_humidity': SUPPORT_TARGET_HUMIDITY |
                 SUPPORT_TARGET_HUMIDITY_LOW |
                 SUPPORT_TARGET_HUMIDITY_HIGH,
     'operation': SUPPORT_OPERATION_MODE,
@@ -54,18 +55,23 @@ DEFAULT_SWING_LIST = ['Auto', '1', '2', '3', 'Off']
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
-    vol.Optional(CONF_OPERATION_LIST, default=DEFAULT_OPERATION_LIST): vol.All(cv.ensure_list, vol.Length(min=2)),
-    vol.Optional(CONF_FAN_LIST, default=DEFAULT_FAN_LIST): vol.All(cv.ensure_list, vol.Length(min=2)),
-    vol.Optional(CONF_SWING_LIST, default=DEFAULT_SWING_LIST): vol.All(cv.ensure_list, vol.Length(min=2)),
+    vol.Optional(CONF_OPERATION_LIST, default=DEFAULT_OPERATION_LIST):
+        vol.All(cv.ensure_list, vol.Length(min=2)),
+    vol.Optional(CONF_FAN_LIST, default=DEFAULT_FAN_LIST):
+        vol.All(cv.ensure_list, vol.Length(min=2)),
+    vol.Optional(CONF_SWING_LIST, default=DEFAULT_SWING_LIST):
+        vol.All(cv.ensure_list, vol.Length(min=2)),
 })
 
 
 def has_valid_register(mods, index):
-    for key in mods:
-        registers = mods[key].get('registers')
+    """Check valid register."""
+    for prop in mods:
+        registers = mods[prop].get('registers')
         if not registers or index >= len(registers):
             return False
     return True
+
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
     """Set up the Modbus climate devices."""
@@ -79,8 +85,8 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     data_types['float'] = {1: 'e', 2: 'f', 4: 'd'}
 
     mods = {}
-    for key in CONF_FEATURES:
-        mod = config.get(key)
+    for prop in CONF_FEATURES:
+        mod = config.get(prop)
         if not mod:
             continue
 
@@ -91,14 +97,14 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
                 mod['structure'] = '>{}'.format(data_types[
                     'int' if data_type is None else data_type][count])
             except KeyError:
-                _LOGGER.error("Unable to detect data type for %s", key)
+                _LOGGER.error("Unable to detect data type for %s", prop)
                 continue
 
         try:
             size = struct.calcsize(mod['structure'])
         except struct.error as err:
             _LOGGER.error(
-                "Error in sensor %s structure: %s", key, err)
+                "Error in sensor %s structure: %s", prop, err)
             continue
 
         if count * 2 != size:
@@ -107,7 +113,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
                 "(%d words)", size, count)
             continue
 
-        mods[key] = mod
+        mods[prop] = mod
 
     if len(mods) == 0:
         _LOGGER.error("Invalid config %s: no modbus items", name)
@@ -117,14 +123,16 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     for index in range(100):
         if not has_valid_register(mods, index):
             break
-        devices.append(ModbusClimate(name, operation_list, fan_list, swing_list, mods, index))
+        devices.append(ModbusClimate(name, operation_list, fan_list,
+                                     swing_list, mods, index))
 
     if len(devices) == 0:
-        for key in mods:
+        for prop in mods:
             if 'register' not in mod:
-                _LOGGER.error("Invalid config %s/%s: no register", name, key)
+                _LOGGER.error("Invalid config %s/%s: no register", name, prop)
                 return
-        devices.append(ModbusClimate(name, operation_list, fan_list, swing_list, mods))
+        devices.append(ModbusClimate(name, operation_list, fan_list,
+                                     swing_list, mods))
 
     add_devices(devices, True)
 
@@ -132,7 +140,8 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
 class ModbusClimate(ClimateDevice):
     """Representation of a Modbus climate device."""
 
-    def __init__(self, name, operation_list, fan_list, swing_list, mods, index=-1):
+    def __init__(self, name, operation_list,
+                 fan_list, swing_list, mods, index=-1):
         """Initialize the climate device."""
         self._name = name + str(index + 1) if index != -1 else name
         self._index = index
@@ -140,7 +149,7 @@ class ModbusClimate(ClimateDevice):
         self._operation_list = operation_list
         self._fan_list = fan_list
         self._swing_list = swing_list
-        self._values = {} # mods[key].get('default_value') for key in mods
+        self._values = {}
 
     @property
     def name(self):
@@ -148,8 +157,16 @@ class ModbusClimate(ClimateDevice):
         return self._name
 
     @property
+    def supported_features(self):
+        """Return the list of supported features."""
+        features = 0
+        for prop in self._mods:
+            features |= CONF_FEATURES[prop]
+        return features
+
+    @property
     def temperature_unit(self):
-        """Return the unit of measurement used by the platform."""
+        """Return the unit of measurement."""
         return self.unit_of_measurement
 
     @property
@@ -158,38 +175,32 @@ class ModbusClimate(ClimateDevice):
         return 1
 
     @property
-    def supported_features(self):
-        """Return the list of supported features."""
-        features = 0
-        for key in self._mods:
-            features |= CONF_FEATURES[key]
-        return features
-
-    @property
     def current_temperature(self):
         """Return the current temperature."""
-        return self.get_value('current_temperature')
+        return self.get_value('temperature')
 
     @property
     def target_temperature(self):
         """Return the temperature we try to reach."""
-        return self.get_value('temperature')
+        return self.get_value('target_temperature')
 
     @property
     def current_humidity(self):
         """Return the current humidity."""
-        return self.get_value('current_humidity')
+        return self.get_value('humidity')
 
     @property
     def target_humidity(self):
         """Return the humidity we try to reach."""
-        return self.get_value('humidity')
+        return self.get_value('target_humidity')
 
     @property
     def current_operation(self):
         """Return current operation ie. heat, cool, idle."""
         operation = self.get_value('operation')
-        return self._operation_list[operation] if operation is not None and  operation < len(self._operation_list) else None
+        if operation and  operation < len(self._operation_list):
+            return self._operation_list[operation]
+        return None
 
     @property
     def operation_list(self):
@@ -200,7 +211,9 @@ class ModbusClimate(ClimateDevice):
     def current_fan_mode(self):
         """Return the fan setting."""
         fan = self.get_value('fan')
-        return self._fan_list[fan] if fan is not None and fan < len(self._fan_list) else None
+        if fan and fan < len(self._fan_list):
+            return self._fan_list[fan]
+        return None
 
     @property
     def fan_list(self):
@@ -211,7 +224,9 @@ class ModbusClimate(ClimateDevice):
     def current_swing_mode(self):
         """Return the swing setting."""
         swing = self.get_value('swing')
-        return self._swing_list[swing] if swing is not None and swing < len(self._swing_list) else None
+        if swing and swing < len(self._swing_list):
+            return self._swing_list[swing]
+        return None
 
     @property
     def swing_list(self):
@@ -238,76 +253,19 @@ class ModbusClimate(ClimateDevice):
         """Return true if the device is on."""
         return self.get_value('is_on')
 
-    def set_temperature(self, **kwargs):
-        """Set new target temperatures."""
-        if kwargs.get(ATTR_TEMPERATURE) is not None:
-            self.set_value('temperature', kwargs.get(ATTR_TEMPERATURE))
-
-    def set_humidity(self, humidity):
-        """Set new target humidity."""
-        self.set_value('humidity', humidity)
-
-    def set_operation_mode(self, operation_mode):
-        """Set new operation mode."""
-        try:
-            index = self._operation_list.index(operation_mode)
-            self.set_value('operation', index)
-        except ValueError:
-            _LOGGER.error("Invalid operation_mode: %s", operation_mode)
-
-    def set_fan_mode(self, fan_mode):
-        """Set new fan mode."""
-        try:
-            index = self._fan_list.index(fan_mode)
-            self.set_value('fan', index)
-        except ValueError:
-            _LOGGER.error("Invalid fan_mode: %s", fan_mode)
-
-    def set_swing_mode(self, swing_mode):
-        """Set new swing mode."""
-        try:
-            index = self._swing_list.index(swing_mode)
-            self.set_value('swing', index)
-        except ValueError:
-            _LOGGER.error("Invalid swing_mode: %s", swing_mode)
-
-    def set_hold_mode(self, hold_mode):
-        """Set new hold mode."""
-        self.set_value('hold', hold_mode)
-
-    def turn_away_mode_on(self):
-        """Turn away mode on."""
-        self.set_value('away', True)
-
-    def turn_away_mode_off(self):
-        """Turn away mode off."""
-        self.set_value('away', False)
-
-    def turn_aux_heat_on(self):
-        """Turn auxiliary heater on."""
-        self.set_value('aux', True)
-
-    def turn_aux_heat_off(self):
-        """Turn auxiliary heater off."""
-        self.set_value('aux', False)
-
-    def turn_on(self):
-        """Turn on."""
-        self.set_value('is_on', True)
-
-    def turn_off(self):
-        """Turn off."""
-        self.set_value('is_on', False)
+    def registe_info(self, mod):
+        register_type = mod.get('register_type')
+        register = mod['register'] \
+            if self._index == -1 else mod['registers'][self._index]
+        slave = mod['slave'] if 'slave' in mod else 1
+        count = mod['count'] if 'count' in mod else 1
+        return (register_type, slave, register, count)
 
     def update(self):
         """Update state."""
-        for key in self._mods:
-            mod = self._mods[key]
-
-            register_type = mod.get('register_type')
-            slave = mod['slave'] if 'slave' in mod else 1
-            register = mod['register'] if self._index == -1 else mod['registers'][self._index]
-            count = mod['count'] if 'count' in mod else 1
+        for prop in self._mods:
+            mod = self._mods[prop]
+            register_type, slave, register, count = self.registe_info(mod)
 
             if register_type == 'coil':
                 result = modbus.HUB.read_coils(slave, register, count)
@@ -326,7 +284,7 @@ class ModbusClimate(ClimateDevice):
                     if mod.get('reverse_order'):
                         registers.reverse()
                 except AttributeError:
-                    _LOGGER.error("No response from modbus %s", key)
+                    _LOGGER.error("No response from modbus %s", prop)
                     return
 
                 byte_string = b''.join(
@@ -337,24 +295,97 @@ class ModbusClimate(ClimateDevice):
                 offset = mod['offset'] if 'offset' in mod else 0
                 value = scale * val + offset
 
-            _LOGGER.info("Read %s: %s = %f", self.name, key, value)
-            self._values[key] = value
+            _LOGGER.info("Read %s: %s = %f", self.name, prop, value)
+            self._values[prop] = value
 
-    def get_value(self, key):
-        return self._values.get(key)
+    @asyncio.coroutine
+    def async_set_temperature(self, **kwargs):
+        """Set new target temperatures."""
+        temperature = kwargs.get(ATTR_TEMPERATURE)
+        if temperature is not None:
+            self.set_value('target_temperature', temperature)
 
-    def set_value(self, key, value):
-        mod = self._mods[key]
-        _LOGGER.info("Write %s: %s = %f", self.name, key, value)
+    @asyncio.coroutine
+    def async_set_humidity(self, humidity):
+        """Set new target humidity."""
+        self.set_value('target_humidity', humidity)
 
-        register_type = mod.get('register_type')
-        slave = mod['slave'] if 'slave' in mod else 1
-        register = mod['register'] if self._index == -1 else mod['registers'][self._index]
+    @asyncio.coroutine
+    def async_set_operation_mode(self, operation_mode):
+        """Set new operation mode."""
+        try:
+            index = self._operation_list.index(operation_mode)
+            self.set_value('operation', index)
+        except ValueError:
+            _LOGGER.error("Invalid operation_mode: %s", operation_mode)
+
+    @asyncio.coroutine
+    def async_set_fan_mode(self, fan_mode):
+        """Set new fan mode."""
+        try:
+            index = self._fan_list.index(fan_mode)
+            self.set_value('fan', index)
+        except ValueError:
+            _LOGGER.error("Invalid fan_mode: %s", fan_mode)
+
+    @asyncio.coroutine
+    def async_set_swing_mode(self, swing_mode):
+        """Set new swing mode."""
+        try:
+            index = self._swing_list.index(swing_mode)
+            self.set_value('swing', index)
+        except ValueError:
+            _LOGGER.error("Invalid swing_mode: %s", swing_mode)
+
+    @asyncio.coroutine
+    def async_set_hold_mode(self, hold_mode):
+        """Set new hold mode."""
+        self.set_value('hold', hold_mode)
+
+    @asyncio.coroutine
+    def async_turn_away_mode_on(self):
+        """Turn away mode on."""
+        self.set_value('away', True)
+
+    @asyncio.coroutine
+    def async_turn_away_mode_off(self):
+        """Turn away mode off."""
+        self.set_value('away', False)
+
+    @asyncio.coroutine
+    def async_turn_aux_heat_on(self):
+        """Turn auxiliary heater on."""
+        self.set_value('aux', True)
+
+    @asyncio.coroutine
+    def async_turn_aux_heat_off(self):
+        """Turn auxiliary heater off."""
+        self.set_value('aux', False)
+
+    @asyncio.coroutine
+    def async_turn_on(self):
+        """Turn on."""
+        self.set_value('is_on', True)
+
+    @asyncio.coroutine
+    def async_turn_off(self):
+        """Turn off."""
+        self.set_value('is_on', False)
+
+    def get_value(self, prop):
+        """Get property value"""
+        return self._values.get(prop)
+
+    def set_value(self, prop, value):
+        """Set property value"""
+        mod = self._mods[prop]
+        register_type, slave, register, count = self.registe_info(mod)
+        _LOGGER.info("Write %s: %s = %f", self.name, prop, value)
 
         if register_type == 'coil':
             modbus.HUB.write_coil(slave, register, bool(value))
         else:
             modbus.HUB.write_register(slave, register, int(value))
 
-        self._values[key] = value
-        self.schedule_update_ha_state()
+        self._values[prop] = value
+        self.async_schedule_update_ha_state()

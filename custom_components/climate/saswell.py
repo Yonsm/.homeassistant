@@ -149,9 +149,9 @@ class SaswellClimate(ClimateDevice):
     def async_set_operation_mode(self, operation_mode):
         """Set new target temperature."""
         if operation_mode == 'off':
-            self.turn_off()
+            yield from self.async_turn_off()
         else:
-            self.turn_on()
+            yield from self.async_turn_on()
 
     @asyncio.coroutine
     def async_turn_away_mode_on(self):
