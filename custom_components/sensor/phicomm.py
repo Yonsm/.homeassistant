@@ -5,12 +5,9 @@ For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/sensor.phicomm/
 """
 
+from datetime import timedelta
 import asyncio
 import logging
-
-from datetime import timedelta
-
-import requests
 import voluptuous as vol
 
 from homeassistant.components.sensor import PLATFORM_SCHEMA
@@ -19,7 +16,7 @@ from homeassistant.const import (
     CONF_SENSORS, CONF_SCAN_INTERVAL, TEMP_CELSIUS)
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.event import async_track_time_interval
-import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers import config_validation as cv
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -57,17 +54,17 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 
-@asyncio.coroutine
-def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
+async def async_setup_platform(hass, config, async_add_devices,
+                               discovery_info=None):
     """Set up the Phicomm sensor."""
-    name = config.get(CONF_NAME)
-    username = config.get(CONF_USERNAME)
-    password = config.get(CONF_PASSWORD)
-    sensors = config.get(CONF_SENSORS)
-    scan_interval = config.get(CONF_SCAN_INTERVAL)
+    name = config[CONF_NAME]
+    username = config[CONF_USERNAME]
+    password = config[CONF_PASSWORD]
+    sensors = config[CONF_SENSORS]
+    scan_interval = config[CONF_SCAN_INTERVAL]
 
     phicomm = PhicommData(hass, username, password)
-    devices = yield from phicomm.make_sensors(name, sensors)
+    devices = await phicomm.async_make_sensors(name, sensors)
     if devices:
         async_add_devices(devices)
         async_track_time_interval(hass, phicomm.async_update, scan_interval)
@@ -154,17 +151,16 @@ class PhicommData():
         self._devices = None
         self.devs = None
 
-    @asyncio.coroutine
-    def make_sensors(self, name, sensors):
+    async def async_make_sensors(self, name, sensors):
         """Make sensors with online data."""
         try:
-            with open(self._token_path) as file:
-                self._token = file.read()
+            async with open(self._token_path) as file:
+                self._token = await file.read()
                 _LOGGER.debug("Load: %s => %s", self._token_path, self._token)
         except BaseException:
             pass
 
-        self.update_data()
+        await self.update_data()
         if not self.devs:
             return None
 
@@ -175,11 +171,10 @@ class PhicommData():
         self._devices = devices
         return devices
 
-    @asyncio.coroutine
-    def async_update(self, time):
+    async def async_update(self, time):
         """Update online data and update ha state."""
         old_devs = self.devs
-        self.update_data()
+        await self.update_data()
 
         tasks = []
         for device in self._devices:
@@ -188,24 +183,25 @@ class PhicommData():
                 tasks.append(device.async_update_ha_state())
 
         if tasks:
-            yield from asyncio.wait(tasks, loop=self._hass.loop)
+            await asyncio.wait(tasks, loop=self._hass.loop)
 
-    def update_data(self):
+    async def update_data(self):
         """Update online data."""
         try:
-            json = self.fetch_data()
+            json = await self.fetch_data()
             if ('error' in json) and (json['error'] != '0'):
                 _LOGGER.debug("Reset token: error=%s", json['error'])
                 self._token = None
-                json = self.fetch_data()
+                json = await self.fetch_data()
             self.devs = json['data']['devs']
             _LOGGER.info("Get data: devs=%s", self.devs)
         except BaseException:
             import traceback
             _LOGGER.error('Exception: %s', traceback.format_exc())
 
-    def fetch_data(self):
+    async def fetch_data(self):
         """Fetch the latest data from Phicomm server."""
+        session = self._hass.helpers.aiohttp_client.async_get_clientsession()
         if self._token is None:
             import hashlib
             md5 = hashlib.md5()
@@ -215,8 +211,11 @@ class PhicommData():
                 'phonenumber': self._username,
                 'password': md5.hexdigest().upper()
             }
+
             headers = {'User-Agent': USER_AGENT}
-            json = requests.post(TOKEN_URL, headers=headers, data=data).json()
+            async with session.post(TOKEN_URL, headers=headers, data=data) as r:
+                json = await r.json(content_type=None)
+
             _LOGGER.debug("Get token: %s", json)
             if 'access_token' in json:
                 self._token = json['access_token']
@@ -224,5 +223,7 @@ class PhicommData():
                     file.write(self._token)
             else:
                 return None
+
         headers = {'User-Agent': USER_AGENT, 'Authorization': self._token}
-        return requests.get(DATA_URL, headers=headers).json()
+        async with session.get(DATA_URL, headers=headers) as r:
+            return await r.json()
