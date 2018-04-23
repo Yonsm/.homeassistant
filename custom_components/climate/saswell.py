@@ -26,7 +26,7 @@ import homeassistant.helpers.config_validation as cv
 
 _LOGGER = logging.getLogger(__name__)
 
-TOKEN_FILE = "._saswell.token."
+TOKEN_FILE = ".saswell.token."
 USER_AGENT = "Thermostat/3.1.0 (iPhone; iOS 11.3; Scale/3.00)"
 
 AUTH_URL = "http://api.scinan.com/oauth2/authorize?client_id=100002" \
