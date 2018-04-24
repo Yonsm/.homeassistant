@@ -5,10 +5,11 @@ For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/sensor.phicomm/
 """
 
-from datetime import timedelta
 import asyncio
 import logging
 import voluptuous as vol
+
+from datetime import timedelta
 
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import (
@@ -64,7 +65,6 @@ async def async_setup_platform(hass, config, async_add_devices,
     scan_interval = config[CONF_SCAN_INTERVAL]
 
     phicomm = PhicommData(hass, username, password)
-
     await phicomm.update_data()
     if not phicomm.devs:
         _LOGGER.error("No sensors added: %s.", name)
@@ -73,7 +73,7 @@ async def async_setup_platform(hass, config, async_add_devices,
     devices = []
     for index in range(len(phicomm.devs)):
         for sensor_type in sensors:
-            devices.append(PhicommSensor(self, name, index, sensor_type))
+            devices.append(PhicommSensor(phicomm, name, index, sensor_type))
     async_add_devices(devices)
 
     phicomm.devices = devices
@@ -155,8 +155,13 @@ class PhicommData():
         self._username = username
         self._password = password
         self._token_path = hass.config.path(TOKEN_FILE + username)
-        self._token = None
         self.devs = None
+
+        try:
+            with open(self._token_path) as file:
+                self._token = file.read()
+        except BaseException:
+            self._token = None
 
     async def async_update(self, time):
         """Update online data and update ha state."""
@@ -183,41 +188,34 @@ class PhicommData():
             self.devs = json['data']['devs']
             _LOGGER.info("Get data: devs=%s", self.devs)
         except BaseException:
+            self.devs = {}
             import traceback
             _LOGGER.error('Exception: %s', traceback.format_exc())
 
     async def fetch_data(self):
         """Fetch the latest data from Phicomm server."""
         session = self._hass.helpers.aiohttp_client.async_get_clientsession()
-        if self._token is None:
-        try:
-            async with open(self._token_path) as file:
-                self._token = await file.read()
-                _LOGGER.debug("Load: %s => %s", self._token_path, self._token)
-            except BaseException:
-                pass
 
+        if self._token is None:
             import hashlib
             md5 = hashlib.md5()
             md5.update(self._password.encode('utf8'))
-            data = {
-                'authorizationcode': AUTH_CODE,
-                'phonenumber': self._username,
-                'password': md5.hexdigest().upper()
-            }
-
+            data = {'authorizationcode': AUTH_CODE,
+                    'phonenumber': self._username,
+                    'password': md5.hexdigest().upper()}
             headers = {'User-Agent': USER_AGENT}
-            async with session.post(TOKEN_URL, headers=headers, data=data) as r:
-                json = await r.json(content_type=None)
+            async with session.post(TOKEN_URL, headers=headers, data=data) \
+                    as response:
+                json = await response.json(content_type=None)
 
             _LOGGER.debug("Get token: %s", json)
-            if 'access_token' in json:
-                self._token = json['access_token']
-                with open(self._token_path, 'w') as file:
-                    file.write(self._token)
-            else:
+            if 'access_token' not in json:
                 return None
 
+            self._token = json['access_token']
+            with open(self._token_path, 'w') as file:
+                file.write(self._token)
+
         headers = {'User-Agent': USER_AGENT, 'Authorization': self._token}
-        async with session.get(DATA_URL, headers=headers) as r:
-            return await r.json()
+        async with session.get(DATA_URL, headers=headers) as response:
+            return await response.json()
