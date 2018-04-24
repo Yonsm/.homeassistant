@@ -64,7 +64,9 @@ async def async_setup_platform(hass, config, async_add_devices,
     sensors = config[CONF_SENSORS]
     scan_interval = config[CONF_SCAN_INTERVAL]
 
-    phicomm = PhicommData(hass, username, password)
+    phicomm = PhicommData(username, password, \
+        hass.config.path(TOKEN_FILE + username), \
+        hass.helpers.aiohttp_client.async_get_clientsession(), hass.loop)
     await phicomm.update_data()
     if not phicomm.devs:
         _LOGGER.error("No sensors added: %s.", name)
@@ -149,12 +151,13 @@ class PhicommSensor(Entity):
 class PhicommData():
     """Class for handling the data retrieval."""
 
-    def __init__(self, hass, username, password):
+    def __init__(self, username, password, token_path, session, loop):
         """Initialize the data object."""
-        self._hass = hass
         self._username = username
         self._password = password
-        self._token_path = hass.config.path(TOKEN_FILE + username)
+        self._token_path = token_path
+        self._session = session
+        self._loop = loop
         self.devs = None
 
         try:
@@ -175,7 +178,7 @@ class PhicommData():
                 tasks.append(device.async_update_ha_state())
 
         if tasks:
-            await asyncio.wait(tasks, loop=self._hass.loop)
+            await asyncio.wait(tasks, loop=self._loop)
 
     async def update_data(self):
         """Update online data."""
@@ -194,8 +197,6 @@ class PhicommData():
 
     async def fetch_data(self):
         """Fetch the latest data from Phicomm server."""
-        session = self._hass.helpers.aiohttp_client.async_get_clientsession()
-
         if self._token is None:
             import hashlib
             md5 = hashlib.md5()
@@ -204,8 +205,8 @@ class PhicommData():
                     'phonenumber': self._username,
                     'password': md5.hexdigest().upper()}
             headers = {'User-Agent': USER_AGENT}
-            async with session.post(TOKEN_URL, headers=headers, data=data) \
-                    as response:
+            async with self._session.post(TOKEN_URL, headers=headers, \
+                data=data) as response:
                 json = await response.json(content_type=None)
 
             _LOGGER.debug("Get token: %s", json)
@@ -217,5 +218,5 @@ class PhicommData():
                 file.write(self._token)
 
         headers = {'User-Agent': USER_AGENT, 'Authorization': self._token}
-        async with session.get(DATA_URL, headers=headers) as response:
+        async with self._session.get(DATA_URL, headers=headers) as response:
             return await response.json()
