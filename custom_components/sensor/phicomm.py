@@ -64,12 +64,20 @@ async def async_setup_platform(hass, config, async_add_devices,
     scan_interval = config[CONF_SCAN_INTERVAL]
 
     phicomm = PhicommData(hass, username, password)
-    devices = await phicomm.async_make_sensors(name, sensors)
-    if devices:
-        async_add_devices(devices)
-        async_track_time_interval(hass, phicomm.async_update, scan_interval)
-    else:
+
+    await phicomm.update_data()
+    if not phicomm.devs:
         _LOGGER.error("No sensors added: %s.", name)
+        return
+
+    devices = []
+    for index in range(len(phicomm.devs)):
+        for sensor_type in sensors:
+            devices.append(PhicommSensor(self, name, index, sensor_type))
+    async_add_devices(devices)
+
+    phicomm.devices = devices
+    async_track_time_interval(hass, phicomm.async_update, scan_interval)
 
 
 class PhicommSensor(Entity):
@@ -148,28 +156,7 @@ class PhicommData():
         self._password = password
         self._token_path = hass.config.path(TOKEN_FILE + username)
         self._token = None
-        self._devices = None
         self.devs = None
-
-    async def async_make_sensors(self, name, sensors):
-        """Make sensors with online data."""
-        try:
-            async with open(self._token_path) as file:
-                self._token = await file.read()
-                _LOGGER.debug("Load: %s => %s", self._token_path, self._token)
-        except BaseException:
-            pass
-
-        await self.update_data()
-        if not self.devs:
-            return None
-
-        devices = []
-        for index in range(len(self.devs)):
-            for sensor_type in sensors:
-                devices.append(PhicommSensor(self, name, index, sensor_type))
-        self._devices = devices
-        return devices
 
     async def async_update(self, time):
         """Update online data and update ha state."""
@@ -177,7 +164,7 @@ class PhicommData():
         await self.update_data()
 
         tasks = []
-        for device in self._devices:
+        for device in self.devices:
             if device.state != device.state_from_devs(old_devs):
                 _LOGGER.info('%s: => %s', device.name, device.state)
                 tasks.append(device.async_update_ha_state())
@@ -203,6 +190,13 @@ class PhicommData():
         """Fetch the latest data from Phicomm server."""
         session = self._hass.helpers.aiohttp_client.async_get_clientsession()
         if self._token is None:
+        try:
+            async with open(self._token_path) as file:
+                self._token = await file.read()
+                _LOGGER.debug("Load: %s => %s", self._token_path, self._token)
+            except BaseException:
+                pass
+
             import hashlib
             md5 = hashlib.md5()
             md5.update(self._password.encode('utf8'))
