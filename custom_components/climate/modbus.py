@@ -5,7 +5,6 @@ For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/climate.modbus/
 """
 
-import asyncio
 import logging
 import struct
 import voluptuous as vol
@@ -317,20 +316,17 @@ class ModbusClimate(ClimateDevice):
             _LOGGER.info("Read %s: %s = %f", self.name, prop, value)
             self._values[prop] = value
 
-    @asyncio.coroutine
-    def async_set_temperature(self, **kwargs):
+    def set_temperature(self, **kwargs):
         """Set new target temperatures."""
         temperature = kwargs.get(ATTR_TEMPERATURE)
         if temperature is not None:
             self.set_value(CONF_TARGET_TEMPERATURE, temperature)
 
-    @asyncio.coroutine
-    def async_set_humidity(self, humidity):
+    def set_humidity(self, humidity):
         """Set new target humidity."""
         self.set_value(CONF_TARGET_HUMIDITY, humidity)
 
-    @asyncio.coroutine
-    def async_set_operation_mode(self, operation_mode):
+    def set_operation_mode(self, operation_mode):
         """Set new operation mode."""
         try:
             index = self._operation_list.index(operation_mode)
@@ -338,8 +334,7 @@ class ModbusClimate(ClimateDevice):
         except ValueError:
             _LOGGER.error("Invalid operation_mode: %s", operation_mode)
 
-    @asyncio.coroutine
-    def async_set_fan_mode(self, fan_mode):
+    def set_fan_mode(self, fan_mode):
         """Set new fan mode."""
         try:
             index = self._fan_list.index(fan_mode)
@@ -347,8 +342,7 @@ class ModbusClimate(ClimateDevice):
         except ValueError:
             _LOGGER.error("Invalid fan_mode: %s", fan_mode)
 
-    @asyncio.coroutine
-    def async_set_swing_mode(self, swing_mode):
+    def set_swing_mode(self, swing_mode):
         """Set new swing mode."""
         try:
             index = self._swing_list.index(swing_mode)
@@ -356,38 +350,31 @@ class ModbusClimate(ClimateDevice):
         except ValueError:
             _LOGGER.error("Invalid swing_mode: %s", swing_mode)
 
-    @asyncio.coroutine
-    def async_set_hold_mode(self, hold_mode):
+    def set_hold_mode(self, hold_mode):
         """Set new hold mode."""
         self.set_value(CONF_HOLD, hold_mode)
 
-    @asyncio.coroutine
-    def async_turn_away_mode_on(self):
+    def turn_away_mode_on(self):
         """Turn away mode on."""
         self.set_value(CONF_AWAY, True)
 
-    @asyncio.coroutine
-    def async_turn_away_mode_off(self):
+    def turn_away_mode_off(self):
         """Turn away mode off."""
         self.set_value(CONF_AWAY, False)
 
-    @asyncio.coroutine
-    def async_turn_aux_heat_on(self):
+    def turn_aux_heat_on(self):
         """Turn auxiliary heater on."""
         self.set_value(CONF_AUX, True)
 
-    @asyncio.coroutine
-    def async_turn_aux_heat_off(self):
+    def turn_aux_heat_off(self):
         """Turn auxiliary heater off."""
         self.set_value(CONF_AUX, False)
 
-    @asyncio.coroutine
-    def async_turn_on(self):
+    def turn_on(self):
         """Turn on."""
         self.set_value(CONF_IS_ON, True)
 
-    @asyncio.coroutine
-    def async_turn_off(self):
+    def turn_off(self):
         """Turn off."""
         self.set_value(CONF_IS_ON, False)
 
