@@ -95,7 +95,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_MONITORED_CONDITIONS,
         default=['weather', 'temperature', 'humidity', 'pm25']):
         vol.All(cv.ensure_list, vol.Length(min=1), [vol.In(SENSOR_TYPES)]),
-    vol.Optional(CONF_SCAN_INTERVAL, default=timedelta(seconds=120)): (
+    vol.Optional(CONF_SCAN_INTERVAL, default=timedelta(seconds=1200)): (
         vol.All(cv.time_period, cv.positive_timedelta)),
 })
 
