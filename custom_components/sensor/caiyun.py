@@ -32,12 +32,9 @@ import asyncio
 import json
 import logging
 import random
-import requests
-
-from datetime import timedelta
-
 import time
 import voluptuous as vol
+from datetime import timedelta
 
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import (
@@ -102,9 +99,8 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
         vol.All(cv.time_period, cv.positive_timedelta)),
 })
 
-
-@asyncio.coroutine
-def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
+async def async_setup_platform(hass, config, async_add_devices,
+                               discovery_info=None):
     """Set up the Caiyun sensor."""
     name = config.get(CONF_NAME)
     longitude = str(config.get(CONF_LONGITUDE, hass.config.longitude))
@@ -113,12 +109,15 @@ def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
     scan_interval = config.get(CONF_SCAN_INTERVAL)
 
     caiyun = CaiYunData(hass, longitude, latitude)
-    sensors = yield from caiyun.make_sensors(name, monitored_conditions)
-    if sensors:
-        async_add_devices(sensors)
-        async_track_time_interval(hass, caiyun.async_update, scan_interval)
-    else:
-        _LOGGER.error("No sensors added: %s.", name)
+    await caiyun.update_data()
+
+    sensors = []
+    for type in monitored_conditions:
+        sensors.append(CaiYunSensor(name, type, caiyun))
+    async_add_devices(sensors)
+
+    caiyun.sensors = sensors
+    async_track_time_interval(hass, caiyun.async_update, scan_interval)
 
 
 class CaiYunSensor(Entity):
@@ -175,38 +174,23 @@ class CaiYunData:
         self._hass = hass
         self._longitude = longitude
         self._latitude = latitude
-        self._sensors = None
         self.data = {}
 
-    @asyncio.coroutine
-    def make_sensors(self, name, monitored_conditions):
-        """Make sensors."""
-        self.update_data()
-        if not self.data:
-            return None
-
-        sensors = []
-        for type in monitored_conditions:
-            sensors.append(CaiYunSensor(name, type, self))
-        self._sensors = sensors
-        return sensors
-
-    @asyncio.coroutine
-    def async_update(self, time):
+    async def async_update(self, time):
         """Update online data and update ha state."""
         old_data = self.data
-        self.update_data()
+        await self.update_data()
 
         tasks = []
-        for sensor in self._sensors:
+        for sensor in self.sensors:
             if sensor.state != sensor.state_from_data(old_data):
                 _LOGGER.info('%s: => %s', sensor.name, sensor.state)
                 tasks.append(sensor.async_update_ha_state())
 
         if tasks:
-            yield from asyncio.wait(tasks, loop=self._hass.loop)
+            await asyncio.wait(tasks, loop=self._hass.loop)
 
-    def update_data(self):
+    async def update_data(self):
         """Update online data."""
         data = {}
 
@@ -219,9 +203,11 @@ class CaiYunData:
                 "&hourlysteps=384&dailysteps=16&alert=true&device_id=%s" % \
                 (self._longitude, self._latitude, int(time.time()), DEVIEC_ID)
             _LOGGER.info('getWeatherData: %s', url)
-            response = requests.get(url, headers=headers).json()
-            #_LOGGER.info('gotWeatherData: %s', response)
-            result = response['result']['realtime']
+            session = self._hass.helpers.aiohttp_client.async_get_clientsession()
+            async with session.get(url, headers=headers) as response:
+                json = await response.json()
+            _LOGGER.info('gotWeatherData: %s', json)
+            result = json['result']['realtime']
             if result['status'] != 'ok':
                 raise
 
