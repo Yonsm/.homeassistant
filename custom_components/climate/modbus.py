@@ -16,7 +16,7 @@ from homeassistant.components.climate import (
     SUPPORT_TARGET_HUMIDITY_HIGH, SUPPORT_TARGET_HUMIDITY_LOW,
     PLATFORM_SCHEMA)
 from homeassistant.const import (
-    CONF_NAME, CONF_SLAVE,, CONF_OFFSET, CONF_STRUCTURE, ATTR_TEMPERATURE)
+    CONF_NAME, CONF_SLAVE, CONF_OFFSET, CONF_STRUCTURE, ATTR_TEMPERATURE)
 from homeassistant.helpers.event import async_call_later
 import homeassistant.components.modbus as modbus
 import homeassistant.helpers.config_validation as cv
@@ -282,7 +282,8 @@ class ModbusClimate(ClimateDevice):
         """Update state."""
         for prop in self._mods:
             mod = self._mods[prop]
-            register_type, slave, register, count = self.register_info(mod)
+            register_type, slave, register, count, scale, offset = \
+                self.register_info(mod)
 
             if register_type == 'coil':
                 result = modbus.HUB.read_coils(slave, register, count)
@@ -308,8 +309,6 @@ class ModbusClimate(ClimateDevice):
                     [x.to_bytes(2, byteorder='big') for x in registers]
                 )
                 val = struct.unpack(mod[CONF_STRUCTURE], byte_string)[0]
-                scale = mod[CONF_SCALE] if CONF_SCALE in mod else 1
-                offset = mod[CONF_OFFSET] if CONF_OFFSET in mod else 0
                 value = scale * val + offset
 
             _LOGGER.info("Read %s: %s = %f", self.name, prop, value)
@@ -384,7 +383,9 @@ class ModbusClimate(ClimateDevice):
             if self._index == -1 else mod[CONF_REGISTERS][self._index]
         slave = mod[CONF_SLAVE] if CONF_SLAVE in mod else 1
         count = mod[CONF_COUNT] if CONF_COUNT in mod else 1
-        return (register_type, slave, register, count)
+        scale = mod[CONF_SCALE] if CONF_SCALE in mod else 1
+        offset = mod[CONF_OFFSET] if CONF_OFFSET in mod else 0
+        return (register_type, slave, register, count, scale, offset)
 
     def get_value(self, prop):
         """Get property value"""
@@ -393,13 +394,15 @@ class ModbusClimate(ClimateDevice):
     def set_value(self, prop, value):
         """Set property value"""
         mod = self._mods[prop]
-        register_type, slave, register, count = self.register_info(mod)
+        register_type, slave, register, count, scale, offset = \
+                self.register_info(mod)
         _LOGGER.info("Write %s: %s = %f", self.name, prop, value)
 
         if register_type == 'coil':
             modbus.HUB.write_coil(slave, register, bool(value))
         else:
-            modbus.HUB.write_register(slave, register, int(value))
+            val = (value - offset) / scale
+            modbus.HUB.write_register(slave, register, int(val))
 
         self._values[prop] = value
 
