@@ -48,7 +48,6 @@ CONF_SWING_LIST = 'swing_list'
 
 DEFAULT_NAME = 'Saswell'
 
-
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
     vol.Required(CONF_USERNAME): cv.string,

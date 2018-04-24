@@ -25,8 +25,6 @@ _LOGGER = logging.getLogger(__name__)
 
 DEPENDENCIES = ['modbus']
 
-DEFAULT_NAME = 'Modbus'
-
 CONF_TEMPERATURE = 'temperature'
 CONF_TARGET_TEMPERATURE = 'target_temperature'
 CONF_HUMIDITY = 'humidity'
@@ -75,6 +73,7 @@ SUPPORTED_FEATURES = {
     CONF_IS_ON: SUPPORT_ON_OFF
     }
 
+DEFAULT_NAME = 'Modbus'
 DEFAULT_OPERATION_LIST = ['heat', 'cool', 'auto', 'off']
 DEFAULT_FAN_LIST = ['On Low', 'On High', 'Auto Low', 'Auto High', 'Off']
 DEFAULT_SWING_LIST = ['Auto', '1', '2', '3', 'Off']
