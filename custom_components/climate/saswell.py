@@ -10,7 +10,6 @@ import logging
 
 from datetime import timedelta
 
-import requests
 import time
 import voluptuous as vol
 
@@ -37,6 +36,16 @@ CTRL_URL = "http://api.scinan.com/v1.0/sensors/control?" \
     "control_data=%%7B%%22value%%22%%3A%%22%s%%22%%7D&device_id=%s" \
     "&format=json&sensor_id=%s&sensor_type=1"
 
+CONF_TEMPERATURE = 'temperature'
+CONF_TARGET_TEMPERATURE = 'target_temperature'
+CONF_OPERATION = 'operation'
+CONF_AWAY = 'away'
+CONF_IS_ON = 'is_on'
+
+CONF_OPERATION_LIST = 'operation_list'
+CONF_FAN_LIST = 'fan_list'
+CONF_SWING_LIST = 'swing_list'
+
 DEFAULT_NAME = 'Saswell'
 
 
@@ -49,8 +58,8 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 
-@asyncio.coroutine
-def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
+async def async_setup_platform(hass, config, async_add_devices,
+                               discovery_info=None):
     """Set up the Saswell climate devices."""
     name = config.get(CONF_NAME)
     username = config.get(CONF_USERNAME)
@@ -58,12 +67,18 @@ def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
     scan_interval = config.get(CONF_SCAN_INTERVAL)
 
     saswell = SaswellData(hass, username, password)
-    devices = yield from saswell.make_sensors(name)
-    if devices:
-        async_add_devices(devices)
-        async_track_time_interval(hass, saswell.async_update, scan_interval)
-    else:
+    await saswell.update_data()
+    if not saswell.devs:
         _LOGGER.error("No sensors added: %s.", name)
+        return None
+
+    devices = []
+    for index in range(len(saswell.devs)):
+        devices.append(SaswellClimate(saswell, name, index))
+    async_add_devices(devices)
+
+    saswell.devices = devices
+    async_track_time_interval(hass, saswell.async_update, scan_interval)
 
 
 class SaswellClimate(ClimateDevice):
@@ -106,12 +121,12 @@ class SaswellClimate(ClimateDevice):
     @property
     def current_temperature(self):
         """Return the current temperature."""
-        return self.get_value('temperature')
+        return self.get_value(CONF_TEMPERATURE)
 
     @property
     def target_temperature(self):
         """Return the temperature we try to reach."""
-        return self.get_value('target_temperature')
+        return self.get_value(CONF_TARGET_TEMPERATURE)
 
     @property
     def current_operation(self):
@@ -126,52 +141,46 @@ class SaswellClimate(ClimateDevice):
     @property
     def is_away_mode_on(self):
         """Return if away mode is on."""
-        return self.get_value('away')
+        return self.get_value(CONF_AWAY)
 
     @property
     def is_on(self):
         """Return true if the device is on."""
-        return self.get_value('is_on')
+        return self.get_value(CONF_IS_ON)
 
     @property
     def should_poll(self):  # pylint: disable=no-self-use
         """No polling needed."""
         return False
 
-    @asyncio.coroutine
-    def async_set_temperature(self, **kwargs):
+    async def async_set_temperature(self, **kwargs):
         """Set new target temperatures."""
         temperature = kwargs.get(ATTR_TEMPERATURE)
         if temperature is not None:
-            self.set_value('target_temperature', temperature)
+            await self.set_value(CONF_TARGET_TEMPERATURE, temperature)
 
-    @asyncio.coroutine
-    def async_set_operation_mode(self, operation_mode):
+    async def async_set_operation_mode(self, operation_mode):
         """Set new target temperature."""
         if operation_mode == 'off':
-            yield from self.async_turn_off()
+            await self.set_value(CONF_IS_ON, False)
         else:
-            yield from self.async_turn_on()
+            await self.set_value(CONF_IS_ON, True)
 
-    @asyncio.coroutine
-    def async_turn_away_mode_on(self):
+    async def async_turn_away_mode_on(self):
         """Turn away mode on."""
-        self.set_value('away', True)
+        await self.set_value(CONF_AWAY, True)
 
-    @asyncio.coroutine
-    def async_turn_away_mode_off(self):
+    async def async_turn_away_mode_off(self):
         """Turn away mode off."""
-        self.set_value('away', False)
+        await self.set_value(CONF_AWAY, False)
 
-    @asyncio.coroutine
-    def async_turn_on(self):
+    async def async_turn_on(self):
         """Turn on."""
-        self.set_value('is_on', True)
+        await self.set_value(CONF_IS_ON, True)
 
-    @asyncio.coroutine
-    def async_turn_off(self):
+    async def async_turn_off(self):
         """Turn off."""
-        self.set_value('is_on', False)
+        await self.set_value(CONF_IS_ON, False)
 
     def get_value(self, prop):
         """Get property value"""
@@ -180,10 +189,11 @@ class SaswellClimate(ClimateDevice):
             return devs[self._index][prop]
         return None
 
-    def set_value(self, prop, value):
+    async def set_value(self, prop, value):
         """Set property value"""
-        if self._saswell.control(self._index, prop, value):
+        if await self._saswell.control(self._index, prop, value):
             self.async_schedule_update_ha_state()
+
 
 class SaswellData():
     """Class for handling the data retrieval."""
@@ -194,54 +204,39 @@ class SaswellData():
         self._username = username.replace('@', '%40')
         self._password = password
         self._token_path = hass.config.path(TOKEN_FILE + username)
-        self._token = None
         self.devs = None
 
-    @asyncio.coroutine
-    def make_sensors(self, name):
-        """Make sensors with online data."""
         try:
             with open(self._token_path) as file:
                 self._token = file.read()
-                _LOGGER.debug("Load: %s => %s", self._token_path, self._token)
+                _LOGGER.debug("Load token: %s", self._token_path)
         except BaseException:
-            pass
+            self._token = None
 
-        self.update_data()
-        if not self.devs:
-            return None
-
-        devices = []
-        for index in range(len(self.devs)):
-            devices.append(SaswellClimate(self, name, index))
-        self._devices = devices
-        return devices
-
-    @asyncio.coroutine
-    def async_update(self, time):
+    async def async_update(self, time):
         """Update online data and update ha state."""
         old_devs = self.devs
-        self.update_data()
+        await self.update_data()
 
         tasks = []
         index = 0
-        for device in self._devices:
+        for device in self.devices:
             if not old_devs or not self.devs \
                     or old_devs[index] != self.devs[index]:
                 _LOGGER.info('%s: => %s', device.name, device.state)
                 tasks.append(device.async_update_ha_state())
 
         if tasks:
-            yield from asyncio.wait(tasks, loop=self._hass.loop)
+            await asyncio.wait(tasks, loop=self._hass.loop)
 
-    def update_data(self):
+    async def update_data(self):
         """Update online data."""
         try:
-            json = self.list()
+            json = await self.request(LIST_URL)
             if ('error' in json) and (json['error'] != '0'):
                 _LOGGER.debug("Reset token: error=%s", json['error'])
                 self._token = None
-                json = self.list()
+                json = await self.request(LIST_URL)
             devs = []
             for dev in json:
                 status = dev['status'].split(',')
@@ -257,11 +252,7 @@ class SaswellData():
             import traceback
             _LOGGER.error('Exception: %s', traceback.format_exc())
 
-    def list(self):
-        """Fetch the latest data from server."""
-        return self.request(LIST_URL)
-
-    def control(self, index, prop, value):
+    async def control(self, index, prop, value):
         """Control device via server."""
         try:
             if prop == 'is_on':
@@ -277,7 +268,7 @@ class SaswellData():
                 return False
 
             device_id = self.devs[index]['id']
-            json = self.request(CTRL_URL % (data, device_id, sensor_id))
+            json = await self.request(CTRL_URL % (data, device_id, sensor_id))
             _LOGGER.debug("Control device: prop=%s, json=%s", prop, json)
             if json['result']:
                 self.devs[index][prop] = value
@@ -288,24 +279,28 @@ class SaswellData():
             _LOGGER.error('Exception: %s', traceback.format_exc())
             return False
 
-    def request(self, url):
+    async def request(self, url):
         """Request from server."""
+        session = self._hass.helpers.aiohttp_client.async_get_clientsession()
         if self._token is None:
             headers = {'User-Agent': USER_AGENT}
             url = AUTH_URL % (self._password, self._username)
-            text = requests.get(url, headers=headers).text
+            async with session.get(url, headers=headers) as response:
+                text = await response.text()
             _LOGGER.info("Get token: %s", text)
             start = text.find('token:')
-            if start != -1 :
-                start += 6
-                end = text.find('\n', start) - 1
-                self._token = text[start:end]
-                with open(self._token_path, 'w') as file:
-                    file.write(self._token)
-            else:
+            if start == -1 :
                 return None
+
+            start += 6
+            end = text.find('\n', start) - 1
+            self._token = text[start:end]
+            with open(self._token_path, 'w') as file:
+                file.write(self._token)
+
         headers = {'User-Agent': USER_AGENT}
         url += "&timestamp=%s&token=%s" % \
             (time.strftime('%Y-%m-%d%%20%H%%3A%M%%3A%S'), self._token)
         _LOGGER.debug("URL: %s", url)
-        return requests.get(url, headers=headers).json()
+        async with session.get(url, headers=headers) as response:
+            return await response.json(content_type=None)
