@@ -5,6 +5,7 @@ For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/sensor.phicomm/
 """
 
+import aiohttp
 import asyncio
 import logging
 import voluptuous as vol
@@ -64,8 +65,18 @@ async def async_setup_platform(hass, config, async_add_devices,
     sensors = config[CONF_SENSORS]
     scan_interval = config[CONF_SCAN_INTERVAL]
 
-    phicomm = PhicommData(username, password, \
-        hass.config.path(TOKEN_FILE + username), \
+    def load_file(filename):
+        """Load file content from a file."""
+        try:
+            with open(filename) as fdesc:
+                return fdesc.read()
+        except FileNotFoundError:
+            return None
+
+    token_path = hass.config.path(TOKEN_FILE + username)
+    token = await hass.async_add_job(load_file, token_path)
+
+    phicomm = PhicommData(username, password, token_path, token,
         hass.helpers.aiohttp_client.async_get_clientsession(), hass.loop)
     await phicomm.update_data()
     if not phicomm.devs:
@@ -151,20 +162,15 @@ class PhicommSensor(Entity):
 class PhicommData():
     """Class for handling the data retrieval."""
 
-    def __init__(self, username, password, token_path, session, loop):
+    def __init__(self, username, password, token_path, token, session, loop):
         """Initialize the data object."""
         self._username = username
         self._password = password
         self._token_path = token_path
         self._session = session
         self._loop = loop
+        self._token = token
         self.devs = None
-
-        try:
-            with open(self._token_path) as file:
-                self._token = file.read()
-        except BaseException:
-            self._token = None
 
     async def async_update(self, time):
         """Update online data and update ha state."""
@@ -174,7 +180,7 @@ class PhicommData():
         tasks = []
         for device in self.devices:
             if device.state != device.state_from_devs(old_devs):
-                _LOGGER.info('%s: => %s', device.name, device.state)
+                _LOGGER.debug('%s: => %s', device.name, device.state)
                 tasks.append(device.async_update_ha_state())
 
         if tasks:
@@ -184,14 +190,15 @@ class PhicommData():
         """Update online data."""
         try:
             json = await self.fetch_data()
-            if ('error' in json) and (json['error'] != '0'):
-                _LOGGER.debug("Reset token: error=%s", json['error'])
+            if json and json.get('error') != '0':
+                _LOGGER.debug("Reset token: error=%s", json.get('error'))
                 self._token = None
                 json = await self.fetch_data()
+
             self.devs = json['data']['devs']
-            _LOGGER.info("Get data: devs=%s", self.devs)
-        except BaseException:
-            self.devs = {}
+            _LOGGER.debug("Get data: devs=%s", self.devs)
+        except (aiohttp.client_exceptions.ClientConnectorError, KeyError):
+            self.devs = None
             import traceback
             _LOGGER.error('Exception: %s', traceback.format_exc())
 
