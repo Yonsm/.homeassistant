@@ -5,12 +5,13 @@ For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/sensor.phicomm/
 """
 
-import aiohttp
 import asyncio
 import logging
-import voluptuous as vol
 
 from datetime import timedelta
+
+import voluptuous as vol
+import aiohttp
 
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import (
@@ -77,7 +78,8 @@ async def async_setup_platform(hass, config, async_add_devices,
     token = await hass.async_add_job(load_file, token_path)
 
     phicomm = PhicommData(username, password, token_path, token,
-        hass.helpers.aiohttp_client.async_get_clientsession(), hass.loop)
+                          hass.helpers.aiohttp_client
+                          .async_get_clientsession(), hass.loop)
     await phicomm.update_data()
     if not phicomm.devs:
         _LOGGER.error("No sensors added: %s.", name)
@@ -171,6 +173,7 @@ class PhicommData():
         self._loop = loop
         self._token = token
         self.devs = None
+        self.devices = None
 
     async def async_update(self, time):
         """Update online data and update ha state."""
@@ -212,8 +215,8 @@ class PhicommData():
                     'phonenumber': self._username,
                     'password': md5.hexdigest().upper()}
             headers = {'User-Agent': USER_AGENT}
-            async with self._session.post(TOKEN_URL, headers=headers, \
-                data=data) as response:
+            async with self._session.post(TOKEN_URL, headers=headers,
+                                          data=data) as response:
                 json = await response.json(content_type=None)
 
             _LOGGER.debug("Get token: %s", json)
