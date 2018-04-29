@@ -7,11 +7,9 @@ https://home-assistant.io/components/sensor.phicomm/
 
 import asyncio
 import logging
+import voluptuous as vol
 
 from datetime import timedelta
-
-import voluptuous as vol
-import aiohttp
 
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import (
@@ -66,20 +64,9 @@ async def async_setup_platform(hass, config, async_add_devices,
     sensors = config[CONF_SENSORS]
     scan_interval = config[CONF_SCAN_INTERVAL]
 
-    def load_file(filename):
-        """Load file content from a file."""
-        try:
-            with open(filename) as fdesc:
-                return fdesc.read()
-        except FileNotFoundError:
-            return None
-
-    token_path = hass.config.path(TOKEN_FILE + username)
-    token = await hass.async_add_job(load_file, token_path)
-
-    phicomm = PhicommData(username, password, token_path, token,
-                          hass.helpers.aiohttp_client
-                          .async_get_clientsession(), hass.loop)
+    phicomm = PhicommData(username, password, \
+        hass.config.path(TOKEN_FILE + username), \
+        hass.helpers.aiohttp_client.async_get_clientsession(), hass.loop)
     await phicomm.update_data()
     if not phicomm.devs:
         _LOGGER.error("No sensors added: %s.", name)
@@ -164,16 +151,20 @@ class PhicommSensor(Entity):
 class PhicommData():
     """Class for handling the data retrieval."""
 
-    def __init__(self, username, password, token_path, token, session, loop):
+    def __init__(self, username, password, token_path, session, loop):
         """Initialize the data object."""
         self._username = username
         self._password = password
         self._token_path = token_path
         self._session = session
         self._loop = loop
-        self._token = token
         self.devs = None
-        self.devices = None
+
+        try:
+            with open(self._token_path) as file:
+                self._token = file.read()
+        except BaseException:
+            self._token = None
 
     async def async_update(self, time):
         """Update online data and update ha state."""
@@ -183,7 +174,7 @@ class PhicommData():
         tasks = []
         for device in self.devices:
             if device.state != device.state_from_devs(old_devs):
-                _LOGGER.debug('%s: => %s', device.name, device.state)
+                _LOGGER.info('%s: => %s', device.name, device.state)
                 tasks.append(device.async_update_ha_state())
 
         if tasks:
@@ -193,15 +184,14 @@ class PhicommData():
         """Update online data."""
         try:
             json = await self.fetch_data()
-            if json and json.get('error') != '0':
-                _LOGGER.debug("Reset token: error=%s", json.get('error'))
+            if ('error' in json) and (json['error'] != '0'):
+                _LOGGER.debug("Reset token: error=%s", json['error'])
                 self._token = None
                 json = await self.fetch_data()
-
             self.devs = json['data']['devs']
-            _LOGGER.debug("Get data: devs=%s", self.devs)
-        except (aiohttp.client_exceptions.ClientConnectorError, KeyError):
-            self.devs = None
+            _LOGGER.info("Get data: devs=%s", self.devs)
+        except BaseException:
+            self.devs = {}
             import traceback
             _LOGGER.error('Exception: %s', traceback.format_exc())
 
@@ -215,8 +205,8 @@ class PhicommData():
                     'phonenumber': self._username,
                     'password': md5.hexdigest().upper()}
             headers = {'User-Agent': USER_AGENT}
-            async with self._session.post(TOKEN_URL, headers=headers,
-                                          data=data) as response:
+            async with self._session.post(TOKEN_URL, headers=headers, \
+                data=data) as response:
                 json = await response.json(content_type=None)
 
             _LOGGER.debug("Get token: %s", json)

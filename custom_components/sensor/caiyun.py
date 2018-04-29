@@ -49,7 +49,7 @@ _LOGGER = logging.getLogger(__name__)
 SCAN_INTERVAL = timedelta(seconds=1200)
 
 USER_AGENT = 'ColorfulCloudsPro/3.2.2 (iPhone; iOS 11.3; Scale/3.00)'
-DEVIEC_ID = '5F544F93-44F1-43C9-94B2-%12X' % random.randint(0,0xffffffffffff)
+DEVIEC_ID = '5F544F93-44F1-43C9-94B2-%012X' % random.randint(0,0xffffffffffff)
 
 WEATHER_ICONS = {
     'CLEAR_DAY': ('晴天','sunny'),

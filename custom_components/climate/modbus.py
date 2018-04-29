@@ -224,6 +224,9 @@ class ModbusClimate(ClimateDevice):
     @property
     def current_operation(self):
         """Return current operation ie. heat, cool, idle."""
+        if not self.is_on:
+            return 'off'
+
         operation = self.get_value(CONF_OPERATION)
         if operation is not None and operation < len(self._operation_list):
             return self._operation_list[operation]
@@ -330,8 +333,11 @@ class ModbusClimate(ClimateDevice):
     def set_operation_mode(self, operation_mode):
         """Set new operation mode."""
         try:
-            index = self._operation_list.index(operation_mode)
-            self.set_value(CONF_OPERATION, index)
+            is_on = operation_mode != 'off'
+            self.set_value(CONF_IS_ON, is_on)
+            if is_on:
+                index = self._operation_list.index(operation_mode)
+                self.set_value(CONF_OPERATION, index)
         except ValueError:
             _LOGGER.error("Invalid operation_mode: %s", operation_mode)
 
