@@ -336,6 +336,11 @@ class ModbusClimate(ClimateDevice):
             is_on = operation_mode != 'off'
             self.set_value(CONF_IS_ON, is_on)
             if is_on:
+                if operation_mode == 'auto':
+                    current = self.current_temperature
+                    target = self.target_temperature
+                    operation_mode = 'heat' \
+                        if current and target and current < target else 'cool'
                 index = self._operation_list.index(operation_mode)
                 self.set_value(CONF_OPERATION, index)
         except ValueError:
