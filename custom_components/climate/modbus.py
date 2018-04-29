@@ -7,6 +7,7 @@ https://home-assistant.io/components/climate.modbus/
 
 import logging
 import struct
+
 import voluptuous as vol
 
 from homeassistant.components.climate import (
@@ -51,6 +52,7 @@ CONF_SCALE = 'scale'
 
 REGISTER_TYPE_HOLDING = 'holding'
 REGISTER_TYPE_INPUT = 'input'
+REGISTER_TYPE_COIL = 'coil'
 
 DATA_TYPE_INT = 'int'
 DATA_TYPE_UINT = 'uint'
@@ -61,9 +63,9 @@ SUPPORTED_FEATURES = {
     CONF_TEMPERATURE: 0,
     CONF_TARGET_TEMPERATURE: SUPPORT_TARGET_TEMPERATURE,
     CONF_HUMIDITY: 0,
-    CONF_TARGET_HUMIDITY: SUPPORT_TARGET_HUMIDITY |
-                       SUPPORT_TARGET_HUMIDITY_LOW |
-                       SUPPORT_TARGET_HUMIDITY_HIGH,
+    CONF_TARGET_HUMIDITY: (SUPPORT_TARGET_HUMIDITY |
+                           SUPPORT_TARGET_HUMIDITY_LOW |
+                           SUPPORT_TARGET_HUMIDITY_HIGH),
     CONF_OPERATION: SUPPORT_OPERATION_MODE,
     CONF_FAN: SUPPORT_FAN_MODE,
     CONF_SWING: SUPPORT_SWING_MODE,
@@ -91,7 +93,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
-    """Set up the Modbus climate devices."""
+    """Set up the Modbus Thermostat Platform."""
     name = config.get(CONF_NAME)
     operation_list = config.get(CONF_OPERATION_LIST)
     fan_list = config.get(CONF_FAN_LIST)
@@ -132,7 +134,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
 
         mods[prop] = mod
 
-    if len(mods) == 0:
+    if not mods:
         _LOGGER.error("Invalid config %s: no modbus items", name)
         return
 
@@ -151,9 +153,9 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
         devices.append(ModbusClimate(name, operation_list, fan_list,
                                      swing_list, mods, index))
 
-    if len(devices) == 0:
+    if not devices:
         for prop in mods:
-            if CONF_REGISTER not in mod:
+            if CONF_REGISTER not in mods[prop]:
                 _LOGGER.error("Invalid config %s/%s: no register", name, prop)
                 return
         devices.append(ModbusClimate(name, operation_list, fan_list,
@@ -223,7 +225,7 @@ class ModbusClimate(ClimateDevice):
     def current_operation(self):
         """Return current operation ie. heat, cool, idle."""
         operation = self.get_value(CONF_OPERATION)
-        if operation is not None and  operation < len(self._operation_list):
+        if operation is not None and operation < len(self._operation_list):
             return self._operation_list[operation]
         return None
 
@@ -282,10 +284,11 @@ class ModbusClimate(ClimateDevice):
         """Update state."""
         for prop in self._mods:
             mod = self._mods[prop]
-            register_type, slave, register, count, scale, offset = \
+            register_type, slave, register, scale, offset = \
                 self.register_info(mod)
+            count = mod[CONF_COUNT] if CONF_COUNT in mod else 1
 
-            if register_type == 'coil':
+            if register_type == REGISTER_TYPE_COIL:
                 result = modbus.HUB.read_coils(slave, register, count)
                 value = bool(result.bits[0])
             else:
@@ -377,28 +380,26 @@ class ModbusClimate(ClimateDevice):
         self.set_value(CONF_IS_ON, False)
 
     def register_info(self, mod):
-        """Get register info"""
+        """Get register info."""
         register_type = mod.get(CONF_REGISTER_TYPE)
         register = mod[CONF_REGISTER] \
             if self._index == -1 else mod[CONF_REGISTERS][self._index]
         slave = mod[CONF_SLAVE] if CONF_SLAVE in mod else 1
-        count = mod[CONF_COUNT] if CONF_COUNT in mod else 1
         scale = mod[CONF_SCALE] if CONF_SCALE in mod else 1
         offset = mod[CONF_OFFSET] if CONF_OFFSET in mod else 0
-        return (register_type, slave, register, count, scale, offset)
+        return (register_type, slave, register, scale, offset)
 
     def get_value(self, prop):
-        """Get property value"""
+        """Get property value."""
         return self._values.get(prop)
 
     def set_value(self, prop, value):
-        """Set property value"""
+        """Set property value."""
         mod = self._mods[prop]
-        register_type, slave, register, count, scale, offset = \
-                self.register_info(mod)
+        register_type, slave, register, scale, offset = self.register_info(mod)
         _LOGGER.info("Write %s: %s = %f", self.name, prop, value)
 
-        if register_type == 'coil':
+        if register_type == REGISTER_TYPE_COIL:
             modbus.HUB.write_coil(slave, register, bool(value))
         else:
             val = (value - offset) / scale
