@@ -219,4 +219,4 @@ class PhicommData():
 
         headers = {'User-Agent': USER_AGENT, 'Authorization': self._token}
         async with self._session.get(DATA_URL, headers=headers) as response:
-            return await response.json()
+            return await response.json(content_type=None)
