@@ -293,7 +293,11 @@ class ModbusClimate(ClimateDevice):
 
             if register_type == REGISTER_TYPE_COIL:
                 result = modbus.HUB.read_coils(slave, register, count)
-                value = bool(result.bits[0])
+                try:
+                	value = bool(result.bits[0])
+                except:
+                    _LOGGER.error("No response from %s %s", self._name, prop)
+                    return
             else:
                 if register_type == REGISTER_TYPE_INPUT:
                     result = modbus.HUB.read_input_registers(slave,
@@ -308,7 +312,7 @@ class ModbusClimate(ClimateDevice):
                     if mod.get(CONF_REVERSE_ORDER):
                         registers.reverse()
                 except AttributeError:
-                    _LOGGER.error("No response from modbus %s", prop)
+                    _LOGGER.error("No response from %s %s", self._name, prop)
                     return
 
                 byte_string = b''.join(
