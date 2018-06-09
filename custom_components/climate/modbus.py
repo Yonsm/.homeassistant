@@ -282,6 +282,17 @@ class ModbusClimate(ClimateDevice):
     def is_on(self):
         """Return true if the device is on."""
         return self.get_value(CONF_IS_ON)
+        
+    def try_reconnect(self):
+        from pymodbus.client.sync import ModbusTcpClient as ModbusClient
+        from pymodbus.transaction import ModbusRtuFramer as ModbusFramer
+        client = ModbusClient(host=modbus.HUB._client.host,
+                              port=modbus.HUB._client.port,
+                              framer=ModbusFramer,
+                              timeout=modbus.HUB._client.timeout)
+        _LOGGER.error("Reconnect: %s", client)
+        modbus.HUB._client = client
+        modbus.HUB._client.connect()
 
     def update(self):
         """Update state."""
@@ -297,22 +308,24 @@ class ModbusClimate(ClimateDevice):
                 	value = bool(result.bits[0])
                 except:
                     _LOGGER.error("No response from %s %s", self._name, prop)
+                    self.try_reconnect()
                     return
             else:
-                if register_type == REGISTER_TYPE_INPUT:
-                    result = modbus.HUB.read_input_registers(slave,
+                try:
+                    if register_type == REGISTER_TYPE_INPUT:
+                        result = modbus.HUB.read_input_registers(slave,
                                                              register, count)
-                else:
-                    result = modbus.HUB.read_holding_registers(slave,
+                    else:
+                        result = modbus.HUB.read_holding_registers(slave,
                                                                register, count)
 
-                val = 0
-                try:
+                    val = 0
                     registers = result.registers
                     if mod.get(CONF_REVERSE_ORDER):
                         registers.reverse()
                 except AttributeError:
                     _LOGGER.error("No response from %s %s", self._name, prop)
+                    self.try_reconnect()
                     return
 
                 byte_string = b''.join(
