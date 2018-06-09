@@ -323,7 +323,7 @@ class ModbusClimate(ClimateDevice):
                     registers = result.registers
                     if mod.get(CONF_REVERSE_ORDER):
                         registers.reverse()
-                except AttributeError:
+                except:
                     _LOGGER.error("No response from %s %s", self._name, prop)
                     self.try_reconnect()
                     return
