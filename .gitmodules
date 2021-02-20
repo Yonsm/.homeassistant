@@ -7,3 +7,6 @@
 [submodule "modules/ZhiBot"]
 	path = modules/ZhiBot
 	url = git@github.com:Yonsm/ZhiBot.git
+[submodule "modules/ZhiCaiYun"]
+	path = modules/ZhiCaiYun
+	url = git@github.com:Yonsm/ZhiCaiYun.git
