@@ -4,3 +4,6 @@
 [submodule "modules/ZhiAct"]
 	path = modules/ZhiAct
 	url = git@github.com:Yonsm/ZhiAct.git
+[submodule "modules/ZhiBot"]
+	path = modules/ZhiBot
+	url = git@github.com:Yonsm/ZhiBot.git
