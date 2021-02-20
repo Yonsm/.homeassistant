@@ -1,3 +1,6 @@
 [submodule "www"]
 	path = www
 	url = git@github.com:Yonsm/ZhiDash.git
+[submodule "modules/ZhiAct"]
+	path = modules/ZhiAct
+	url = git@github.com:Yonsm/ZhiAct.git
