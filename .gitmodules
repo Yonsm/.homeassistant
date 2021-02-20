@@ -28,3 +28,6 @@
 [submodule "modules/ZhiViomi"]
 	path = modules/ZhiViomi
 	url = git@github.com:Yonsm/ZhiViomi.git
+[submodule "modules/SmartIR"]
+	path = modules/SmartIR
+	url = git@github.com:smartHomeHub/SmartIR.git
