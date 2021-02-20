@@ -19,3 +19,6 @@
 [submodule "modules/ZhiMrBond"]
 	path = modules/ZhiMrBond
 	url = git@github.com:Yonsm/ZhiMrBond.git
+[submodule "modules/ZhiMsg"]
+	path = modules/ZhiMsg
+	url = git@github.com:Yonsm/ZhiMsg.git
