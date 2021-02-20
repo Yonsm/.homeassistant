@@ -1,0 +1,72 @@
+- alias: 室外空气好
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.yang_tai_ke_li_wu
+      below: 20
+      for:
+        minutes: 10
+  condition:
+    - condition: time
+      after: '07:00'
+      before: '22:00'
+    - condition: state
+      entity_id: binary_sensor.door_window_sensor_158d000228a52b
+      state: 'off'
+    - condition: numeric_state
+      entity_id: sensor.yang_tai_wen_du
+      above: 10
+      below: 30
+    - condition: or
+      conditions:
+        - condition: numeric_state
+          entity_id: sensor.can_ting_ke_li_wu
+          above: 20
+        - condition: numeric_state
+          entity_id: sensor.ke_ting_er_yang_hua_tan
+          above: 800
+  action:
+    - service: zhimsg.miai
+      data:
+        message: 外面空气很好，可以打开门窗
+
+- alias: 室内空气差
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.can_ting_ke_li_wu
+      above: 35
+      for:
+        minutes: 2
+  condition:
+    - condition: time
+      after: '06:00'
+      before: '23:00'
+  action:
+    - service: zhimsg.miai
+      data_template:
+        message: '客厅PM2.5为{{ states("sensor.can_ting_ke_li_wu") }}，空气不好。{% if is_state("binary_sensor.door_window_sensor_158d0001f3d2d1", "on") or is_state("binary_sensor.door_window_sensor_158d0003cf4735", "on") or is_state("binary_sensor.door_window_sensor_158d000228a52b", "on") %}请关好{% if is_state("binary_sensor.door_window_sensor_158d0001f3d2d1", "on") %}厨房门、{% endif %}{% if is_state("binary_sensor.door_window_sensor_158d0003cf4735", "on") %}洗手间门、{% endif %}{% if is_state("binary_sensor.door_window_sensor_158d000228a52b", "on") %}阳台门{% endif %}{% endif %}'
+    - delay: 600
+    - condition: numeric_state
+      entity_id: sensor.can_ting_ke_li_wu
+      above: 40
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: binary_sensor.door_window_sensor_158d0001f3d2d1
+          state: 'on'
+        - condition: state
+          entity_id: binary_sensor.door_window_sensor_158d0003cf4735
+          state: 'on'
+        - condition: state
+          entity_id: binary_sensor.door_window_sensor_158d000228a52b
+          state: 'on'
+    - service: automation.trigger
+      entity_id: automation.shi_nei_kong_qi_chai
+
+- alias: 环境状况
+  trigger:
+    - platform: time
+      at: '7:30:00'
+  action:
+    - service: zhimsg.ding
+      data_template:
+        message: '室内PM2.5为{{ states("sensor.can_ting_ke_li_wu") }}，温度为{{ states("sensor.can_ting_wen_du") }}，CO2为客厅{{ states("sensor.ke_ting_er_yang_hua_tan") }}/主卧{{ states("sensor.zhu_wo_er_yang_hua_tan") }}/儿童房{{ states("sensor.er_tong_fang_er_yang_hua_tan") }}。室外PM2.5为{{ states("sensor.yang_tai_ke_li_wu") }}，温度为{{ states("sensor.yang_tai_wen_du") }}；{{ state_attr("weather.tian_qi", "attribution") }}'

@@ -1,0 +1,80 @@
+- alias: 调节餐厅净化器
+  trigger:
+    - platform: state
+      entity_id: sensor.can_ting_ke_li_wu
+  action:
+    - service: zhiact.actuate
+      data:
+        sensor_id: sensor.can_ting_ke_li_wu
+        sensor_values: [10, 20, 50]
+        entity_id: fan.can_ting_jing_hua_qi
+        entity_attr: speed
+        entity_values: [low, medium, high]
+        # condition_attr: oscillating
+        # condition_values: [false]
+        delay: 0
+
+- alias: 调节主卧净化器
+  trigger:
+    - platform: state
+      entity_id: sensor.zhu_wo_ke_li_wu
+  action:
+    - service: zhiact.actuate
+      data:
+        sensor_id: sensor.zhu_wo_ke_li_wu
+        sensor_values: [7, 15, 40]
+        alt_sensor_values: [5, 20, 40]
+        entity_id: fan.zhu_wo_jing_hua_qi
+        entity_attr: speed
+        entity_values: [low, medium, high]
+        # condition_attr: oscillating
+        # condition_values: [false]
+        delay: 0
+
+- alias: 调节次卧净化器
+  trigger:
+    - platform: state
+      entity_id: sensor.ci_wo_ke_li_wu
+  action:
+    - service: zhiact.actuate
+      data:
+        sensor_id: sensor.ci_wo_ke_li_wu
+        sensor_values: [15, 25, 35, 45, 50, 60, 70, 80, 90, 100]
+        entity_id: fan.ci_wo_jing_hua_qi
+        entity_attr: favorite_level
+        service: xiaomi_miio.fan_set_favorite_level
+        service_attr: level
+        entity_values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        condition_attr: mode
+        condition_values: [idle, favorite]
+
+- alias: 调节儿童房净化器
+  trigger:
+    - platform: state
+      entity_id: sensor.er_tong_fang_ke_li_wu
+  action:
+    - service: zhiact.actuate
+      data:
+        sensor_id: sensor.er_tong_fang_ke_li_wu
+        sensor_values: [10, 20, 50]
+        alt_sensor_values: [7, 30, 50]
+        entity_id: fan.er_tong_fang_jing_hua_qi
+        entity_attr: speed
+        entity_values: [low, medium, high]
+        # condition_attr: oscillating
+        # condition_values: [false]
+        delay: 0
+
+# - alias: 调节书房净化器
+#   trigger:
+#     - platform: state
+#       entity_id: sensor.aircat2_pm25
+#   action:
+#     - service: zhiact.actuate
+#       data:
+#         sensor_id: sensor.aircat2_pm25
+#         sensor_values: [10, 20, 50]
+#         alt_sensor_values: [10, 30, 50]
+#         entity_id: fan.shu_fang_jing_hua_qi
+#         entity_attr: speed
+#         entity_values: [low, medium, high]

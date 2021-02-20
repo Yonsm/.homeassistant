@@ -1,0 +1,69 @@
+- alias: 书房亮度高-关窗帘
+  trigger:
+    - platform: time
+      at: '12:30:00'
+    - platform: numeric_state
+      entity_id: sensor.shu_fang_liang_du
+      above: 200
+      for:
+        minutes: 10
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.shu_fang_liang_du
+      above: 180
+    - condition: time
+      after: '12:00'
+      before: '16:00'
+  action:
+    - service: cover.close_cover
+      entity_id: cover.shu_fang_chuang_lian
+
+- alias: 书房亮度正常-开窗帘
+  trigger:
+    - platform: sun
+      event: sunset
+      offset: '-01:30:00'
+  condition:
+    - condition: state
+      entity_id: cover.shu_fang_chuang_lian
+      state: closed
+    - condition: state
+      entity_id: media_player.tou_ying_yi
+      state: 'off'
+  action:
+    - service: cover.open_cover
+      entity_id: cover.shu_fang_chuang_lian
+
+- alias: 过道门开关-开关卷帘
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_158d00041c74da
+      from: 'off'
+      to: 'on'
+      for:
+        seconds: 10
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_158d00041c74da
+      from: 'on'
+      to: 'off'
+  action:
+    - service_template: 'cover.{% if is_state("binary_sensor.door_window_sensor_158d00041c74da", "off") %}open{% else %}close{% endif %}_cover'
+      entity_id: cover.curtain_158d0003f7951d
+
+- alias: 主卧窗帘开关-调整新风机
+  trigger:
+    - platform: state
+      entity_id: cover.curtain_158d000405d535
+      to: closed
+    - platform: state
+      entity_id: cover.curtain_158d000405d535
+      to: open
+  action:
+    - service: fan.set_speed
+      data_template:
+        entity_id: fan.zhu_wo_xin_feng_ji
+        speed: '{% if is_state("cover.curtain_158d000405d535", "closed") %}Silent{% else %}Middle{% endif %}'
+    - service: xiaomi_miio.fan_set_led_brightness
+      data_template:
+        entity_id: fan.zhu_wo_xin_feng_ji
+        brightness: '{% if is_state("cover.curtain_158d000405d535", "closed") %}2{% else %}0{% endif %}'

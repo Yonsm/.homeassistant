@@ -1,0 +1,127 @@
+- alias: 睡眠准备
+  trigger:
+    - platform: time
+      at: '20:30:00'
+  action:
+    - service: cover.close_cover
+      entity_id: cover.shu_fang_chuang_lian
+    - service: xiaomi_miio.fan_set_led_brightness
+      data:
+        entity_id: fan.ke_ting_xin_feng_ji
+        brightness: 2
+    - service: xiaomi_miio.fan_set_led_brightness
+      data:
+        entity_id: fan.zhu_wo_xin_feng_ji
+        brightness: 2
+    # - service: fan.set_speed
+    #   data:
+    #     entity_id: fan.ci_wo_jing_hua_qi
+    #     speed: Silent
+    # - service: climate.set_temperature
+    #   data:
+    #     entity_id: climate.zhu_wo_kong_diao
+    #     temperature: 25
+    #     #hvac_mode: cool
+    # - service: climate.set_temperature
+    #   data:
+    #     entity_id: climate.er_tong_fang_kong_diao
+    #     temperature: 25
+    #     #hvac_mode: cool
+
+- alias: 睡眠开始
+  trigger:
+    - platform: time
+      at: '21:30:00'
+  action:
+    - service: zhimsg.miai
+      data:
+        message: 音量30
+    - service: shell_command.magic_off
+    # - service: fan.set_speed
+    #   data:
+    #     entity_id: fan.zhu_wo_xin_feng_ji
+    #     speed: Auto
+
+# - alias: 睡眠深入
+#   trigger:
+#     - platform: time
+#       at: '00:00:01'
+#   action:
+#     - service: climate.set_temperature
+#       data:
+#         entity_id: climate.zhu_wo_kong_diao
+#         temperature: 26
+#         #hvac_mode: cool
+#     - service: climate.set_temperature
+#       data:
+#         entity_id: climate.er_tong_fang_kong_diao
+#         temperature: 26
+#         #hvac_mode: cool
+
+- alias: 睡眠早起
+  trigger:
+    - platform: time
+      at: '06:00:00'
+  action:
+    - service: shell_command.magic_on
+    - service: xiaomi_miio.fan_set_led_brightness
+      data:
+        entity_id: fan.ke_ting_xin_feng_ji
+        brightness: 0
+    - service: xiaomi_miio.fan_set_led_brightness
+      data:
+        entity_id: fan.zhu_wo_xin_feng_ji
+        brightness: 0
+
+- alias: 睡眠完成
+  trigger:
+    - platform: time
+      at: '07:30:00'
+  action:
+    - service: zhimsg.miai
+      data:
+        message: 音量30
+    # - service: climate.set_fan_mode
+    #   data:
+    #     entity_id: climate.zhu_wo_kong_diao
+    #     fan_mode: 自动
+    # - service: climate.set_fan_mode
+    #   data:
+    #     entity_id: climate.er_tong_fang_kong_diao
+    #     fan_mode: 自动
+    # - service: climate.turn_off
+    #   entity_id: climate.zhu_wo_kong_diao
+    # - service: climate.turn_off
+    #   entity_id: climate.er_tong_fang_kong_diao
+    # - service: climate.turn_off
+    #   entity_id: climate.shu_fang_kong_diao
+    # - service: fan.turn_off
+    #   entity_id: fan.er_tong_fang_feng_shan
+    # - service: fan.turn_off
+    #   entity_id: fan.shu_fang_feng_shan
+    - condition: time
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+        - sun
+    - service: automation.trigger
+      entity_id: automation.shui_mian_yan_chang
+
+- alias: 睡眠延长
+  trigger:
+    - platform: time
+      at: '10:00:00'
+  condition:
+    - condition: time
+      weekday:
+        - sat
+  action:
+    - service: cover.open_cover
+      entity_id: cover.shu_fang_chuang_lian
+    # - service: fan.set_speed
+    #   data:
+    #     entity_id: fan.zhu_wo_xin_feng_ji
+    #     speed: Middle

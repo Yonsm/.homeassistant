@@ -1,0 +1,159 @@
+- alias: 餐厅湿度高-开除湿机
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.can_ting_shi_du
+      above: 74
+      for:
+        minutes: 10
+  action:
+    - service: switch.turn_on
+      entity_id: switch.can_ting_chu_shi_ji
+
+- alias: 餐厅湿度正常-关除湿机
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.can_ting_shi_du
+      below: 70
+      for:
+        minutes: 10
+  action:
+    - service: switch.turn_off
+      entity_id: switch.can_ting_chu_shi_ji
+
+# - alias: 儿童房湿度高-开除湿机
+#   initial_state: true
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.er_tong_fang_shi_du
+#       above: 75
+#       for:
+#         minutes: 10
+#   condition:
+#     - condition: state
+#       entity_id: sun.sun
+#       state: above_horizon
+#   action:
+#     - service: switch.turn_on
+#       entity_id: switch.yi_gui_chu_shi_ji
+
+# - alias: 儿童房湿度正常-开除湿机
+#   initial_state: true
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.er_tong_fang_shi_du
+#       below: 72
+#       for:
+#         minutes: 10
+#     - platform: time
+#       at: '20:30:00'
+#   action:
+#     - service: switch.turn_off
+#       entity_id: switch.yi_gui_chu_shi_ji
+
+# - alias: 餐厅湿度低-开加湿器
+#   initial_state: true
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.can_ting_shi_du
+#       below: 56
+#       for:
+#         minutes: 10
+#   action:
+#     - service: automation.turn_off
+#       entity_id: automation.can_ting_jing_hua_qi_diao_jie
+#     - service: fan.oscillate
+#       data:
+#         entity_id: fan.can_ting_jing_hua_qi
+#         oscillating: true
+#     - service: fan.set_speed
+#       data:
+#         entity_id: fan.can_ting_jing_hua_qi
+#         speed: low
+
+# - alias: 餐厅湿度正常-关加湿器
+#   initial_state: true
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.can_ting_shi_du
+#       above: 60
+#       for:
+#         minutes: 10
+#   action:
+#     - service: automation.turn_on
+#       entity_id: automation.can_ting_jing_hua_qi_diao_jie
+#     - service: fan.oscillate
+#       data:
+#         entity_id: fan.can_ting_jing_hua_qi
+#         oscillating: false
+
+# - alias: 主卧湿度低-开加湿器
+#   initial_state: true
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.zhu_wo_shi_du
+#       below: 58
+#       for:
+#         minutes: 10
+#   action:
+#     - service: automation.turn_off
+#       entity_id: automation.zhu_wo_jing_hua_qi_diao_jie
+#     - service: fan.oscillate
+#       data:
+#         entity_id: fan.zhu_wo_jing_hua_qi
+#         oscillating: true
+#     - service: fan.set_speed
+#       data:
+#         entity_id: fan.zhu_wo_jing_hua_qi
+#         speed: low
+
+# - alias: 主卧湿度正常-关加湿器
+#   initial_state: true
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.zhu_wo_shi_du
+#       above: 62
+#       for:
+#         minutes: 10
+#   action:
+#     - service: automation.turn_on
+#       entity_id: automation.zhu_wo_jing_hua_qi_diao_jie
+#     - service: fan.oscillate
+#       data:
+#         entity_id: fan.zhu_wo_jing_hua_qi
+#         oscillating: false
+
+# - alias: 儿童房湿度低-开加湿器
+#   initial_state: true
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.er_tong_fang_shi_du
+#       below: 56
+#       for:
+#         minutes: 10
+#   action:
+#     - service: automation.turn_off
+#       entity_id: automation.er_tong_fang_jing_hua_qi_diao_jie
+#     - service: fan.oscillate
+#       data:
+#         entity_id: fan.er_tong_fang_jing_hua_qi
+#         oscillating: true
+#     - service: fan.set_speed
+#       data:
+#         entity_id: fan.er_tong_fang_jing_hua_qi
+#         speed: low
+
+# - alias: 儿童房湿度正常-关加湿器
+#   initial_state: true
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.er_tong_fang_shi_du
+#       above: 60
+#       for:
+#         minutes: 10
+#   action:
+#     - service: automation.turn_on
+#       entity_id: automation.er_tong_fang_jing_hua_qi_diao_jie
+#     - service: fan.oscillate
+#       data:
+#         entity_id: fan.er_tong_fang_jing_hua_qi
+#         oscillating: false

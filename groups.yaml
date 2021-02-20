@@ -1,0 +1,156 @@
+default_view:
+  icon: mdi:home-assistant
+  entities:
+    - group.yang_tai
+    - group.ke_ting
+    - group.can_ting
+    - group.guo_dao
+    - group.zhu_wo
+    - group.ci_wo
+    - group.er_tong_fang
+    - group.shu_fang
+    - person.ba_ba
+    - person.ma_ma
+    - person.wai_gong
+    - person.wai_po
+    - person.a_yi
+    - input_text.ding_ding_xin_shi
+    - camera.can_ting_she_xiang_ji
+    - camera.guo_dao_she_xiang_ji
+    - camera.zhu_wo_she_xiang_ji
+
+客厅:
+  icon: mdi:seat
+  entities:
+    - sensor.ke_ting_wen_du
+    - sensor.ke_ting_shi_du
+    - sensor.ke_ting_ke_li_wu
+    - sensor.ke_ting_er_yang_hua_tan
+    - light.ke_ting_tong_deng
+    - light.ke_ting_tong_deng_2
+    - media_player.ke_ting_dian_shi
+    - fan.ke_ting_bi_shan
+    - fan.ke_ting_xin_feng_ji
+    - climate.ke_ting_kong_diao
+    - climate.ke_ting_di_nuan
+    - remote.hong_wai_yao_kong
+    - input_text.ke_ting_yin_xiang
+
+餐厅:
+  icon: mdi:silverware-fork-knife
+  entities:
+    - sensor.can_ting_wen_du
+    - sensor.can_ting_shi_du
+    - sensor.can_ting_ke_li_wu
+    - sensor.can_ting_jia_quan
+    - sensor.illumination_34ce0090901a
+    - binary_sensor.door_window_sensor_158d0001f3d2d1
+    - binary_sensor.door_window_sensor_158d0001f3e5be
+    - light.can_ting_tong_deng
+    - light.can_ting_tong_deng_2
+    - light.gateway_light_34ce0090901a
+    - light.can_ting_jian_ce_yi
+    - switch.can_ting_chu_shi_ji
+    - fan.can_ting_jing_hua_qi
+    - climate.can_ting_kong_diao
+
+过道:
+  icon: mdi:road
+  entities:
+    - sensor.guo_dao_wen_du
+    - sensor.guo_dao_shi_du
+    - sensor.guo_dao_ke_li_wu
+    - sensor.guo_dao_jia_quan
+    - binary_sensor.motion_sensor_158d0001d66ce9
+    - binary_sensor.door_window_sensor_158d00041c74da
+    - binary_sensor.cube_158d0002a66db1
+    - light.guo_dao_bei_jing_deng
+    - light.guo_dao_jian_ce_yi
+    - switch.plug_158d0003a58422
+    - cover.curtain_158d0003f7951d
+    - binary_sensor.motion_sensor_158d0001f4a238
+    - binary_sensor.door_window_sensor_158d0003cf4735
+    - light.xi_shou_jian_deng
+    - switch.xi_shou_jian_pai_qi_shan
+    - input_text.guo_dao_yin_xiang
+
+主卧:
+  icon: mdi:bed-king
+  entities:
+    - sensor.zhu_wo_wen_du
+    - sensor.zhu_wo_shi_du
+    - sensor.zhu_wo_ke_li_wu
+    - sensor.zhu_wo_er_yang_hua_tan
+    - sensor.zhu_wo_liang_du
+    - binary_sensor.door_window_sensor_158d0004611461
+    - binary_sensor.switch_158d0001e59b33
+    - binary_sensor.switch_158d00054e98b0
+    - light.zhu_wo_deng
+    #- switch.zhu_wo_dian_shi
+    #- switch.yi_gui_chu_shi_ji
+    - media_player.zhu_wo_dian_shi
+    - cover.curtain_158d000405d535
+    - fan.zhu_wo_xin_feng_ji
+    - fan.zhu_wo_jing_hua_qi
+    - fan.zhu_wo_bi_shan
+    # - fan.zhu_wo_feng_shan
+    - fan.xi_yi_ji
+    - climate.zhu_wo_kong_diao
+    - climate.zhu_wo_di_nuan
+
+次卧:
+  icon: mdi:bed-double
+  entities:
+    - sensor.ci_wo_wen_du
+    - sensor.ci_wo_shi_du
+    - sensor.ci_wo_ke_li_wu
+    - fan.ci_wo_jing_hua_qi
+
+儿童房:
+  icon: mdi:car-child-seat
+  entities:
+    - sensor.er_tong_fang_wen_du
+    - sensor.er_tong_fang_shi_du
+    - sensor.er_tong_fang_ke_li_wu
+    - sensor.er_tong_fang_er_yang_hua_tan
+    #- sensor.feng_shan_wen_du
+    - light.er_tong_fang_deng
+    - light.er_tong_fang_tai_deng
+    - cover.curtain_158d00042cf265
+    - fan.er_tong_fang_jing_hua_qi
+    # - fan.er_tong_fang_feng_shan
+    - climate.er_tong_fang_kong_diao
+    - input_text.er_tong_fang_yin_xiang
+
+书房:
+  icon: mdi:bookshelf
+  entities:
+    - sensor.shu_fang_wen_du
+    - sensor.shu_fang_shi_du
+    - sensor.shu_fang_er_yang_hua_tan
+    - sensor.shu_fang_liang_du
+    - binary_sensor.motion_sensor_158d0003d0d46e
+    - binary_sensor.switch_158d000201a73f
+    - light.shu_fang_tai_deng
+    - light.liang_yi_jia_deng
+    - media_player.tou_ying_yi
+    - switch.wang_luo_cun_chu
+    - switch.yin_xiang
+    - cover.tou_ying_mu_bu
+    - cover.shu_fang_chuang_lian
+    - cover.liang_yi_jia
+    - vacuum.sao_di_ji
+    # - fan.shu_fang_feng_shan
+    - fan.shu_fang_jing_hua_qi
+    - climate.shu_fang_kong_diao
+    - remote.wan_neng_yao_kong
+
+阳台:
+  icon: mdi:home-minus
+  entities:
+    - weather.tian_qi
+    - sensor.yang_tai_wen_du
+    - sensor.yang_tai_shi_du
+    - sensor.yang_tai_ke_li_wu
+    - binary_sensor.door_window_sensor_158d000228a52b
+    - sun.sun

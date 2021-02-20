@@ -1,0 +1,36 @@
+- alias: 浴室按钮单击—预约洗衣
+  trigger:
+    - platform: event
+      event_type: xiaomi_aqara.click
+      event_data:
+        entity_id: binary_sensor.switch_158d0001e59b33
+        click_type: single
+  action:
+    - service: fan.turn_on
+      data:
+        entity_id: fan.xi_yi_ji
+        speed: program=goldenwash,dry_mode=0,appoint_clock=8
+
+- alias: 浴室按钮长按—预约洗烘
+  trigger:
+    - platform: event
+      event_type: xiaomi_aqara.click
+      event_data:
+        entity_id: binary_sensor.switch_158d0001e59b33
+        click_type: long_click_press
+  action:
+    - service: fan.turn_on
+      data:
+        entity_id: fan.xi_yi_ji
+        speed: program=goldenwash,dry_mode=1,appoint_clock=8
+
+- alias: 浴室按钮双击—取消预约
+  trigger:
+    - platform: event
+      event_type: xiaomi_aqara.click
+      event_data:
+        entity_id: binary_sensor.switch_158d0001e59b33
+        click_type: double
+  action:
+    - service: fan.turn_off
+      entity_id: fan.xi_yi_ji
