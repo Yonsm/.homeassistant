@@ -22,3 +22,6 @@
 [submodule "modules/ZhiMsg"]
 	path = modules/ZhiMsg
 	url = git@github.com:Yonsm/ZhiMsg.git
+[submodule "modules/ZhiSaswell"]
+	path = modules/ZhiSaswell
+	url = git@github.com:Yonsm/ZhiSaswell.git
