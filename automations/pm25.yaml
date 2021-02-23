@@ -23,13 +23,13 @@
       data:
         sensor_id: sensor.zhu_wo_ke_li_wu
         sensor_values: [7, 15, 40]
-        alt_sensor_values: [5, 20, 40]
+        alt_sensor_values: [12, 30, 50]
         entity_id: fan.zhu_wo_jing_hua_qi
         entity_attr: speed
         entity_values: [low, medium, high]
         # condition_attr: oscillating
         # condition_values: [false]
-        delay: 0
+        #delay: 0
 
 - alias: 调节次卧净化器
   trigger:
@@ -57,13 +57,13 @@
       data:
         sensor_id: sensor.er_tong_fang_ke_li_wu
         sensor_values: [10, 20, 50]
-        alt_sensor_values: [7, 30, 50]
+        alt_sensor_values: [12, 30, 50]
         entity_id: fan.er_tong_fang_jing_hua_qi
         entity_attr: speed
         entity_values: [low, medium, high]
         # condition_attr: oscillating
         # condition_values: [false]
-        delay: 0
+        #delay: 0
 
 # - alias: 调节书房净化器
 #   trigger:
