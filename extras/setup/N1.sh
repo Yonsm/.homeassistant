@@ -1,5 +1,19 @@
 #!/bin/sh
 
+# N1: Pre-Install to EMMC
+# https://www.right.com.cn/forum/thread-4057162-1-1.html
+# https://yadi.sk/d/_rQgn_FosYuW0g
+#dd if=/dev/mmcblk1 of=/root/u-boot-default-aml.img bs=1M count=4 conv=fsync
+echo '/dev/mmcblk1 0x27400000 0x10000' > /etc/fw_env.config
+
+fw_setenv ab 0
+fw_setenv bootcmd 'run start_autoscript; run storeboot'
+fw_setenv start_autoscript 'if mmcinfo; then run start_mmc_autoscript; fi; if usb start; then run start_usb_autoscript; fi; run start_emmc_autoscript'
+fw_setenv start_emmc_autoscript 'if fatload mmc 1 1020000 emmc_autoscript; then autoscr 1020000; fi;'
+fw_setenv start_mmc_autoscript 'if fatload mmc 0 1020000 s905_autoscript; then autoscr 1020000; fi;'
+fw_setenv start_usb_autoscript 'for usbdev in 0 1 2 3; do if fatload usb ${usbdev} 1020000 s905_autoscript; then autoscr 1020000; fi; done'
+./install-aml.sh
+
 # ============================== Basic Config ==============================
 # Raspberry Pi Only
 #ssh pi@hass
@@ -49,6 +63,17 @@ armbian-config #Hostname, wifi,timezone, apt-source
 #echo "Asia/Shanghai" > /etc/timezone && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 # ============================== Home Assistant ==============================
+cat <<\EOF > /etc/apt/sources.list
+deb http://mirrors.aliyun.com/debian/ buster main non-free contrib
+deb-src http://mirrors.aliyun.com/debian/ buster main non-free contrib
+deb http://mirrors.aliyun.com/debian-security buster/updates main
+deb-src http://mirrors.aliyun.com/debian-security buster/updates main
+deb http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib
+deb-src http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib
+deb http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib
+deb-src http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib
+EOF
+
 apt update && apt upgrade -y
 #apt autoclean
 #apt clean
@@ -57,27 +82,38 @@ apt update && apt upgrade -y
 apt install mosquitto mosquitto-clients libavahi-compat-libdnssd-dev libturbojpeg0 adb
 
 # Armbian
-apt install python3-pip python3-dev python3-setuptools libffi-dev
-ln -sf /usr/bin/python3 /usr/bin/python
-
-# Baidy TTS: pip3 install baidu-aip==1.6.6
-apt install libjpeg-dev zlib1g-dev
+#apt install python3-pip python3-dev python3-setuptools libffi-dev
+#ln -sf /usr/bin/python3 /usr/bin/python
 
 # Speedtest
 cd /usr/local/bin
 wget -O speedtest https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py; chmod +x speedtest; ./speedtest
 
-# PIP 18
+# PIP
 ##python3 -m pip install --upgrade pip # Logout after install
 #curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 #python3 get-pip.py --force-reinstall
 
-# Python 3.7+
-#curl https://bc.gongxinke.cn/downloads/install-python-latest | bash
-
-# Baidu TTS
+# Baidy TTS: pip3 install baidu-aip==1.6.6
 #apt install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
 #apt install libjpeg-dev zlib1g-dev
+
+# Python 3.9
+apt install build-essential checkinstall
+apt install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev
+cd /opt
+wget -o Python.tgz https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz
+tar xzf Python.tgz
+cd Python
+./configure --prefix=/usr --enable-optimizations
+make build_all
+make altinstall
+ln -s /usr/share/pyshared/lsb_release.py /usr/lib/python3.9/site-packages/lsb_release.py
+ln -s /usr/lib/python3/dist-packages/apt_pkg.cpython-37m-aarch64-linux-gnu.so /usr/lib/python3.9/site-packages/apt_pkg.so
+update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 1
+update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 2
+update-alternatives --config python
+cd /opt && rm -rf Python*
 
 # Home Assistant
 pip3 install wheel
@@ -177,19 +213,3 @@ pip3 install wheel homeassistant
 systemctl mask kodi
 systemctl start kodi
 systemctl stop kodi
-
-# Python 3.9
-apt install build-essential checkinstall
-apt install libreadline-gplv2-dev libncursesw5-dev libssl-dev \
-    libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev
-cd /opt
-wget -o Python.tgz https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz
-tar xzf Python.tgz
-cd Python
-./configure --prefix=/usr --enable-optimizations
-make build_all
-#make install
-make altinstall
-update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
-update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 2
-cd /opt && rm -rf Python*
