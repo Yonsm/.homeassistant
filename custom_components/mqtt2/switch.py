@@ -82,7 +82,7 @@ class MqttSwitch2(MqttSwitch):
         if self._optimistic:
             last_state = await self.async_get_last_state()
             if last_state:
-                self._state = last_sta
+                self._state = last_state
 
     @property
     def icon(self):
