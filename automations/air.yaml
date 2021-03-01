@@ -30,6 +30,7 @@
         message: 外面空气很好，可以打开门窗
 
 - alias: 室内空气差
+  mode: restart
   trigger:
     - platform: numeric_state
       entity_id: sensor.can_ting_ke_li_wu

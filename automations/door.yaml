@@ -12,6 +12,7 @@
         ringtone_vol: 80
 
 - alias: 入户门提醒
+  mode: restart
   trigger:
     - platform: state
       entity_id: binary_sensor.door_window_sensor_158d0001f3e5be
@@ -54,6 +55,7 @@
 #       entity_id: light.balcony_light
 
 - alias: 阳台门提醒
+  mode: restart
   trigger:
     - platform: numeric_state
       entity_id: sensor.yang_tai_ke_li_wu
@@ -95,6 +97,7 @@
       entity_id: automation.yang_tai_men_ti_xing
 
 - alias: 厨房门提醒
+  mode: restart
   trigger:
     - platform: state
       entity_id: binary_sensor.door_window_sensor_158d0001f3d2d1

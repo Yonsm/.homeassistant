@@ -68,16 +68,16 @@
       data:
         entity_id: fan.ke_ting_xin_feng_ji
         brightness: 0
-    - service: xiaomi_miio.fan_set_led_brightness
-      data:
-        entity_id: fan.zhu_wo_xin_feng_ji
-        brightness: 0
 
 - alias: 睡眠完成
   trigger:
     - platform: time
       at: '07:30:00'
   action:
+    - service: xiaomi_miio.fan_set_led_brightness
+      data:
+        entity_id: fan.zhu_wo_xin_feng_ji
+        brightness: 0
     - service: zhimsg.miai
       data:
         message: 音量30
