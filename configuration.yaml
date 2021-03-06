@@ -736,10 +736,13 @@ media_player:
   #   url: http://Magic:49153/description.xml
 
 camera:
+  - platform: ffmpeg
+    name: 客厅摄像机
+    input: !secret rtsp_camera6
   - platform: generic
     name: 餐厅摄像机
-    still_image_url: http://Camera/last.cgi
-    #stream_source: rtsp://Camera/live/ch00_0
+    still_image_url: http://Camera1/last.cgi
+    #stream_source: rtsp://Camera1/live/ch00_0
   - platform: ffmpeg
     name: 过道摄像机
     input: rtsp://Camera2/ch0_1.h264

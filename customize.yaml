@@ -34,6 +34,8 @@ camera.er_tong_fang_she_xiang_ji:
   dash_click: mihome://device?did=130040912&uid=8816080&server=cn
 camera.guo_dao_she_xiang_ji:
   dash_click: mihome://device?did=yunyi.BSYZ92EXT4NRDJSK111A&uid=8816080&server=cn
+camera.ke_ting_she_xiang_ji:
+  dash_click: videogo://
 camera.zhu_wo_she_xiang_ji:
   dash_click: mihome://device?did=63538723&uid=8816080&server=cn
 cover.curtain_158d0003f7951d:
