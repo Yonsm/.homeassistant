@@ -112,7 +112,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     async_add_entities(
         [
             BraviaTVDevice(
-                braviarc, DEFAULT_NAME, pin, unique_id, device_info, ignored_sources
+                braviarc, braviarc.name, pin, unique_id, device_info, ignored_sources
             )
         ]
     )
