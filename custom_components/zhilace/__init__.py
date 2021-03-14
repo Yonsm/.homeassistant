@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from homeassistant.util import slugify
 import sys
 import json
 import logging
@@ -71,7 +72,9 @@ def compare_item(items, item1, item2):
     return index1 - index2
 
 
-def compare_string(string1, string2):
+def compare_name(name1, name2):
+    string1 = slugify(name1)
+    string2 = slugify(name2)
     if string1 < string2:
         return -1
     elif string1 > string2:
@@ -84,7 +87,7 @@ def compare_title(title1, title2):
     if ret == 0:
         ret = compare_item(domain_names, title1, title2)
         if ret == 0:
-            ret = compare_string(title1, title2)
+            ret = compare_name(title1, title2)
     return ret
 
 
@@ -109,7 +112,7 @@ def compare_entity_id(entity_id1, entity_id2):
             elif domain1 == 'binary_sensor':
                 ret = compare_item(binary_sensor_classes, attrs1.get('device_class'), attrs2.get('device_class'))
             if ret == 0:
-                ret = compare_string(attrs1['friendly_name'], attrs2['friendly_name'])
+                ret = compare_name(attrs1['friendly_name'], attrs2['friendly_name'])
     return ret
 
 
@@ -164,7 +167,7 @@ def make_zone_lovelace(hass):
         zone = '其它' if 'hidden' in attributes else get_entity_zone(attributes, '其它')
         view = next((i for i in views if i.get('title') == zone), None)
         if view is None:
-            view = {'title': zone, 'path': zone, 'badges': [], 'cards': []}
+            view = {'title': zone, 'path': slugify(zone), 'badges': [], 'cards': []}
             add_to_sorted(view, views, compare_view)
         if domain == 'sun' or domain == 'sensor' or domain == 'binary_sensor' or domain == 'person' or domain == 'device_tracker':
             add_to_sorted(entity_id, view['badges'], compare_entity_id)
