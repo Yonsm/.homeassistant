@@ -91,7 +91,7 @@ light.guo_dao_ju_deng:
   icon: mdi:car-light-dimmed
 light.ke_ting_tong_deng:
   icon: mdi:track-light
-light.shu_fang_liang_yi_jia_deng:
+light.shu_fang_liang_yi_deng:
   genie_name: 吊灯
   icon: mdi:spotlight
 light.shu_fang_tai_deng:

@@ -660,6 +660,11 @@ climate:
     humidity_sensor: sensor.aircat2_humidity
 
 cover:
+  - platform: zhimrbond
+    name: 书房晾衣架
+    host: Airer
+    token: !secret airer_token
+    light_name: 书房晾衣灯
   - platform: zhiremote
     sender: remote.shu_fang_yao_kong
     covers:
@@ -673,11 +678,6 @@ cover:
         command_stop: 'b64:JgDGACoPKg8pDykPDygQKBEnDykQKBAnECgpDw8pKBAPKSgQKg4qDg8pECgqDikPDykQKA8pKBApDykPKQ8PKRAoDwAD6ioOKQ8pECkPDygQKA8pECgPKQ8oDykoEA8pKQ8PKSgQKQ8qDg8pECgoECoODykPKQ8oKRAoECkPKQ8PKQ8oEAAD6ikPKQ8qDikQDikPKQ8pDykPKBAoDykpDw8pKQ8PKSgQKQ8pDw8pDykoECkPDioPKQ8oKRAoECgQKBAPKQ8oEAANBQAA'
         command_close: 'b64:JgDGACoPKRAoECgQDykPKBAoDykPKSgQDykPKA8pKQ8PKSkPKQ4qECgQDygpECgQKBAPKSgQKBAPKQ8oKRAPKA8pKQAD0SgQKQ8pDykPECgPKQ8pDykPKCkQDygPKQ8pKBAPKSgQKQ8pDykPDykoECkPKQ8PKSkOKg8PKQ8pKQwSKQ8pKAAD0igQKBAoECkPDykPKQ8oDykPKSkPDykPKQ8oKRAPKCkQKBAoECgQDykoECgQKA8QKSgQKQ8PKQ8pKBAPKBAoKQANBQAA'
         travel_time: 45
-
-zhimrbond:
-  name: 书房晾衣架
-  host: Airer
-  token: !secret airer_token
 
 media_player:
   - platform: smartir
