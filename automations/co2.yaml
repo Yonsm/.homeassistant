@@ -1,4 +1,4 @@
-- alias: 调节客厅新风机
+- alias: 客厅二氧化碳变化-调控新风机
   trigger:
     - platform: state
       entity_id: sensor.ke_ting_er_yang_hua_tan
@@ -13,7 +13,7 @@
         condition_attr: mode
         condition_values: [auto, low, middle, strong]
 
-- alias: 调节主卧新风机
+- alias: 主卧二氧化碳变化-调控新风机
   trigger:
     - platform: state
       entity_id: sensor.zhu_wo_er_yang_hua_tan

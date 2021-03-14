@@ -1,33 +1,36 @@
 binary_sensor.cube_158d0002a66db1:
-  friendly_name: 魔方控制器
-  hidden: true
+  friendly_name: 儿童房魔方
 binary_sensor.door_window_sensor_158d0001f3d2d1:
   friendly_name: 厨房门
+  dash_click: /config/integrations
 binary_sensor.door_window_sensor_158d0001f3e5be:
   friendly_name: 入户门
+  dash_click: /
 binary_sensor.door_window_sensor_158d000228a52b:
   friendly_name: 阳台门
+  dash_click: /config/logs
 binary_sensor.door_window_sensor_158d0003cf4735:
   friendly_name: 洗手间门
+  dash_click: /config/customize
 binary_sensor.door_window_sensor_158d00041c74da:
   friendly_name: 过道门
+  dash_click: /config/automation
 binary_sensor.door_window_sensor_158d0004611461:
   friendly_name: 浴室门
+  dash_click: /config/server_control
 binary_sensor.motion_sensor_158d0001d66ce9:
   friendly_name: 过道感应
 binary_sensor.motion_sensor_158d0001f4a238:
   friendly_name: 洗手间感应
 binary_sensor.motion_sensor_158d0003d0d46e:
   friendly_name: 书房感应
+  dash_click: /local/aha.html
 binary_sensor.switch_158d0001e59b33:
   friendly_name: 浴室按钮
-  hidden: true
 binary_sensor.switch_158d000201a73f:
   friendly_name: 书房按钮
-  hidden: true
 binary_sensor.switch_158d00054e98b0:
   friendly_name: 主卧按钮
-  hidden: true
 camera.can_ting_she_xiang_ji:
   dash_click: mihome://device?did=79750727&uid=8816080&server=cn
 camera.er_tong_fang_she_xiang_ji:
@@ -38,96 +41,68 @@ camera.ke_ting_she_xiang_ji:
   dash_click: videogo://
 camera.zhu_wo_she_xiang_ji:
   dash_click: mihome://device?did=63538723&uid=8816080&server=cn
+climate.ke_ting_di_nuan:
+  genie_name: 取暖器
+climate.zhu_wo_di_nuan:
+  genie_name: 取暖器
 cover.curtain_158d0003f7951d:
   friendly_name: 过道卷帘
 cover.curtain_158d000405d535:
   friendly_name: 主卧窗帘
 cover.curtain_158d00042cf265:
   friendly_name: 儿童房窗帘
-cover.liang_yi_jia:
-  genie_deviceName: 窗帘
-  genie_zone: 工作间
-cover.tou_ying_mu_bu:
-  genie_deviceName: 布帘
-  genie_zone: 影音室
+cover.shu_fang_mu_bu:
+  genie_name: 电视盒子
   icon: mdi:projector-screen
 fan.can_ting_jing_hua_qi:
   dash_icon: ${sensor.can_ting_ke_li_wu}
-  genie_deviceType: airpurifier
   icon: mdi:cupcake
 fan.ci_wo_jing_hua_qi:
   dash_icon: ${aqi}
-  genie_deviceType: airpurifier
   icon: mdi:cupcake
 fan.er_tong_fang_feng_shan:
   dash_icon: ${temperature}
 fan.er_tong_fang_jing_hua_qi:
   dash_icon: ${sensor.er_tong_fang_ke_li_wu}
-  genie_deviceType: airpurifier
   icon: mdi:cupcake
 fan.ke_ting_xin_feng_ji:
   dash_icon: ${co2}
-  genie_deviceType: VMC
   icon: mdi:leaf
 fan.shu_fang_feng_shan:
   dash_icon: ${sensor.shu_fang_wen_du}
 fan.shu_fang_jing_hua_qi:
-  genie_deviceType: airpurifier
   icon: mdi:cupcake
 fan.zhu_wo_jing_hua_qi:
   dash_icon: ${sensor.zhu_wo_ke_li_wu}
-  genie_deviceType: airpurifier
   icon: mdi:cupcake
 fan.zhu_wo_xin_feng_ji:
   dash_icon: ${co2}
-  genie_deviceType: VMC
   icon: mdi:leaf
-group.default_view:
-  friendly_name: 总览
-# light.can_ting_jian_ce_yi:
-#   hidden: true
 light.can_ting_tong_deng:
   icon: mdi:track-light
-light.can_ting_tong_deng_2:
-  hidden: true
-light.er_tong_fang_deng:
-  icon: mdi:ceiling-light
 light.er_tong_fang_tai_deng:
   icon: mdi:lamp
+light.er_tong_fang_xi_ding_deng:
+  icon: mdi:ceiling-light
 light.gateway_light_34ce0090901a:
-  friendly_name: 壁灯
+  friendly_name: 餐厅壁灯
   icon: mdi:car-light-high
-light.guo_dao_bei_jing_deng:
+light.guo_dao_ju_deng:
   icon: mdi:car-light-dimmed
-# light.guo_dao_jian_ce_yi:
-#   hidden: true
 light.ke_ting_tong_deng:
   icon: mdi:track-light
-light.ke_ting_tong_deng_2:
-  hidden: true
-  icon: mdi:track-light
-light.liang_yi_jia_deng:
-  genie_deviceName: 吊灯
+light.shu_fang_liang_yi_jia_deng:
+  genie_name: 吊灯
   icon: mdi:spotlight
 light.shu_fang_tai_deng:
   icon: mdi:lamp
 light.xi_shou_jian_deng:
   icon: mdi:ceiling-light
-light.zhu_wo_deng:
+light.zhu_wo_xi_ding_deng:
   icon: mdi:ceiling-light
-media_player.tou_ying_yi:
-  genie_deviceName: 电视
-  genie_deviceType: television
-person.a_yi:
-  dash_click: /config/automation
-person.ba_ba:
-  dash_click: /config/server_control
-person.ma_ma:
-  dash_click: /local/aha.html
-person.wai_po:
-  dash_click: /config/logs
+media_player.shu_fang_tou_ying_yi:
+  icon: mdi:projector
 sensor.can_ting_ke_li_wu:
-  dash_click: if (self == top) location = '/'
   dash_relation: fan.can_ting_jing_hua_qi
   friendly_name: 餐厅颗粒物
 sensor.ci_wo_ke_li_wu:
@@ -167,33 +142,30 @@ sensor.zhu_wo_ke_li_wu:
 sun.sun:
   friendly_name: 日照
 switch.can_ting_chu_shi_ji:
-  genie_deviceType: dehumidifier
   icon: mdi:power-socket-uk
+switch.can_ting_tong_deng:
+  hidden: true
+switch.ke_ting_tong_deng:
+  hidden: true
 switch.plug_158d0003a58422:
-  friendly_name: 米家插座
+  friendly_name: 过道插座
+switch.shu_fang_yin_xiang:
+  dash_extra: original_state
+  dash_extra_click: mqttPublish("NodeMCU2/relay/0/set", "toggle")
+  genie_name: 机顶盒
 switch.wang_luo_cun_chu:
-  genie_deviceName: 网关
-  genie_deviceType: gateway
+  genie_name: 书房网关
   icon: mdi:nas
 switch.xi_shou_jian_pai_qi_shan:
-  genie_deviceName: 顶扇
-  genie_deviceType: fan
+  genie_name: 洗手间顶扇
   icon: mdi:fan
 switch.yi_gui_chu_shi_ji:
-  genie_deviceType: dehumidifier
   icon: mdi:power-socket-uk
-switch.yin_xiang:
-  dash_extra: original_state
-  dash_extra_click: 'callService(''mqtt'', ''publish'', {''topic'': ''NodeMCU3/relay/0/set'',
-    ''payload'': ''toggle''})'
-  genie_deviceName: 电视盒子
-  genie_deviceType: STB
+switch.zhu_wo_dian_shi:
+  genie_name: 开关
 vacuum.sao_di_ji:
-  dash_extra_forced: 'eval:"${status}"=="Charging" ? "充电中" : ("${status}"=="Charger
-    disconnected" ? "充电断开" : ("${status}"=="Cleaning" ? "清扫中" : "${status}"))'
-  genie_deviceName: 风扇
-  genie_deviceType: fan
-  genie_zone: 工作间
+  dash_extra_forced: eval:k="${status}",v={Charging:"充电中",Cleaning:"清扫中"};v[k]||k
+  genie_zone: 书房
 weather.tian_qi:
   dash_click: https://caiyunapp.com/weather
   dash_extra: attribution

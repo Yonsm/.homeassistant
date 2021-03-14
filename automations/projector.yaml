@@ -1,5 +1,4 @@
-
-- alias: 投影仪开启
+- alias: 书房投影仪开启-准备配套
   trigger:
     - platform: state
       entity_id: device_tracker.projector
@@ -7,14 +6,14 @@
       to: home
   condition:
     - condition: state
-      entity_id: cover.tou_ying_mu_bu
+      entity_id: cover.shu_fang_mu_bu
       state: open
   action:
     - service: cover.close_cover
       entity_id: cover.shu_fang_chuang_lian
     #- delay: 10
     - service: cover.close_cover
-      entity_id: cover.tou_ying_mu_bu
+      entity_id: cover.shu_fang_mu_bu
     #- service: cover.close_cover
     #  entity_id: cover.airer
     - service: homeassistant.turn_off
@@ -27,7 +26,7 @@
     # - service: climate.turn_on
     #   entity_id: climate.shu_fang_kong_diao
 
-- alias: 投影仪关闭
+- alias: 书房投影仪关闭-收尾配套
   trigger:
     - platform: state
       entity_id: device_tracker.projector
@@ -35,13 +34,13 @@
       to: not_home
   condition:
     - condition: state
-      entity_id: cover.tou_ying_mu_bu
+      entity_id: cover.shu_fang_mu_bu
       state: closed
   action:
     # - service_template: '{% if is_state("sun.sun", "below_horizon") %}light.turn_on{% else %}light.turn_off{% endif %}'
     #   entity_id: light.liang_yi_deng
     - service: cover.open_cover
-      entity_id: cover.tou_ying_mu_bu
+      entity_id: cover.shu_fang_mu_bu
     #- delay: 10
     # - service: climate.turn_off
     #   entity_id: climate.shu_fang_kong_diao
@@ -73,14 +72,14 @@
   action:
     - service: zhimsg.miai
       data_template:
-        message: '正在{% if is_state("media_player.tou_ying_yi", "on") %}关闭{% else %}打开{% endif %}投影仪'
+        message: '正在{% if is_state("media_player.shu_fang_tou_ying_yi", "on") %}关闭{% else %}打开{% endif %}投影仪'
     - service: media_player.toggle
-      entity_id: media_player.tou_ying_yi
+      entity_id: media_player.shu_fang_tou_ying_yi
     # - service: media_player.toggle # Repeat to ensure
-    #   entity_id: media_player.tou_ying_yi
+    #   entity_id: media_player.shu_fang_tou_ying_yi
     - service: automation.trigger
       data_template:
-        entity_id: 'automation.tou_ying_yi_{% if is_state("media_player.tou_ying_yi", "on") %}guan_bi{% else %}kai_qi{% endif %}'
+        entity_id: 'automation.shu_fang_tou_ying_yi_{% if is_state("media_player.shu_fang_tou_ying_yi", "on") %}guan_bi_shou_wei{% else %}kai_qi_zhun_bei{% endif %}_pei_tao'
 
 - alias: 书房按钮长按—开关播放器
   trigger:
@@ -92,8 +91,8 @@
   action:
     # - service: zhimsg.miai
     #   data_template:
-    #     message: '正在{% if is_state("media_player.tou_ying_yi", "on") %}关闭{% else %}打开{% endif %}播放器'
-    - service_template: 'switch.turn_{% if is_state("media_player.tou_ying_yi", "on") %}off{% else %}on{% endif %}'
+    #     message: '正在{% if is_state("media_player.shu_fang_tou_ying_yi", "on") %}关闭{% else %}打开{% endif %}播放器'
+    - service_template: 'switch.turn_{% if is_state("media_player.shu_fang_tou_ying_yi", "on") %}off{% else %}on{% endif %}'
       entity_id: switch.yin_xiang
     - service: automation.trigger
       entity_id: automation.shu_fang_an_niu_shuang_ji_kai_guan_tou_ying_yi

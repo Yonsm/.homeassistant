@@ -8,7 +8,7 @@
   action:
     - service: fan.turn_on
       data:
-        entity_id: fan.xi_yi_ji
+        entity_id: fan.yu_shi_xi_yi_ji
         speed: program=goldenwash,dry_mode=0,appoint_clock=8
 
 - alias: 浴室按钮长按—预约洗烘
@@ -21,7 +21,7 @@
   action:
     - service: fan.turn_on
       data:
-        entity_id: fan.xi_yi_ji
+        entity_id: fan.yu_shi_xi_yi_ji
         speed: program=goldenwash,dry_mode=1,appoint_clock=8
 
 - alias: 浴室按钮双击—取消预约
@@ -33,4 +33,4 @@
         click_type: double
   action:
     - service: fan.turn_off
-      entity_id: fan.xi_yi_ji
+      entity_id: fan.yu_shi_xi_yi_ji

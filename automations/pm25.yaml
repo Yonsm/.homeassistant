@@ -1,4 +1,4 @@
-- alias: 调节餐厅净化器
+- alias: 餐厅颗粒物变化-调控净化器
   trigger:
     - platform: state
       entity_id: sensor.can_ting_ke_li_wu
@@ -14,7 +14,7 @@
         # condition_values: [false]
         delay: 0
 
-- alias: 调节主卧净化器
+- alias: 主卧颗粒物变化-调控净化器
   trigger:
     - platform: state
       entity_id: sensor.zhu_wo_ke_li_wu
@@ -31,7 +31,7 @@
         # condition_values: [false]
         #delay: 0
 
-- alias: 调节次卧净化器
+- alias: 次卧颗粒物变化-调控净化器
   trigger:
     - platform: state
       entity_id: sensor.ci_wo_ke_li_wu
@@ -48,7 +48,7 @@
         condition_attr: mode
         condition_values: [idle, favorite]
 
-- alias: 调节儿童房净化器
+- alias: 儿童房颗粒物变化-调控净化器
   trigger:
     - platform: state
       entity_id: sensor.er_tong_fang_ke_li_wu
@@ -65,7 +65,7 @@
         # condition_values: [false]
         #delay: 0
 
-# - alias: 调节书房净化器
+# - alias: 书房颗粒物变化-调控净化器
 #   trigger:
 #     - platform: state
 #       entity_id: sensor.aircat2_pm25

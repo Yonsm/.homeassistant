@@ -1,4 +1,4 @@
-# 
+#
 - alias: 过道感应-开关背景灯
   trigger:
     - platform: state
@@ -13,19 +13,19 @@
           below: 100
         - condition: and
           conditions:
-          - condition: numeric_state
-            entity_id: sensor.illumination_34ce0090901a
-            below: 300
-          - condition: state
-            entity_id: sun.sun
-            state: above_horizon
+            - condition: numeric_state
+              entity_id: sensor.illumination_34ce0090901a
+              below: 300
+            - condition: state
+              entity_id: sun.sun
+              state: above_horizon
   action:
     # - service: mqtt.publish
     #   data:
     #     topic: Dashboard/command
     #     payload: '{wake: true}'
     - service: light.turn_on
-      entity_id: light.guo_dao_bei_jing_deng
+      entity_id: light.guo_dao_ju_deng
     - wait_template: '{{ is_state("binary_sensor.motion_sensor_158d0001d66ce9", "off") }}'
     - service: light.turn_off
-      entity_id: light.guo_dao_bei_jing_deng
+      entity_id: light.guo_dao_ju_deng

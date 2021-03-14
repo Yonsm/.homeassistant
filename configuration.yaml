@@ -7,30 +7,50 @@ homeassistant:
   time_zone: Asia/Shanghai
   customize: !include customize.yaml
 
-logger:
-  default: warning
-  logs:
-    custom_components.zhimi: debug
-    custom_components.zhimsg: debug
-    custom_components.zhibot: debug
-
-recorder:
-  purge_keep_days: 2
-
-system_health:
-
-frontend:
-
-#mobile_app:
-
-#discovery:
-
-config:
-
 http:
   ssl_key: ~/.homeassistant/ssl.key
   ssl_certificate: ~/.homeassistant/ssl.crt
 
+panel_iframe:
+  dash:
+    title: 面板
+    icon: mdi:microsoft
+    url: /local/dash.html
+
+# default_config:
+
+automation: !include_dir_merge_list automations
+#scene: !include scenes.yaml
+#script: !include scripts.yaml
+
+# cloud:
+config:
+frontend:
+mobile_app:
+system_health:
+# updater:
+
+# dhcp:
+# ssdp:
+# zeroconf:
+
+input_boolean:
+input_datetime:
+input_number:
+input_select:
+input_text:
+counter:
+timer:
+
+my:
+tag:
+sun:
+zone:
+image:
+# media_source:
+
+# map:
+logbook:
 history:
   exclude:
     domains:
@@ -43,9 +63,15 @@ history:
       - input_select
       - input_boolean
 
-logbook:
+logger:
+  default: warning
+  logs:
+    components.homekit: debug
+    custom_components.zhimsg: info
+    custom_components.zhibot: info
 
-sun:
+recorder:
+  purge_keep_days: 2
 
 # tts:
 #   - platform: baidu
@@ -53,38 +79,26 @@ sun:
 #     api_key: !secret baidu_api_key
 #     secret_key: !secret baidu_secret_key
 
-group: !include groups.yaml
-automation: !include_dir_merge_list automations
-#script: !include scripts.yaml
-#scene: !include scenes.yaml
-
-mqtt:
-  broker: Hass
-
-modbus:
-  type: rtuovertcp
-  host: ModBus
-  port: 8899
-
 homekit:
+  auto_start: false
   filter:
     exclude_domains:
-      - script
       - automation
-      - input_boolean
-      - device_tracker
-      - media_player
       - camera
+      - device_tracker
+      - input_boolean
+      - media_player
+      - script
     exclude_entities:
-      - light.ke_ting_tong_deng_2
-      - light.can_ting_tong_deng_2
       - binary_sensor.switch_158d0001e59b33
       - binary_sensor.switch_158d000201a73f
       - binary_sensor.switch_158d00054e98b0
-      - sensor.zhu_wo_er_yang_hua_tan
-      - sensor.er_tong_fang_er_yang_hua_tan
       - climate.ke_ting_di_nuan
       - climate.zhu_wo_di_nuan
+      - sensor.er_tong_fang_er_yang_hua_tan
+      - sensor.zhu_wo_er_yang_hua_tan
+      - switch.can_ting_tong_deng
+      - switch.ke_ting_tong_deng
   entity_config:
     switch.can_ting_chu_shi_ji:
       type: outlet
@@ -97,49 +111,39 @@ homekit:
       feature_list:
         - feature: on_off
 
-#mkdir -p /var/lib/misc
-#echo "/bin/ln -s /tmp/dnsmasq.leases /var/lib/misc/dnsmasq.leases" >> /etc/storage/started_script.sh
-asuswrt:
-  host: Router
-  username: admin
-  password: !secret http_password
-  dnsmasq: /tmp
-  interface: ppp0
+mqtt:
+  broker: Hass
+
+modbus:
+  type: rtuovertcp
+  host: ModBus
+  port: 8899
 
 device_tracker:
-  - platform: asuswrt
-    interval_seconds: 120
-    new_device_defaults:
-      track_new_devices: false
-  # - platform: ping
-  #   hosts:
-  #     x9300d: 192.168.1.7
+  - platform: ping
+    scan_interval: 120
+    hosts:
+      yphone: 192.168.1.23
+      zphone: 192.168.1.24
+      bphone: 192.168.1.26
+      cphone: 192.168.1.27
+      x9300d: 192.168.1.6
+      x9400e: 192.168.1.7
+      projector: 192.168.1.8
 
 person:
   - name: 爸爸
     id: baba
-    device_trackers:
-      - device_tracker.yphone
+    device_trackers: device_tracker.yphone
   - name: 妈妈
     id: mama
-    device_trackers:
-      - device_tracker.zphone
-  # - name: 爷爷
-  #   id: yeye
-  #   device_trackers:
-  #     - device_tracker.xphone
-  - name: 阿姨
-    id: ayi
-    device_trackers:
-      - device_tracker.aphone
+    device_trackers: device_tracker.zphone
   - name: 外公
     id: waigong
-    device_trackers:
-      - device_tracker.bphone
+    device_trackers: device_tracker.bphone
   - name: 外婆
     id: waipo
-    device_trackers:
-      - device_tracker.cphone
+    device_trackers: device_tracker.cphone
 
 weather:
   - platform: zhicaiyun
@@ -227,14 +231,6 @@ sensor:
     state_topic: NodeMCU6/co2
     unit_of_measurement: ppm
     availability_topic: NodeMCU6/status
-
-  # - platform: phicomm
-  #   name: AirCat
-  #   username: !secret phicomm_username
-  #   password: !secret phicomm_password
-  # - platform: aircat
-  #   name: [['餐厅颗粒物', '餐厅甲醛', '餐厅温度', '餐厅湿度'], ['过道颗粒物', '过道甲醛', '过道温度', '过道湿度']]
-  #   mac: ['B0F8931EA148', 'B0F893249132']
 
   - platform: mqtt
     name: 餐厅温度
@@ -373,95 +369,91 @@ sensor:
       #   friendly_name: 书房风扇模式
       #   value_template: '{% set mode = state_attr("fan.shu_fang_feng_shan", "speed") %}{% if is_state("fan.shu_fang_feng_shan", "off") %}off{% elif mode == "Level 1" %}一{% elif mode == "Level 2" %}二{% elif mode == "Level 3" %}三{% elif mode == "Level 4" %}四{% else %}{{ mode }}{% endif %}'
 
-      ke_ting_xin_feng_ji_mo_shi:
-        friendly_name: 客厅新风机模式
-        value_template: '{% set mode = state_attr("fan.ke_ting_xin_feng_ji", "speed") %}{% if is_state("fan.ke_ting_xin_feng_ji", "off") %}off{% elif mode == "Auto" %}自{% elif mode == "Silent" %}静{% elif mode == "Interval" %}间{% elif mode == "Low" %}一{% elif mode == "Middle" %}二{% elif mode == "Strong" %}三{% else %}{{ mode }}{% endif %}'
-      zhu_wo_xin_feng_ji_mo_shi:
-        friendly_name: 主卧新风机模式
-        value_template: '{% set mode = state_attr("fan.zhu_wo_xin_feng_ji", "speed") %}{% if is_state("fan.zhu_wo_xin_feng_ji", "off") %}off{% elif mode == "Auto" %}自{% elif mode == "Silent" %}静{% elif mode == "Interval" %}间{% elif mode == "Low" %}一{% elif mode == "Middle" %}二{% elif mode == "Strong" %}三{% else %}{{ mode }}{% endif %}'
+      # ke_ting_xin_feng_ji_mo_shi:
+      #   friendly_name: 客厅新风机模式
+      #   value_template: '{% set mode = state_attr("fan.ke_ting_xin_feng_ji", "speed") %}{% if is_state("fan.ke_ting_xin_feng_ji", "off") %}off{% elif mode == "Auto" %}自{% elif mode == "Silent" %}静{% elif mode == "Interval" %}间{% elif mode == "Low" %}一{% elif mode == "Middle" %}二{% elif mode == "Strong" %}三{% else %}{{ mode }}{% endif %}'
+      # zhu_wo_xin_feng_ji_mo_shi:
+      #   friendly_name: 主卧新风机模式
+      #   value_template: '{% set mode = state_attr("fan.zhu_wo_xin_feng_ji", "speed") %}{% if is_state("fan.zhu_wo_xin_feng_ji", "off") %}off{% elif mode == "Auto" %}自{% elif mode == "Silent" %}静{% elif mode == "Interval" %}间{% elif mode == "Low" %}一{% elif mode == "Middle" %}二{% elif mode == "Strong" %}三{% else %}{{ mode }}{% endif %}'
 
-      ci_wo_jing_hua_qi_mo_shi:
-        friendly_name: 次卧净化器模式
-        value_template: '{% set mode = state_attr("fan.ci_wo_jing_hua_qi", "speed") %}{% if is_state("fan.ci_wo_jing_hua_qi", "off") %}off{% elif mode == "Auto" %}自{% elif mode == "Silent" %}静{% elif mode == "Favorite" %}{{ state_attr("fan.ci_wo_jing_hua_qi", "favorite_level") }}{% else %}{{ mode }}{% endif %}'
-      shu_fang_jing_hua_qi_mo_shi:
-        friendly_name: 书房净化器模式
-        value_template: '{% set mode = state_attr("fan.shu_fang_jing_hua_qi", "speed") %}{% if is_state("fan.shu_fang_jing_hua_qi", "off") %}off{% elif mode == "low" %}一{% elif mode == "medium" %}二{% elif mode == "high" %}三{% else %}{{ mode }}{% endif %}'
-      can_ting_jing_hua_qi_mo_shi:
-        friendly_name: 餐厅净化器模式
-        value_template: '{% set mode = state_attr("fan.can_ting_jing_hua_qi", "speed") %}{% if is_state("fan.can_ting_jing_hua_qi", "off") %}off{% elif mode == "low" %}一{% elif mode == "medium" %}二{% elif mode == "high" %}三{% else %}{{ mode }}{% endif %}'
-      zhu_wo_jing_hua_qi_mo_shi:
-        friendly_name: 主卧净化器模式
-        value_template: '{% set mode = state_attr("fan.zhu_wo_jing_hua_qi", "speed") %}{% if is_state("fan.zhu_wo_jing_hua_qi", "off") %}off{% elif mode == "low" %}一{% elif mode == "medium" %}二{% elif mode == "high" %}三{% else %}{{ mode }}{% endif %}'
-      er_tong_fang_jing_hua_qi_mo_shi:
-        friendly_name: 儿童房净化器模式
-        value_template: '{% set mode = state_attr("fan.er_tong_fang_jing_hua_qi", "speed") %}{% if is_state("fan.er_tong_fang_jing_hua_qi", "off") %}off{% elif mode == "low" %}一{% elif mode == "medium" %}二{% elif mode == "high" %}三{% else %}{{ mode }}{% endif %}'
+      # ci_wo_jing_hua_qi_mo_shi:
+      #   friendly_name: 次卧净化器模式
+      #   value_template: '{% set mode = state_attr("fan.ci_wo_jing_hua_qi", "speed") %}{% if is_state("fan.ci_wo_jing_hua_qi", "off") %}off{% elif mode == "Auto" %}自{% elif mode == "Silent" %}静{% elif mode == "Favorite" %}{{ state_attr("fan.ci_wo_jing_hua_qi", "favorite_level") }}{% else %}{{ mode }}{% endif %}'
+      # shu_fang_jing_hua_qi_mo_shi:
+      #   friendly_name: 书房净化器模式
+      #   value_template: '{% set mode = state_attr("fan.shu_fang_jing_hua_qi", "speed") %}{% if is_state("fan.shu_fang_jing_hua_qi", "off") %}off{% elif mode == "low" %}一{% elif mode == "medium" %}二{% elif mode == "high" %}三{% else %}{{ mode }}{% endif %}'
+      # can_ting_jing_hua_qi_mo_shi:
+      #   friendly_name: 餐厅净化器模式
+      #   value_template: '{% set mode = state_attr("fan.can_ting_jing_hua_qi", "speed") %}{% if is_state("fan.can_ting_jing_hua_qi", "off") %}off{% elif mode == "low" %}一{% elif mode == "medium" %}二{% elif mode == "high" %}三{% else %}{{ mode }}{% endif %}'
+      # zhu_wo_jing_hua_qi_mo_shi:
+      #   friendly_name: 主卧净化器模式
+      #   value_template: '{% set mode = state_attr("fan.zhu_wo_jing_hua_qi", "speed") %}{% if is_state("fan.zhu_wo_jing_hua_qi", "off") %}off{% elif mode == "low" %}一{% elif mode == "medium" %}二{% elif mode == "high" %}三{% else %}{{ mode }}{% endif %}'
+      # er_tong_fang_jing_hua_qi_mo_shi:
+      #   friendly_name: 儿童房净化器模式
+      #   value_template: '{% set mode = state_attr("fan.er_tong_fang_jing_hua_qi", "speed") %}{% if is_state("fan.er_tong_fang_jing_hua_qi", "off") %}off{% elif mode == "low" %}一{% elif mode == "medium" %}二{% elif mode == "high" %}三{% else %}{{ mode }}{% endif %}'
 
 switch:
   - platform: wake_on_lan
     name: 网络存储
-    mac: 00-11-32-6B-75-F7
-    #broadcast_address: 192.168.1.255
+    mac: 00:11:32:6B:75:F7
     host: Station
     turn_off:
       service: shell_command.station_off
+  - platform: mqtt
+    name: 餐厅筒灯
+    state_topic: Sonoff1/relay/1
+    command_topic: Sonoff1/relay/1/set
+    availability_topic: Sonoff1/status
+  - platform: mqtt
+    name: 客厅筒灯
+    state_topic: Sonoff1/relay/2
+    command_topic: Sonoff1/relay/2/set
+    availability_topic: Sonoff1/status
   - platform: mqtt
     name: 洗手间排气扇
     state_topic: Hassmart2/relay/1
     command_topic: Hassmart2/relay/1/set
     availability_topic: Hassmart2/status
-  - platform: mqtt2
-    name: 音箱
+  - platform: zhimqtt
+    name: 书房音箱
     state_topic: NodeMCU2/relay/0
     command_topic: NodeMCU2/relay/0/set
     availability_topic: NodeMCU2/status
     value_template: '{% if value == "关闭" %}OFF{% else %}ON{% endif %}'
     icon_template: '{% if value == "关闭" %}mdi:speaker-off{% elif value == "蓝牙" %}mdi:speaker-bluetooth{% elif value == "光纤" %}mdi:speaker-wireless{% elif value == "优盘" %}mdi:usb{% elif value == "辅助" %}mdi:video-input-component{% else %}mdi:speaker{% endif %}'
-  # - platform: broadlink
-  #   host: Outlet
-  #   mac: 34:EA:34:B8:36:AC
-  #   friendly_name: 餐厅除湿机
-  #   type: spmini2
-  # - platform: broadlink
-  #   host: Outlet2
-  #   mac: 78:0f:77:cc:cc:be
-  #   friendly_name: 衣柜除湿机
-  #   type: spmini2
-  # - platform: broadlink
-  #   friendly_name: 万能遥控
-  #   host: Remote
-  #   mac: 34:EA:34:58:73:5D
-  #   type: rm2_pro_plus
-  # - platform: broadlink
-  #   friendly_name: 红外遥控
-  #   host: Remote2
-  #   mac: 78:0F:77:47:AA:8F
-  #   type: rm_mini
-  # - platform: template
-  #   switches:
-  #     tou_ying_yi:
-  #       friendly_name: 投影仪
+  - platform: template
+    switches:
+      zhu_wo_dian_shi:
+        friendly_name: 主卧电视电源
+        value_template: '{{ is_state("device_tracker.x9300d", "home") }}'
+        turn_on:
+          service: mqtt.publish
+          data:
+            topic: NodeMCU5/irout/set
+            payload: '2416,592,1210,594,608,618,1186,616,586,592,1210,618,584,618,586,616,1186,618,584,618,584,616,586,592,608,1,2,38'
+        turn_off:
+          service: shell_command.x9300d_off
+  #     shu_fang_tou_ying_yi:
+  #       friendly_name: 书房投影仪
   #       value_template: '{{ is_state("device_tracker.projector", "home") }}'
   #       icon_template: mdi:projector
   #       turn_on:
   #         service: remote.send_command
   #         data:
-  #           entity_id: remote.wan_neng_yao_kong_remote
+  #           entity_id: remote.shu_fang_yao_kong
   #           command: 'b64:JgBQAAABKZMTNxQ3ExIUERQSExITEhM3FBITEhM3ExITOBM3EzcUNxM3EzcUNxMSEzcTExMSExITEhMSExIUNxMSEzcUNxM3EwAFGQABJUkTAA0FAAAAAAAAAAA='
   #       turn_off:
   #         service: remote.send_command
   #         data:
-  #           entity_id: remote.mo_neng_yao_kong_remote
+  #           entity_id: remote.shu_fang_yao_kong
   #           command: 'b64:JgBQAAABKZMTNxQ3ExIUERQSExITEhM3FBITEhM3ExITOBM3EzcUNxM3EzcUNxMSEzcTExMSExITEhMSExIUNxMSEzcUNxM3EwAFGQABJUkTAA0FAAAAAAAAAAA='
-  #     zhu_wo_dian_shi:
-  #       friendly_name: 主卧电视电源
-  #       value_template: '{{ is_state("device_tracker.x9300d", "home") }}'
-  #       turn_on:
-  #         service: mqtt.publish
-  #         data:
-  #           topic: NodeMCU5/irout/set
-  #           payload: '2416,592,1210,594,608,618,1186,616,586,592,1210,618,584,618,586,616,1186,618,584,618,584,616,586,592,608,1,2,38'
-  #       turn_off:
-  #         service: shell_command.x9300d_off
+
+shell_command:
+  station_off: 'ssh root@Station shutdown -h now'
+  magic_on: "adb connect magic && adb -s magic shell 'input keyevent 82; am start -n com.thanksmister.iot.wallpanel/.ui.activities.WelcomeActivity'"
+  magic_off: "adb connect magic && adb -s magic shell 'input keyevent 82; input keyevent 26'"
+  x9300d_off: 'adb connect x9300d && adb -s x9300d shell reboot -p'
+  x9400d_off: 'adb connect x9400e && adb -s x9400e shell reboot -p'
 
 yeelight:
   devices:
@@ -489,33 +481,23 @@ light:
     command_topic: Hassmart2/relay/0/set
     availability_topic: Hassmart2/status
   - platform: mqtt
-    name: 过道背景灯
+    name: 过道柜灯
     state_topic: Sonoff1/relay/0
     command_topic: Sonoff1/relay/0/set
     availability_topic: Sonoff1/status
   - platform: mqtt
-    name: 餐厅筒灯2
-    state_topic: Sonoff1/relay/1
-    command_topic: Sonoff1/relay/1/set
-    availability_topic: Sonoff1/status
-  - platform: mqtt
-    name: 客厅筒灯2
-    state_topic: Sonoff1/relay/2
-    command_topic: Sonoff1/relay/2/set
-    availability_topic: Sonoff1/status
-  - platform: mqtt
-    name: 主卧灯
+    name: 主卧吸顶灯
     state_topic: NodeMCU5/analog
     state_value_template: '{% if (value | int > 1000) or ((value | int > 600) and is_state("sun.sun", "below_horizon")) %}3526,1658,426,418,426,1292,426,420,426,1288,428,418,426,1290,430,418,426,1290,428,418,426,418,426,416,426,1290,428,416,430,1290,428,1290,428,418,428,1288,428,416,428,418,426,418,428,1288,428,1288,428,1290,428,418,428,1290,428,418,428,1290,428,416,428,1290,428,1290,428,416,428,418,426,418,428,416,428,418,426,416,428,418,426,416,428,416,428,418,426,1292,426,418,428,1290,428,416,428,1292,424,1292,424,1294,424,418,426,1290,426,420,424,418,426,420,424,422,424,1294,424,420,424,420,424,1294,424,420,424,422,422,422,422,1298,422,422,422,1296,422,422,422,1,2,38{% else %}3528,1658,426,418,426,1292,380,462,382,1334,382,464,382,1338,380,462,382,1336,382,462,382,462,382,462,382,1336,382,462,382,1336,380,1336,382,464,382,1338,378,462,384,462,382,464,380,1336,382,1336,382,1336,382,462,382,1334,384,464,382,1336,382,462,382,1336,382,1336,382,464,382,462,382,464,382,464,380,462,382,462,382,464,382,464,380,464,382,464,382,464,380,1338,380,462,382,464,382,462,380,464,380,464,380,464,380,1334,382,464,380,464,380,464,380,464,382,1336,382,464,382,462,382,1334,382,464,382,464,382,464,380,1336,382,1336,382,464,382,1338,380,1,2,38{% endif %}'
     command_topic: NodeMCU5/irout/set
     availability_topic: NodeMCU5/status
     payload_on: 3526,1658,426,418,426,1292,426,420,426,1288,428,418,426,1290,430,418,426,1290,428,418,426,418,426,416,426,1290,428,416,430,1290,428,1290,428,418,428,1288,428,416,428,418,426,418,428,1288,428,1288,428,1290,428,418,428,1290,428,418,428,1290,428,416,428,1290,428,1290,428,416,428,418,426,418,428,416,428,418,426,416,428,418,426,416,428,416,428,418,426,1292,426,418,428,1290,428,416,428,1292,424,1292,424,1294,424,418,426,1290,426,420,424,418,426,420,424,422,424,1294,424,420,424,420,424,1294,424,420,424,422,422,422,422,1298,422,422,422,1296,422,422,422,1,2,38
     payload_off: 3528,1658,426,418,426,1292,380,462,382,1334,382,464,382,1338,380,462,382,1336,382,462,382,462,382,462,382,1336,382,462,382,1336,380,1336,382,464,382,1338,378,462,384,462,382,464,380,1336,382,1336,382,1336,382,462,382,1334,384,464,382,1336,382,462,382,1336,382,1336,382,464,382,462,382,464,382,464,380,462,382,462,382,464,382,464,380,464,382,464,382,464,380,1338,380,462,382,464,382,462,380,464,380,464,380,464,380,1334,382,464,380,464,380,464,380,464,382,1336,382,464,382,462,382,1334,382,464,382,464,382,464,380,1336,382,1336,382,464,382,1338,380,1,2,38
-    brightness_state_topic:  NodeMCU5/analog
+    brightness_state_topic: NodeMCU5/analog
     brightness_command_topic: NodeMCU5_/analog/set
     brightness_scale: 1024
   - platform: mqtt
-    name: 儿童房灯
+    name: 儿童房吸顶灯
     command_topic: NodeMCU6/irout/set
     availability_topic: NodeMCU6/status
     payload_on: 3526,1658,426,418,426,1292,426,420,426,1288,428,418,426,1290,430,418,426,1290,428,418,426,418,426,416,426,1290,428,416,430,1290,428,1290,428,418,428,1288,428,416,428,418,426,418,428,1288,428,1288,428,1290,428,418,428,1290,428,418,428,1290,428,416,428,1290,428,1290,428,416,428,418,426,418,428,416,428,418,426,416,428,418,426,416,428,416,428,418,426,1292,426,418,428,1290,428,416,428,1292,424,1292,424,1294,424,418,426,1290,426,420,424,418,426,420,424,422,424,1294,424,420,424,420,424,1294,424,420,424,422,422,422,422,1298,422,422,422,1296,422,422,422,1,2,38
@@ -539,29 +521,13 @@ light:
     state_template: '{%- if value_json.brightness == 0 -%}off{%- else -%}on{%- endif -%}'
     brightness_template: '{%- if value_json.brightness is defined -%}{{ ( value_json.brightness *64 )|int }}{%- endif -%}'
 
-shell_command:
-  station_off: 'ssh root@Station shutdown -h now'
-  magic_on: "adb connect magic; adb -s magic shell 'input keyevent 82; am start -n com.thanksmister.iot.wallpanel/.ui.activities.WelcomeActivity'"
-  magic_off: "adb connect magic; adb -s magic shell 'input keyevent 82; input keyevent 26'"
-  # x9300d_off: 'adb connect x9300d; adb -s x9300d shell reboot -p'
-  # x9400d_off: 'adb connect x9400e; adb -s x9400e shell reboot -p'
-
 xiaomi_aqara:
-  #interface: 192.168.2.40
   gateways:
     - key: 3ECB50168D7F4AEB
-      #mac: 34CE0090901A
-      #host: ZigBee
-
-vacuum:
-  - platform: xiaomi_miio
-    name: 扫地机
-    host: Vacuum
-    token: !secret vacuum_token
 
 fan:
   - platform: zhiviomi
-    name: 洗衣机
+    name: 浴室洗衣机
     host: Washer
     token: !secret washer_token
   - platform: xiaomi_miio
@@ -671,10 +637,7 @@ fan:
   - platform: smartir
     name: 客厅壁扇
     device_code: 6666
-    controller_data: remote.hong_wai_yao_kong
-
-smartir:
-  check_updates: false
+    controller_data: remote.ke_ting_yao_kong
 
 climate:
   - platform: zhisaswell
@@ -692,45 +655,42 @@ climate:
   - platform: smartir
     name: 书房空调
     device_code: 6666
-    controller_data: remote.wan_neng_yao_kong
+    controller_data: remote.shu_fang_yao_kong
     temperature_sensor: sensor.shu_fang_wen_du
     humidity_sensor: sensor.aircat2_humidity
 
+cover:
+  - platform: zhiremote
+    sender: remote.shu_fang_yao_kong
+    covers:
+      书房窗帘:
+        command_open: 'b64:sgD8AJ8wGAwNFxgMGAwYDAwYFwwYDQwYGAsNFw0XDRcYDAwYDBgNFxkMDBgYDBgMDBcNFw0XGQsNFxgMGAwMGAwYDBgXDQwYDBcNFxgMDRcMGAwXGAABIZ4xGQwNFxgMGAwYDAwXGAwYDQwXGAwNFw0XDBgYDAwYDBgMGBgMDBcYDBgMDRcMGAwYGAwMGBgMGAwMFw0XDRcYDA0XDBgMGBgMDBkMFw0XGAABIZ4xFwwNFxgMGAwYDAwYGAwYDAwYGAwMFw0XDRcYDAwYDBgNFxgMDBgYDRgMDBgMFw0YGAsNFxgMGAwMGAwYDBcYDQwYDBcNFxgMDBgMGAwYFwAF3AAAAAAAAAAAAAAAAA=='
+        command_stop: 'b64:sgD8AJ4xGAwMGBcMGAwYDAwYGAwYDAwYGAwMGAwZDBcYDAwYDBkLGBgMDBgYDBcNDBgMFw0YFw0MFxgMGAwMGAwYDBgXDQwYFw0MFxgMDRcYDAwYFwABIZ8xGAwMGBcNFw0XDQwXGAwYDQwYFwwNFwwYDBgXDQwYDBgMGBcMDRcYDBgMDBgMGAwYGAwMGBcNFwwNFwwYDBgZDAwYFw0MGBcNDBcYDAwYGAABIJ4xGAwMGBgMGAwXDQwXGAwYDQwYFwwNFwwYDBgYDAwYDRgMGBcNDBcYDBgMDBgMGAwYGAwMGBcNFw0MGAsYDBgYDAwYGAwMGBcNDBcYDAwYGAAF3AAAAAAAAAAAAAAAAA=='
+        command_close: 'b64:sgD8AJ0xGAwMGBcNFw0XDQsYGAwYDAwZFwwMGAwYDBgXDQwXDBkMGBcNCxkXDBgMDBkMGAwYGAwMGBcNFw0MGAsZCxgYDQsYDBgXDRcNDBgMGBcNFwABIZ4xFw0MGBcNFwwYDA0YGAwYDAwYGAwMGAwYDBgXDQsYDBgMGBgMDBgXDRcNDBgMGAwYFw0MGBcMGAwMGAwYDBgXDQwYDBgXDRcMDBgMGBgMFwABI50yFw0LGBgMGAwXDQwYFw0XDQwYFw0MGAwYDBcYDAwYDBgMGBgMDBgXDRcNCxkLGAwYGA4MFxgMGAwMGAwYDBgXDQwYDBgXDBgNCxgMGBcNFwAF3AAAAAAAAAAAAAAAAA=='
+        travel_time: 13
+      书房幕布:
+        command_open: 'b64:JgDGACoPKQ8pDykQDikOKg4qDykPKA4qKQ8PKQ8pKA8QKSgQKQ8pDw8pKBApDykPDykpDykPDykpDw8pKQ8PKQ8pKAAD0igQKBAoECgQDykPKQ8oDykPKQ8pKBAPKQ8oKRAPKCkQKBAoEA8oKBEoECgQDykoECgQDykoEA8pKBAPKA8pKQAD0SkPKRAoECgQDygQKA8pDykPKQ8oKRAPKA4qKQ8PKSkPKQ8pDw8pKQ8pDykQDygpECgQDikqDw8oKQ8PKQ8pKQANBQAA'
+        command_stop: 'b64:JgDGACoPKg8pDykPDygQKBEnDykQKBAnECgpDw8pKBAPKSgQKg4qDg8pECgqDikPDykQKA8pKBApDykPKQ8PKRAoDwAD6ioOKQ8pECkPDygQKA8pECgPKQ8oDykoEA8pKQ8PKSgQKQ8qDg8pECgoECoODykPKQ8oKRAoECkPKQ8PKQ8oEAAD6ikPKQ8qDikQDikPKQ8pDykPKBAoDykpDw8pKQ8PKSgQKQ8pDw8pDykoECkPDioPKQ8oKRAoECgQKBAPKQ8oEAANBQAA'
+        command_close: 'b64:JgDGACoPKRAoECgQDykPKBAoDykPKSgQDykPKA8pKQ8PKSkPKQ4qECgQDygpECgQKBAPKSgQKBAPKQ8oKRAPKA8pKQAD0SgQKQ8pDykPECgPKQ8pDykPKCkQDygPKQ8pKBAPKSgQKQ8pDykPDykoECkPKQ8PKSkOKg8PKQ8pKQwSKQ8pKAAD0igQKBAoECkPDykPKQ8oDykPKSkPDykPKQ8oKRAPKCkQKBAoECgQDykoECgQKA8QKSgQKQ8PKQ8pKBAPKBAoKQANBQAA'
+        travel_time: 45
+
 zhimrbond:
-  name: 晾衣架
+  name: 书房晾衣架
   host: Airer
   token: !secret airer_token
 
-cover:
-  - platform: broadlink2
-    host: Remote
-    mac: 34:EA:34:58:73:5D
-    covers:
-      shu_fang_chuang_lian:
-        name: 书房窗帘
-        travel_time: 13
-        command_open: sgD8AJ8wGAwNFxgMGAwYDAwYFwwYDQwYGAsNFw0XDRcYDAwYDBgNFxkMDBgYDBgMDBcNFw0XGQsNFxgMGAwMGAwYDBgXDQwYDBcNFxgMDRcMGAwXGAABIZ4xGQwNFxgMGAwYDAwXGAwYDQwXGAwNFw0XDBgYDAwYDBgMGBgMDBcYDBgMDRcMGAwYGAwMGBgMGAwMFw0XDRcYDA0XDBgMGBgMDBkMFw0XGAABIZ4xFwwNFxgMGAwYDAwYGAwYDAwYGAwMFw0XDRcYDAwYDBgNFxgMDBgYDRgMDBgMFw0YGAsNFxgMGAwMGAwYDBcYDQwYDBcNFxgMDBgMGAwYFwAF3AAAAAAAAAAAAAAAAA==
-        command_stop: sgD8AJ4xGAwMGBcMGAwYDAwYGAwYDAwYGAwMGAwZDBcYDAwYDBkLGBgMDBgYDBcNDBgMFw0YFw0MFxgMGAwMGAwYDBgXDQwYFw0MFxgMDRcYDAwYFwABIZ8xGAwMGBcNFw0XDQwXGAwYDQwYFwwNFwwYDBgXDQwYDBgMGBcMDRcYDBgMDBgMGAwYGAwMGBcNFwwNFwwYDBgZDAwYFw0MGBcNDBcYDAwYGAABIJ4xGAwMGBgMGAwXDQwXGAwYDQwYFwwNFwwYDBgYDAwYDRgMGBcNDBcYDBgMDBgMGAwYGAwMGBcNFw0MGAsYDBgYDAwYGAwMGBcNDBcYDAwYGAAF3AAAAAAAAAAAAAAAAA==
-        command_close: sgD8AJ0xGAwMGBcNFw0XDQsYGAwYDAwZFwwMGAwYDBgXDQwXDBkMGBcNCxkXDBgMDBkMGAwYGAwMGBcNFw0MGAsZCxgYDQsYDBgXDRcNDBgMGBcNFwABIZ4xFw0MGBcNFwwYDA0YGAwYDAwYGAwMGAwYDBgXDQsYDBgMGBgMDBgXDRcNDBgMGAwYFw0MGBcMGAwMGAwYDBgXDQwYDBgXDRcMDBgMGBgMFwABI50yFw0LGBgMGAwXDQwYFw0XDQwYFw0MGAwYDBcYDAwYDBgMGBgMDBgXDRcNCxkLGAwYGA4MFxgMGAwMGAwYDBgXDQwYDBgXDBgNCxgMGBcNFwAF3AAAAAAAAAAAAAAAAA==
-      tou_ying_mu_bu:
-        name: 投影幕布
-        travel_time: 45
-        command_open: JgDGACoPKQ8pDykQDikOKg4qDykPKA4qKQ8PKQ8pKA8QKSgQKQ8pDw8pKBApDykPDykpDykPDykpDw8pKQ8PKQ8pKAAD0igQKBAoECgQDykPKQ8oDykPKQ8pKBAPKQ8oKRAPKCkQKBAoEA8oKBEoECgQDykoECgQDykoEA8pKBAPKA8pKQAD0SkPKRAoECgQDygQKA8pDykPKQ8oKRAPKA4qKQ8PKSkPKQ8pDw8pKQ8pDykQDygpECgQDikqDw8oKQ8PKQ8pKQANBQAA
-        command_stop: JgDGACoPKg8pDykPDygQKBEnDykQKBAnECgpDw8pKBAPKSgQKg4qDg8pECgqDikPDykQKA8pKBApDykPKQ8PKRAoDwAD6ioOKQ8pECkPDygQKA8pECgPKQ8oDykoEA8pKQ8PKSgQKQ8qDg8pECgoECoODykPKQ8oKRAoECkPKQ8PKQ8oEAAD6ikPKQ8qDikQDikPKQ8pDykPKBAoDykpDw8pKQ8PKSgQKQ8pDw8pDykoECkPDioPKQ8oKRAoECgQKBAPKQ8oEAANBQAA
-        command_close: JgDGACoPKRAoECgQDykPKBAoDykPKSgQDykPKA8pKQ8PKSkPKQ4qECgQDygpECgQKBAPKSgQKBAPKQ8oKRAPKA8pKQAD0SgQKQ8pDykPECgPKQ8pDykPKCkQDygPKQ8pKBAPKSgQKQ8pDykPDykoECkPKQ8PKSkOKg8PKQ8pKQwSKQ8pKAAD0igQKBAoECkPDykPKQ8oDykPKSkPDykPKQ8oKRAPKCkQKBAoECgQDykoECgQKA8QKSgQKQ8PKQ8pKBAPKBAoKQANBQAA
-
 media_player:
   - platform: smartir
-    name: 投影仪
+    name: 书房投影仪
     device_code: 6666
-    controller_data: remote.wan_neng_yao_kong
+    controller_data: remote.shu_fang_yao_kong
     power_sensor: device_tracker.projector
-#   - platform: braviatv
-#     host: X9300d
-#     name: 主卧电视
-#   - platform: braviatv
-#     host: X9400e
-#     name: 客厅电视
+  # - platform: braviatv
+  #   host: X9300d
+  #   name: 主卧电视
+  # - platform: braviatv
+  #   host: X9400e
+  #   name: 客厅电视
   # - platform: dlna_dmr
   #   name: 天猫精灵
   #   url: http://Magic:49153/description.xml
@@ -751,17 +711,20 @@ camera:
     still_image_url: http://Camera5/last.cgi
     #stream_source: rtsp://Camera5/live/ch00_0
 
-panel_iframe:
-  dash:
-    title: 面板
-    icon: mdi:microsoft
-    url: /local/dash.html
+# vacuum:
+#   - platform: xiaomi_miio
+#     name: 扫地机
+#     host: Vacuum
+#     token: !secret vacuum_token
+
+smartir:
+  check_updates: false
 
 zhiact:
 
 zhimi:
-    username: !secret zhimi_username
-    password: !secret zhimi_password
+  username: !secret zhimi_username
+  password: !secret zhimi_password
 
 zhimsg:
   - platform: ding
@@ -783,6 +746,7 @@ zhimsg:
 
 zhibot:
   - platform: genie
+    token: !secret zhibot_token
   - platform: miai
     token: !secret zhibot_token
   - platform: ding
@@ -796,3 +760,14 @@ zhibot:
   - platform: ding
     name: 儿童房音箱
     token: !secret zhibot_token
+# By Intergration
+# switch.broadlink
+#   餐厅除湿机
+#   衣柜除湿机
+#   万能遥控
+#   红外遥控
+# vacuum.xiaomi_miio
+#   扫地机
+# media_player.braviatv
+#   主卧电视
+#   客厅电视

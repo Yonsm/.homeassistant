@@ -63,7 +63,7 @@
     - service: automation.trigger
       entity_id: automation.shi_nei_kong_qi_chai
 
-- alias: 环境状况
+- alias: 室内外环境提醒
   trigger:
     - platform: time
       at: '7:30:00'

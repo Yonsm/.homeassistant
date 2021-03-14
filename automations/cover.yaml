@@ -28,7 +28,7 @@
       entity_id: cover.shu_fang_chuang_lian
       state: closed
     - condition: state
-      entity_id: media_player.tou_ying_yi
+      entity_id: media_player.shu_fang_tou_ying_yi
       state: 'off'
   action:
     - service: cover.open_cover

@@ -89,7 +89,7 @@
 #     - service: climate.turn_off
 #       entity_id: climate.can_ting_kong_diao
 
-# - alias: 主卧空调调节
+# - alias: 主卧温度变化-调控空调
 #   initial_state: false
 #   trigger:
 #     - platform: time
@@ -112,7 +112,7 @@
 #         entity_attr: fan_mode
 #         entity_values: [一档, 二档, 三档, 四档, 五档]
 
-# - alias: 儿童房空调调节
+# - alias: 儿童房温度变化-调控空调
 #   initial_state: false
 #   trigger:
 #     - platform: time
@@ -135,7 +135,7 @@
 #         entity_values: [一档, 二档, 三档, 四档, 五档]
 #         delay: 0
 
-# - alias: 书房空调调节
+# - alias: 书房温度变化-调控空调
 #   initial_state: false
 #   trigger:
 #     - platform: time
@@ -160,7 +160,7 @@
 #         entity_values: [low, mid, high, highest]
 #         delay: 0
 
-# - alias: 书房风扇调节
+# - alias: 书房温度变化-调控风扇
 #   initial_state: false
 #   trigger:
 #     - platform: time
@@ -187,7 +187,7 @@
 #         entity_values: [Level 1, Level 2, Level 3, Level 4]
 #         delay: 0
 
-# - alias: 儿童房风扇调节
+# - alias: 儿童房温度变化-调控风扇
 #   initial_state: false
 #   trigger:
 #     - platform: time

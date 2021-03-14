@@ -1,19 +1,17 @@
-#
-- alias: 同步餐厅筒灯
+- alias: 餐厅筒灯同步调控
   trigger:
     - platform: state
-      entity_id: light.can_ting_tong_deng_2, light.can_ting_tong_deng
+      entity_id: switch.can_ting_tong_deng, light.can_ting_tong_deng
   action:
-    - service_template: '{% if trigger.to_state.state == "on" %}light.turn_on{% else %}light.turn_off{% endif %}'
+    - service_template: '{% if trigger.to_state.state == "on" %}homeassistant.turn_on{% else %}light.turn_off{% endif %}'
       data_template:
-        entity_id: '{% if trigger.entity_id == "light.can_ting_tong_deng_2" %}light.can_ting_tong_deng{% else %}light.can_ting_tong_deng_2{% endif %}'
+        entity_id: '{% if trigger.entity_id == "switch.can_ting_tong_deng" %}light.can_ting_tong_deng{% else %}switch.can_ting_tong_deng{% endif %}'
 
-#
-- alias: 同步客厅筒灯
+- alias: 客厅筒灯同步调控
   trigger:
     - platform: state
-      entity_id: light.ke_ting_tong_deng_2, light.ke_ting_tong_deng
+      entity_id: switch.ke_ting_tong_deng, light.ke_ting_tong_deng
   action:
-    - service_template: '{% if trigger.to_state.state == "on" %}light.turn_on{% else %}light.turn_off{% endif %}'
+    - service_template: '{% if trigger.to_state.state == "on" %}homeassistant.turn_on{% else %}light.turn_off{% endif %}'
       data_template:
-        entity_id: '{% if trigger.entity_id == "light.ke_ting_tong_deng_2" %}light.ke_ting_tong_deng{% else %}light.ke_ting_tong_deng_2{% endif %}'
+        entity_id: '{% if trigger.entity_id == "switch.ke_ting_tong_deng" %}light.ke_ting_tong_deng{% else %}switch.ke_ting_tong_deng{% endif %}'
