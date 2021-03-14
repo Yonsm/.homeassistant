@@ -37,5 +37,8 @@ class RemoteHass:
         d = self.rest('states/' + entity_id) or {}
         return namedtuple('EntityState', d.keys())(*d.values())
 
-    async def async_call(self, domain, service, data, blocking=False):
+    def call(self, domain, service, data, blocking=False):
         return self.rest('services/' + domain + '/' + service, data) or []
+
+    async def async_call(self, domain, service, data, blocking=False):
+        return self.call(self, domain, service, data, blocking)

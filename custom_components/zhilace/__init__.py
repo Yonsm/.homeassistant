@@ -12,156 +12,10 @@ binary_sensor_classes = ['opening', 'motion', 'window', 'illuminance']
 card_types = ['weather-forecast', 'glance', 'entities', 'entity', 'media-control', 'thermostat', 'picture-entity']
 zone_names = [['客厅', '室内'], ['餐厅', '入户', '玄关', '厨房'], ['过道', '洗手间'], ['主卧', '浴室'], ['次卧'], ['儿童房'], ['书房'], ['阳台', '天气', '日照', '太阳', '室外'], ['其它']]
 domain_names = ['', '天气', '日照', '太阳', '传感器', '二元传感器', '人员',  '设备', '灯光', '开关', '风扇', '净化器', '新风机', '扫地机', '卷帘', '空调', '地暖', '视听', '摄像头', '输入', '遥控', '智能', '隐藏', '其它']
-domain_types = ['weather', 'sun', 'sensor', 'binary_sensor', 'person', 'device_tracker', 'light', 'switch', 'fan', 'remote', 'vacuum', 'cover', 'climate', 'media_player', 'camera', 'input_text', 'automation']
-
-
-def make_lovelace(hass):
-    status_cards = []
-    toggle_cards = []
-    thermostat_cards = []
-    guard_cards = []
-    guard_badges = []
-    automation_cards = []
-    other_cards = []
-    sorts = domain_names[:-1] + [zone for z in zone_names for zone in z]
-
-    def get_zone(name):
-        for z in zone_names:
-            for zone in z:
-                if name.startswith(zone):
-                    return z[0]
-        return '其它'
-
-    def get_sort_index(title):
-        i = len(sorts) - 1
-        while i >= 0 and title != sorts[i]:  # title not in zone_names[i]:
-            i -= 1
-        return i
-
-    def add_to_sorted(items, item, func, func2=None):
-        n1 = func(item)
-        z1 = func2(n1) if func2 else n1
-        i = len(items)-1
-        while i >= 0:
-            n2 = func(items[i])
-            z2 = func2(n2) if func2 else n2
-            j = get_sort_index(z2)
-            k = get_sort_index(z1)
-            if k > j or (j == k and n1 > n2):
-                break
-            i -= 1
-        items.insert(i + 1, item)
-
-    entity_names = {}
-
-    def add_to_entities(entities, entity_id):
-        add_to_sorted(entities, entity_id, lambda x: entity_names[x], lambda x: get_zone(x))
-
-    def add_to_entities_card(cards, card):
-        add_to_sorted(cards, card, lambda x: entity_names[x['entity']], lambda x: get_zone(x))
-
-    def add_to_entities_card(entity_id, cards, title, key='title', type='entities'):
-        card = next((i for i in cards if i.get(key) == title), None)
-        if card is None:
-            card = {'type': type, key: title, 'entities': [entity_id]}
-            add_to_sorted(cards, card, lambda x: x[key])
-        else:
-            add_to_entities(card['entities'], entity_id)
-        return card
-
-    # title = '智家'
-    entities = hass.states.async_all()
-    for i in entities:
-        entity_id = i.entity_id
-        attributes = i.attributes
-        name = attributes['friendly_name']
-        entity_names[entity_id] = name
-        domain = entity_id[:entity_id.find('.')]
-        if entity_id == 'zone.home':
-            title = name
-        elif 'hidden' in attributes:
-            add_to_entities_card(entity_id, other_cards, '隐藏')
-        elif domain == 'weather':
-            card = {'type': 'weather-forecast', 'name': name, 'entity': entity_id}
-            if 'attribution' in attributes:
-                card['secondary_info_attribute'] = 'attribution'
-            status_cards.insert(0, card)
-        elif domain == 'sun' or domain == 'sensor':
-            zone = '阳台' if domain == 'sun' else get_zone(name)
-            add_to_entities_card(entity_id, status_cards, zone, 'name', 'glance')
-        elif domain == 'light':
-            add_to_entities_card(entity_id, toggle_cards, '灯光')
-        elif domain == 'media_player':
-            add_to_entities_card(entity_id, toggle_cards, '视听')
-        elif domain == 'cover' or domain == 'fan' or domain == 'switch' or domain == 'vacuum':
-            name_domain_names = {'净化': '净化器',  '新风': '新风机', '扇': '风扇', '音箱': '视听', '存储': '视听', '幕布': '视听', '帘': '卷帘'}
-            add_to_entities_card(entity_id, toggle_cards, next((v for k, v in name_domain_names.items() if k in name), '其它'))
-        elif domain == 'climate':
-            card = {'type': 'thermostat', 'entity': entity_id}
-            add_to_entities_card(thermostat_cards, card)
-        elif domain == 'binary_sensor':
-            add_to_entities(guard_badges, entity_id)
-        elif domain == 'camera':
-            card = {'type': 'picture-entity', 'entity': entity_id}
-            add_to_entities_card(guard_cards, card)
-        elif domain == 'automation':
-            add_to_entities_card(entity_id, automation_cards, get_zone(name))
-        else:
-            domain_names = {'device_tracker': '设备', 'input_text': '输入', 'person': '人员'}
-            add_to_entities_card(entity_id, other_cards, domain_names.get(domain, '其它'))
-
-    for cards in [status_cards, toggle_cards, thermostat_cards, guard_cards, automation_cards, other_cards]:
-        for card in cards:
-            card_type = card['type']
-            if card_type == 'entities':
-                card_key = 'title'
-            elif card_type == 'glance':
-                card_key = 'name'
-            else:
-                continue
-            if card[card_key] != '其它':
-                entities = card['entities']
-                if len(entities) == 1:
-                    add_to_entities_card(entities[0], cards, '其它', card_key, card_type)
-                    cards.remove(card)
-
-    result = {
-        'title': title,
-        'views': [
-            {
-                'title': '状态',
-                'path': 'status',
-                'cards': status_cards
-            },
-            {
-                'title': '调控',
-                'path': 'toggle',
-                'cards': toggle_cards
-            },
-            {
-                'title': '空调',
-                'path': 'thermostat',
-                'cards': thermostat_cards
-            },
-            {
-                'title': '安防',
-                'path': 'guard',
-                'badges': guard_badges,
-                'cards': guard_cards
-            },
-            {
-                'title': '智能',
-                'path': 'automation',
-                'cards': automation_cards
-            },
-            {
-                'title': '其它',
-                'path': 'other',
-                'cards': other_cards
-            },
-        ]
-    }
-    return result
+domain_types = ['weather', 'sun', 'sensor', 'binary_sensor', 'person', 'device_tracker', 'light', 'switch',
+                'fan', 'remote', 'vacuum', 'cover', 'climate', 'media_player', 'camera', 'input_text', 'automation']
+type_names = {'device_tracker': '设备', 'input_text': '输入', 'person': '人员'}
+name_types = {'净化': '净化器',  '新风': '新风机', '扇': '风扇', '音箱': '视听', '存储': '视听', '幕布': '视听', '帘': '卷帘'}
 
 
 def get_zone(name, default=None):
@@ -209,11 +63,11 @@ def compare_item(items, item1, item2):
     try:
         index1 = items.index(item1)
     except:
-        index1 = -1
+        index1 = 65535
     try:
         index2 = items.index(item2)
     except:
-        index2 = -1
+        index2 = 65535
     return index1 - index2
 
 
@@ -277,6 +131,7 @@ def compare_card(card1, card2):
                 return 1
     return ret
 
+
 def add_to_entities_card(entity_id, cards, title='', key='title', type='entities'):
     card = next((i for i in cards if i.get(key) == title), None)
     if card is None:
@@ -286,9 +141,7 @@ def add_to_entities_card(entity_id, cards, title='', key='title', type='entities
         add_to_sorted(entity_id, card['entities'], compare_entity_id)
 
 
-def make_lovelace2(hass):
-    views = []
-
+def make_lovelace(hass, views, handle_entity):
     # title = '智家'
     entities = hass.states.async_all()
     for i in entities:
@@ -300,20 +153,30 @@ def make_lovelace2(hass):
             continue
         entity_attributes[entity_id] = attributes
         domain = entity_id[:entity_id.find('.')]
+        handle_entity(domain, entity_id, name, attributes)
+    return {'title': title, 'views': views}
+
+
+def make_zone_lovelace(hass):
+    views = []
+
+    def handle_entity(domain, entity_id, name, attributes):
         zone = '其它' if 'hidden' in attributes else get_entity_zone(attributes, '其它')
         view = next((i for i in views if i.get('title') == zone), None)
         if view is None:
-            view = {'title': zone, 'badges': [], 'cards': []}
+            view = {'title': zone, 'path': zone, 'badges': [], 'cards': []}
             add_to_sorted(view, views, compare_view)
         if domain == 'sun' or domain == 'sensor' or domain == 'binary_sensor' or domain == 'person' or domain == 'device_tracker':
             add_to_sorted(entity_id, view['badges'], compare_entity_id)
-            continue
+            return
         cards = view['cards']
         if 'hidden' in attributes:
             add_to_entities_card(entity_id, cards, '隐藏')
-            continue
+            return
         elif domain == 'weather':
             card = {'type': 'weather-forecast', 'name': name, 'entity': entity_id}
+            if 'attribution' in attributes:
+                card['secondary_info_attribute'] = 'attribution'
         elif domain == 'media_player':
             card = {'type': 'media-control', 'entity': entity_id}
         elif domain == 'climate':
@@ -322,13 +185,82 @@ def make_lovelace2(hass):
             card = {'type': 'picture-entity', 'entity': entity_id}
         elif domain == 'automation':
             add_to_entities_card(entity_id, cards, '智能')
-            continue
+            return
         else:
             add_to_entities_card(entity_id, cards, '')
-            continue
+            return
         add_to_sorted(card, cards, compare_card)
 
-    return {'title': title, 'views': views}
+    return make_lovelace(hass, views, handle_entity)
+
+
+def make_type_lovelace(hass):
+    status_cards = []
+    toggle_cards = []
+    thermostat_cards = []
+    guard_cards = []
+    guard_badges = []
+    automation_cards = []
+    other_cards = []
+
+    def handle_entity(domain, entity_id, name, attributes):
+        if 'hidden' in attributes:
+            add_to_entities_card(entity_id, other_cards, '隐藏')
+        elif domain == 'weather':
+            card = {'type': 'weather-forecast', 'name': name, 'entity': entity_id}
+            if 'attribution' in attributes:
+                card['secondary_info_attribute'] = 'attribution'
+            #add_to_sorted(card, status_cards, compare_card)
+            status_cards.insert(0, card)
+        elif domain == 'sun' or domain == 'sensor':
+            zone = get_entity_zone(attributes, '其它')
+            add_to_entities_card(entity_id, status_cards, zone, 'name', 'glance')
+        elif domain == 'binary_sensor':
+            add_to_sorted(entity_id, guard_badges, compare_entity_id)
+        elif domain == 'light':
+            add_to_entities_card(entity_id, toggle_cards, '灯光')
+        elif domain == 'media_player':
+            add_to_entities_card(entity_id, toggle_cards, '视听')
+        elif domain == 'cover' or domain == 'fan' or domain == 'switch' or domain == 'vacuum':
+            add_to_entities_card(entity_id, toggle_cards, next((v for k, v in name_types.items() if k in name), '其它'))
+        elif domain == 'climate':
+            card = {'type': 'thermostat', 'entity': entity_id}
+            add_to_sorted(card, thermostat_cards, compare_card)
+        elif domain == 'camera':
+            card = {'type': 'picture-entity', 'entity': entity_id}
+            add_to_sorted(card, guard_cards, compare_card)
+        elif domain == 'automation':
+            add_to_entities_card(entity_id, automation_cards, get_entity_zone(attributes, '其它'))
+        else:
+            add_to_entities_card(entity_id, other_cards, type_names.get(domain, '其它'))
+
+    views = [{'title': '状态', 'path': 'status', 'cards': status_cards},
+             {'title': '调控', 'path': 'toggle', 'cards': toggle_cards},
+             {'title': '空调', 'path': 'thermostat', 'cards': thermostat_cards},
+             {'title': '安防', 'path': 'guard', 'badges': guard_badges, 'cards': guard_cards},
+             {'title': '智能', 'path': 'automation', 'cards': automation_cards},
+             {'title': '其它', 'path': 'other', 'cards': other_cards}]
+    lovelace = make_lovelace(hass, views, handle_entity)
+    merge_single_card(views)
+    return lovelace
+
+
+def merge_single_card(views):
+    for view in views:
+        cards = view['cards']
+        for card in cards:
+            card_type = card['type']
+            if card_type == 'entities':
+                card_key = 'title'
+            elif card_type == 'glance':
+                card_key = 'name'
+            else:
+                continue
+            if card[card_key] != '其它':
+                entities = card['entities']
+                if len(entities) == 1:
+                    add_to_entities_card(entities[0], cards, '其它', card_key, card_type)
+                    cards.remove(card)
 
 
 if __name__ == '__main__':
@@ -339,12 +271,5 @@ if __name__ == '__main__':
     _LOGGER.setLevel(logging.DEBUG)
     _LOGGER.addHandler(logging.StreamHandler())
     hass = RemoteHass(argv[1], argv[2])
-    result = make_lovelace(hass) if len(argv) > 3 and argv[3] == '2' else make_lovelace2(hass)
-    print(json.dumps(result, indent=2, ensure_ascii=False))
-
-    ret1 = compare_item(sensor_classes, 'temperature', 'humidity')
-    ret2 = compare_string('A', 'B')
-    ret3 = compare_title('客厅', '餐厅')
-    ret4 = compare_title('灯光', '智能')
-    ret5 = compare_entity_id('sensor.can_ting_wen_du', 'sensor.can_ting_ke_li_wu')
-    print('x')
+    lovelace = make_zone_lovelace(hass) if len(argv) > 3 and argv[3] == '2' else make_type_lovelace(hass)
+    print(json.dumps(lovelace, indent=2, ensure_ascii=False))
