@@ -18,7 +18,7 @@
     #  entity_id: cover.airer
     - service: homeassistant.turn_off
       entity_id:
-        - light.liang_yi_deng
+        - light.shu_fang_liang_yi_deng
         - light.shu_fang_tai_deng
     # - condition: numeric_state
     #   entity_id: sensor.shu_fang_wen_du
@@ -38,7 +38,7 @@
       state: closed
   action:
     # - service_template: '{% if is_state("sun.sun", "below_horizon") %}light.turn_on{% else %}light.turn_off{% endif %}'
-    #   entity_id: light.liang_yi_deng
+    #   entity_id: light.shu_fang_liang_yi_deng
     - service: cover.open_cover
       entity_id: cover.shu_fang_mu_bu
     #- delay: 10
@@ -62,26 +62,20 @@
 #       data:
 #         message: 正在开关卷帘
 
-- alias: 书房按钮双击—开关投影仪
-  trigger:
-    - platform: event
-      event_type: xiaomi_aqara.click
-      event_data:
-        entity_id: binary_sensor.switch_158d000201a73f
-        click_type: double
-  action:
-    - service: zhimsg.miai
-      data_template:
-        message: '正在{% if is_state("media_player.shu_fang_tou_ying_yi", "on") %}关闭{% else %}打开{% endif %}投影仪'
-    - service: media_player.toggle
-      entity_id: media_player.shu_fang_tou_ying_yi
-    # - service: media_player.toggle # Repeat to ensure
-    #   entity_id: media_player.shu_fang_tou_ying_yi
-    - service: automation.trigger
-      data_template:
-        entity_id: 'automation.shu_fang_tou_ying_yi_{% if is_state("media_player.shu_fang_tou_ying_yi", "on") %}guan_bi_shou_wei{% else %}kai_qi_zhun_bei{% endif %}_pei_tao'
+# - alias: 书房按钮双击—开关播放器
+#   trigger:
+#     - platform: event
+#       event_type: xiaomi_aqara.click
+#       event_data:
+#         entity_id: binary_sensor.switch_158d000201a73f
+#         click_type: double
+#   action:
+#     - service_template: 'switch.turn_{% if is_state("media_player.shu_fang_tou_ying_yi", "on") %}off{% else %}on{% endif %}'
+#       entity_id: switch.shu_fang_yin_xiang
+#     - service: automation.trigger
+#       entity_id: automation.shu_fang_an_niu_chang_an_kai_guan_tou_ying_yi
 
-- alias: 书房按钮长按—开关播放器
+- alias: 书房按钮长按—开关投影仪
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click
@@ -89,10 +83,13 @@
         entity_id: binary_sensor.switch_158d000201a73f
         click_type: long_click_press
   action:
-    # - service: zhimsg.miai
-    #   data_template:
-    #     message: '正在{% if is_state("media_player.shu_fang_tou_ying_yi", "on") %}关闭{% else %}打开{% endif %}播放器'
-    - service_template: 'switch.turn_{% if is_state("media_player.shu_fang_tou_ying_yi", "on") %}off{% else %}on{% endif %}'
-      entity_id: switch.yin_xiang
+    - service: zhimsg.miai
+      data_template:
+        message: '正在{% if is_state("media_player.shu_fang_tou_ying_yi", "on") %}关闭{% else %}打开{% endif %}投影仪'
+    - service: media_player.toggle
+      entity_id: media_player.shu_fang_tou_ying_yi
     - service: automation.trigger
-      entity_id: automation.shu_fang_an_niu_shuang_ji_kai_guan_tou_ying_yi
+      data_template:
+        entity_id: 'automation.shu_fang_tou_ying_yi_{% if is_state("media_player.shu_fang_tou_ying_yi", "on") %}guan_bi_shou_wei{% else %}kai_qi_zhun_bei{% endif %}_pei_tao'
+    - service_template: 'switch.turn_{% if is_state("media_player.shu_fang_tou_ying_yi", "on") %}off{% else %}on{% endif %}'
+      entity_id: switch.shu_fang_yin_xiang
