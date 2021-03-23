@@ -11,12 +11,6 @@ http:
   ssl_key: ~/.homeassistant/ssl.key
   ssl_certificate: ~/.homeassistant/ssl.crt
 
-panel_iframe:
-  dash:
-    title: 面板
-    icon: mdi:microsoft
-    url: /local/dash.html
-
 # default_config:
 
 automation: !include_dir_merge_list automations
@@ -66,9 +60,7 @@ history:
 logger:
   default: warning
   logs:
-    components.homekit: debug
-    custom_components.zhimsg: info
-    custom_components.zhibot: info
+    custom_components: info
 
 recorder:
   purge_keep_days: 2
@@ -465,6 +457,9 @@ yeelight:
       model: mono1
 
 light:
+  - platform: zhimrbond
+    name: 书房晾衣灯
+    did: 57379167
   - platform: mqtt
     name: 客厅筒灯
     state_topic: Hassmart1/relay/0
@@ -526,10 +521,6 @@ xiaomi_aqara:
     - key: 3ECB50168D7F4AEB
 
 fan:
-  - platform: zhiviomi
-    name: 浴室洗衣机
-    host: Washer
-    token: !secret washer_token
   - platform: xiaomi_miio
     name: 次卧净化器
     host: Purifier
@@ -660,24 +651,22 @@ climate:
     humidity_sensor: sensor.aircat2_humidity
 
 cover:
+  - platform: zhimrbond
+    name: 书房晾衣架
+    did: 57379167
   - platform: zhiremote
     sender: remote.shu_fang_yao_kong
     covers:
-      书房窗帘:
+      - name: 书房窗帘
         command_open: 'b64:sgD8AJ8wGAwNFxgMGAwYDAwYFwwYDQwYGAsNFw0XDRcYDAwYDBgNFxkMDBgYDBgMDBcNFw0XGQsNFxgMGAwMGAwYDBgXDQwYDBcNFxgMDRcMGAwXGAABIZ4xGQwNFxgMGAwYDAwXGAwYDQwXGAwNFw0XDBgYDAwYDBgMGBgMDBcYDBgMDRcMGAwYGAwMGBgMGAwMFw0XDRcYDA0XDBgMGBgMDBkMFw0XGAABIZ4xFwwNFxgMGAwYDAwYGAwYDAwYGAwMFw0XDRcYDAwYDBgNFxgMDBgYDRgMDBgMFw0YGAsNFxgMGAwMGAwYDBcYDQwYDBcNFxgMDBgMGAwYFwAF3AAAAAAAAAAAAAAAAA=='
         command_stop: 'b64:sgD8AJ4xGAwMGBcMGAwYDAwYGAwYDAwYGAwMGAwZDBcYDAwYDBkLGBgMDBgYDBcNDBgMFw0YFw0MFxgMGAwMGAwYDBgXDQwYFw0MFxgMDRcYDAwYFwABIZ8xGAwMGBcNFw0XDQwXGAwYDQwYFwwNFwwYDBgXDQwYDBgMGBcMDRcYDBgMDBgMGAwYGAwMGBcNFwwNFwwYDBgZDAwYFw0MGBcNDBcYDAwYGAABIJ4xGAwMGBgMGAwXDQwXGAwYDQwYFwwNFwwYDBgYDAwYDRgMGBcNDBcYDBgMDBgMGAwYGAwMGBcNFw0MGAsYDBgYDAwYGAwMGBcNDBcYDAwYGAAF3AAAAAAAAAAAAAAAAA=='
         command_close: 'b64:sgD8AJ0xGAwMGBcNFw0XDQsYGAwYDAwZFwwMGAwYDBgXDQwXDBkMGBcNCxkXDBgMDBkMGAwYGAwMGBcNFw0MGAsZCxgYDQsYDBgXDRcNDBgMGBcNFwABIZ4xFw0MGBcNFwwYDA0YGAwYDAwYGAwMGAwYDBgXDQsYDBgMGBgMDBgXDRcNDBgMGAwYFw0MGBcMGAwMGAwYDBgXDQwYDBgXDRcMDBgMGBgMFwABI50yFw0LGBgMGAwXDQwYFw0XDQwYFw0MGAwYDBcYDAwYDBgMGBgMDBgXDRcNCxkLGAwYGA4MFxgMGAwMGAwYDBgXDQwYDBgXDBgNCxgMGBcNFwAF3AAAAAAAAAAAAAAAAA=='
         travel_time: 13
-      书房幕布:
+      - name: 书房幕布
         command_open: 'b64:JgDGACoPKQ8pDykQDikOKg4qDykPKA4qKQ8PKQ8pKA8QKSgQKQ8pDw8pKBApDykPDykpDykPDykpDw8pKQ8PKQ8pKAAD0igQKBAoECgQDykPKQ8oDykPKQ8pKBAPKQ8oKRAPKCkQKBAoEA8oKBEoECgQDykoECgQDykoEA8pKBAPKA8pKQAD0SkPKRAoECgQDygQKA8pDykPKQ8oKRAPKA4qKQ8PKSkPKQ8pDw8pKQ8pDykQDygpECgQDikqDw8oKQ8PKQ8pKQANBQAA'
         command_stop: 'b64:JgDGACoPKg8pDykPDygQKBEnDykQKBAnECgpDw8pKBAPKSgQKg4qDg8pECgqDikPDykQKA8pKBApDykPKQ8PKRAoDwAD6ioOKQ8pECkPDygQKA8pECgPKQ8oDykoEA8pKQ8PKSgQKQ8qDg8pECgoECoODykPKQ8oKRAoECkPKQ8PKQ8oEAAD6ikPKQ8qDikQDikPKQ8pDykPKBAoDykpDw8pKQ8PKSgQKQ8pDw8pDykoECkPDioPKQ8oKRAoECgQKBAPKQ8oEAANBQAA'
         command_close: 'b64:JgDGACoPKRAoECgQDykPKBAoDykPKSgQDykPKA8pKQ8PKSkPKQ4qECgQDygpECgQKBAPKSgQKBAPKQ8oKRAPKA8pKQAD0SgQKQ8pDykPECgPKQ8pDykPKCkQDygPKQ8pKBAPKSgQKQ8pDykPDykoECkPKQ8PKSkOKg8PKQ8pKQwSKQ8pKAAD0igQKBAoECkPDykPKQ8oDykPKSkPDykPKQ8oKRAPKCkQKBAoECgQDykoECgQKA8QKSgQKQ8PKQ8pKBAPKBAoKQANBQAA'
         travel_time: 45
-
-zhimrbond:
-  name: 书房晾衣架
-  host: Airer
-  token: !secret airer_token
 
 media_player:
   - platform: smartir
@@ -697,7 +686,7 @@ media_player:
 
 camera:
   - platform: ffmpeg
-    name: 客厅摄像机
+    name: 书房摄像机
     input: !secret rtsp_camera6
   - platform: generic
     name: 餐厅摄像机
@@ -711,7 +700,12 @@ camera:
     still_image_url: http://Camera5/last.cgi
     #stream_source: rtsp://Camera5/live/ch00_0
 
-# vacuum:
+vacuum:
+  - platform: zhiviomi
+    name: 浴室洗衣机
+    host: Washer
+    token: !secret washer_token
+    did: 238295145
 #   - platform: xiaomi_miio
 #     name: 扫地机
 #     host: Vacuum
@@ -771,3 +765,27 @@ zhibot:
 # media_player.braviatv
 #   主卧电视
 #   客厅电视
+
+zhilace:
+
+lovelace:
+  mode: storage
+  dashboards:
+    zhilace-type:
+      mode: yaml
+      title: 分类
+      icon: mdi:home-currency-usd
+      show_in_sidebar: true
+      filename: zhilace-type.yaml
+    zhilace-zone:
+      mode: yaml
+      title: 分区
+      icon: mdi:home-assistant
+      show_in_sidebar: true
+      filename: zhilace-zone.yaml
+
+panel_iframe:
+  dash:
+    title: 面板
+    icon: mdi:microsoft
+    url: /local/dash.html
