@@ -1,6 +1,9 @@
 [submodule "www"]
 	path = www
 	url = git@github.com:Yonsm/ZhiDash.git
+[submodule "modules/Zhi"]
+	path = modules/Zhi
+	url = git@github.com:Yonsm/Zhi.git
 [submodule "modules/ZhiAct"]
 	path = modules/ZhiAct
 	url = git@github.com:Yonsm/ZhiAct.git
@@ -10,6 +13,9 @@
 [submodule "modules/ZhiCaiYun"]
 	path = modules/ZhiCaiYun
 	url = git@github.com:Yonsm/ZhiCaiYun.git
+[submodule "modules/ZhiLace"]
+	path = modules/ZhiLace
+	url = git@github.com:Yonsm/ZhiLace.git
 [submodule "modules/ZhiMi"]
 	path = modules/ZhiMi
 	url = git@github.com:Yonsm/ZhiMi.git
@@ -22,6 +28,12 @@
 [submodule "modules/ZhiMsg"]
 	path = modules/ZhiMsg
 	url = git@github.com:Yonsm/ZhiMsg.git
+[submodule "modules/ZhiMQTT"]
+	path = modules/ZhiMQTT
+	url = git@github.com:Yonsm/ZhiMQTT.git
+[submodule "modules/ZhiRemote"]
+	path = modules/ZhiRemote
+	url = git@github.com:Yonsm/ZhiRemote.git
 [submodule "modules/ZhiSaswell"]
 	path = modules/ZhiSaswell
 	url = git@github.com:Yonsm/ZhiSaswell.git
@@ -34,9 +46,3 @@
 [submodule "modules/xiaomi_fan"]
 	path = modules/xiaomi_fan
 	url = git@github.com:syssi/xiaomi_fan.git
-[submodule "modules/ZhiMQTT"]
-	path = modules/ZhiMQTT
-	url = git@github.com:Yonsm/ZhiMQTT.git
-[submodule "modules/ZhiRemote"]
-	path = modules/ZhiRemote
-	url = git@github.com:Yonsm/ZhiRemote.git
