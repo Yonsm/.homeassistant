@@ -6,10 +6,10 @@
         entity_id: binary_sensor.switch_158d0001e59b33
         click_type: single
   action:
-    - service: fan.turn_on
+    - service: vacuum.send_command
       data:
-        entity_id: fan.yu_shi_xi_yi_ji
-        speed: program=goldenwash,dry_mode=0,appoint_clock=8
+        entity_id: vacuum.yu_shi_xi_yi_ji
+        command: turn_on;program=4;dry_mode=0;appoint
 
 - alias: 浴室按钮长按—预约洗烘
   trigger:
@@ -19,10 +19,10 @@
         entity_id: binary_sensor.switch_158d0001e59b33
         click_type: long_click_press
   action:
-    - service: fan.turn_on
+    - service: vacuum.send_command
       data:
-        entity_id: fan.yu_shi_xi_yi_ji
-        speed: program=goldenwash,dry_mode=1,appoint_clock=8
+        entity_id: vacuum.yu_shi_xi_yi_ji
+        command: turn_on;program=4;dry_mode=1;appoint
 
 - alias: 浴室按钮双击—取消预约
   trigger:
@@ -32,5 +32,5 @@
         entity_id: binary_sensor.switch_158d0001e59b33
         click_type: double
   action:
-    - service: fan.turn_off
-      entity_id: fan.yu_shi_xi_yi_ji
+    - service: vacuum.stop
+      entity_id: vacuum.yu_shi_xi_yi_ji
