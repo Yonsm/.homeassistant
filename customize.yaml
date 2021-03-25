@@ -162,8 +162,6 @@ switch.wang_luo_cun_chu:
 switch.xi_shou_jian_pai_qi_shan:
   genie_name: 洗手间顶扇
   icon: mdi:fan
-switch.yi_gui_chu_shi_ji:
-  icon: mdi:power-socket-uk
 switch.yi_ju_chu_shi_ji:
   icon: mdi:power-socket-uk
 switch.zhu_wo_dian_shi:

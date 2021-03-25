@@ -94,7 +94,7 @@ homekit:
   entity_config:
     switch.can_ting_chu_shi_ji:
       type: outlet
-    switch.yi_gui_chu_shi_ji:
+    switch.yi_ju_chu_shi_ji:
       type: outlet
     media_player.zhu_wo_dian_shi:
       feature_list:

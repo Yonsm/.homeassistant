@@ -34,7 +34,7 @@
       state: above_horizon
   action:
     - service: switch.turn_on
-      entity_id: switch.yi_gui_chu_shi_ji
+      entity_id: switch.yi_ju_chu_shi_ji
 
 - alias: 儿童房湿度正常-开除湿机
   initial_state: true
@@ -48,7 +48,7 @@
       at: '20:30:00'
   action:
     - service: switch.turn_off
-      entity_id: switch.yi_gui_chu_shi_ji
+      entity_id: switch.yi_ju_chu_shi_ji
 
 # - alias: 餐厅湿度低-开加湿器
 #   initial_state: true
