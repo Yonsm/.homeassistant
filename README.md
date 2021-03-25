@@ -8,6 +8,10 @@
 
 ## 二、[智家组件](https://github.com/Yonsm/.homeassistant/tree/main/modules)
 
+### 0. [Zhi](https://github.com/Yonsm/Zhi)
+
+智家通用公共代码，部分组件依赖此目录。
+
 ### 1. [ZhiAct](https://github.com/Yonsm/ZhiAct)
 
 根据传感器数值区间来自动控制设备。
@@ -34,7 +38,7 @@
 
 ### 7. [ZhiMrBond](https://github.com/Yonsm/ZhiMrBond)
 
-邦先生晾衣架 M1 组件。
+邦先生晾衣架组件。
 
 ### 8. [ZhiMsg](https://github.com/Yonsm/ZhiMsg)
 
@@ -42,7 +46,7 @@
 
 ### 9. [ZhiRemote](https://github.com/Yonsm/ZhiRemote)
 
-基于 `Broadlink` 万能遥控器的窗帘插件。
+基于 `remote` 遥控器的通用 `fan` `cover` `climate` `media_player` 组件。
 
 ### 10. [ZhiSaswell](https://github.com/Yonsm/ZhiSaswell)
 
