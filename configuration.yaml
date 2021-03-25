@@ -425,20 +425,6 @@ switch:
             payload: '2416,592,1210,594,608,618,1186,616,586,592,1210,618,584,618,586,616,1186,618,584,618,584,616,586,592,608,1,2,38'
         turn_off:
           service: shell_command.x9300d_off
-  #     shu_fang_tou_ying_yi:
-  #       friendly_name: 书房投影仪
-  #       value_template: '{{ is_state("device_tracker.projector", "home") }}'
-  #       icon_template: mdi:projector
-  #       turn_on:
-  #         service: remote.send_command
-  #         data:
-  #           entity_id: remote.shu_fang_yao_kong
-  #           command: 'b64:JgBQAAABKZMTNxQ3ExIUERQSExITEhM3FBITEhM3ExITOBM3EzcUNxM3EzcUNxMSEzcTExMSExITEhMSExIUNxMSEzcUNxM3EwAFGQABJUkTAA0FAAAAAAAAAAA='
-  #       turn_off:
-  #         service: remote.send_command
-  #         data:
-  #           entity_id: remote.shu_fang_yao_kong
-  #           command: 'b64:JgBQAAABKZMTNxQ3ExIUERQSExITEhM3FBITEhM3ExITOBM3EzcUNxM3EzcUNxMSEzcTExMSExITEhMSExIUNxMSEzcUNxM3EwAFGQABJUkTAA0FAAAAAAAAAAA='
 
 shell_command:
   station_off: 'ssh root@Station shutdown -h now'
@@ -625,10 +611,10 @@ fan:
     payload_low_speed: 9126,4798,380,784,438,754,412,780,436,754,438,754,810,382,810,382,810,382,436,756,810,382,412,778,812,380,812,380,810,380,812,382,810,382,408,786,412,778,436,758,434,756,410,780,810,382,434,756,412,780,808,386,806,384,832,360,808,384,832,358,410,778,812,384,808,384,1230,8294,9148,4772,406,786,412,778,418,774,412,780,412,780,812,380,812,380,810,382,412,778,812,382,412,780,810,382,810,382,810,382,810,382,810,382,382,810,412,780,412,780,412,780,410,780,812,382,410,780,412,780,810,384,808,382,808,382,810,382,808,384,412,780,810,384,808,382,1208,8316,9152,4776,378,810,412,778,412,778,412,780,412,780,810,382,810,382,810,382,412,780,810,384,410,780,810,382,810,382,810,382,808,384,810,382,384,810,412,780,412,780,412,780,412,780,812,382,412,780,410,780,810,382,808,382,810,382,810,382,810,380,412,782,808,384,808,382,1208,1,2,38
     payload_medium_speed: 9126,4798,380,784,438,754,412,780,436,754,438,754,810,382,810,382,810,382,436,756,810,382,412,778,812,380,812,380,810,380,812,382,810,382,408,786,412,778,436,758,434,756,410,780,810,382,434,756,412,780,808,386,806,384,832,360,808,384,832,358,410,778,812,384,808,384,1230,8294,9148,4772,406,786,412,778,418,774,412,780,412,780,812,380,812,380,810,382,412,778,812,382,412,780,810,382,810,382,810,382,810,382,810,382,382,810,412,780,412,780,412,780,410,780,812,382,410,780,412,780,810,384,808,382,808,382,810,382,808,384,412,780,810,384,808,382,1208,8316,9152,4776,378,810,412,778,412,778,412,780,412,780,810,382,810,382,810,382,412,780,810,384,410,780,810,382,810,382,810,382,808,384,810,382,384,810,412,780,412,780,412,780,412,780,812,382,412,780,410,780,810,382,808,382,810,382,810,382,810,380,412,782,808,384,808,382,1208,1,2,38
     payload_high_speed: 9126,4798,380,784,438,754,412,780,436,754,438,754,810,382,810,382,810,382,436,756,810,382,412,778,812,380,812,380,810,380,812,382,810,382,408,786,412,778,436,758,434,756,410,780,810,382,434,756,412,780,808,386,806,384,832,360,808,384,832,358,410,778,812,384,808,384,1230,8294,9148,4772,406,786,412,778,418,774,412,780,412,780,812,380,812,380,810,382,412,778,812,382,412,780,810,382,810,382,810,382,810,382,810,382,382,810,412,780,412,780,412,780,410,780,812,382,410,780,412,780,810,384,808,382,808,382,810,382,808,384,412,780,810,384,808,382,1208,8316,9152,4776,378,810,412,778,412,778,412,780,412,780,810,382,810,382,810,382,412,780,810,384,410,780,810,382,810,382,810,382,808,384,810,382,384,810,412,780,412,780,412,780,412,780,812,382,412,780,410,780,810,382,808,382,810,382,810,382,810,380,412,782,808,384,808,382,1208,1,2,38
-  - platform: smartir
+  - platform: zhiremote
     name: 客厅壁扇
-    device_code: 6666
-    controller_data: remote.ke_ting_yao_kong
+    sender: remote.ke_ting_yao_kong
+    command: midea_fan
 
 climate:
   - platform: zhisaswell
@@ -643,37 +629,32 @@ climate:
     hvac_off: { registers: [1, 2, 3, 4], register_type: coil }
     target_temperature: { registers: [4, 8, 12, 16] }
     temperature: { registers: [3, 6, 9, 12], register_type: input, scale: 0.1 }
-  - platform: smartir
+  - platform: zhiremote
     name: 书房空调
-    device_code: 6666
-    controller_data: remote.shu_fang_yao_kong
-    temperature_sensor: sensor.shu_fang_wen_du
-    humidity_sensor: sensor.aircat2_humidity
+    sender: remote.shu_fang_yao_kong
+    command: mitsubishi_climate
+    sensor: sensor.shu_fang_wen_du
 
 cover:
   - platform: zhimrbond
     name: 书房晾衣架
     did: 57379167
   - platform: zhiremote
+    name: 书房窗帘
     sender: remote.shu_fang_yao_kong
-    covers:
-      - name: 书房窗帘
-        command_open: 'b64:sgD8AJ8wGAwNFxgMGAwYDAwYFwwYDQwYGAsNFw0XDRcYDAwYDBgNFxkMDBgYDBgMDBcNFw0XGQsNFxgMGAwMGAwYDBgXDQwYDBcNFxgMDRcMGAwXGAABIZ4xGQwNFxgMGAwYDAwXGAwYDQwXGAwNFw0XDBgYDAwYDBgMGBgMDBcYDBgMDRcMGAwYGAwMGBgMGAwMFw0XDRcYDA0XDBgMGBgMDBkMFw0XGAABIZ4xFwwNFxgMGAwYDAwYGAwYDAwYGAwMFw0XDRcYDAwYDBgNFxgMDBgYDRgMDBgMFw0YGAsNFxgMGAwMGAwYDBcYDQwYDBcNFxgMDBgMGAwYFwAF3AAAAAAAAAAAAAAAAA=='
-        command_stop: 'b64:sgD8AJ4xGAwMGBcMGAwYDAwYGAwYDAwYGAwMGAwZDBcYDAwYDBkLGBgMDBgYDBcNDBgMFw0YFw0MFxgMGAwMGAwYDBgXDQwYFw0MFxgMDRcYDAwYFwABIZ8xGAwMGBcNFw0XDQwXGAwYDQwYFwwNFwwYDBgXDQwYDBgMGBcMDRcYDBgMDBgMGAwYGAwMGBcNFwwNFwwYDBgZDAwYFw0MGBcNDBcYDAwYGAABIJ4xGAwMGBgMGAwXDQwXGAwYDQwYFwwNFwwYDBgYDAwYDRgMGBcNDBcYDBgMDBgMGAwYGAwMGBcNFw0MGAsYDBgYDAwYGAwMGBcNDBcYDAwYGAAF3AAAAAAAAAAAAAAAAA=='
-        command_close: 'b64:sgD8AJ0xGAwMGBcNFw0XDQsYGAwYDAwZFwwMGAwYDBgXDQwXDBkMGBcNCxkXDBgMDBkMGAwYGAwMGBcNFw0MGAsZCxgYDQsYDBgXDRcNDBgMGBcNFwABIZ4xFw0MGBcNFwwYDA0YGAwYDAwYGAwMGAwYDBgXDQsYDBgMGBgMDBgXDRcNDBgMGAwYFw0MGBcMGAwMGAwYDBgXDQwYDBgXDRcMDBgMGBgMFwABI50yFw0LGBgMGAwXDQwYFw0XDQwYFw0MGAwYDBcYDAwYDBgMGBgMDBgXDRcNCxkLGAwYGA4MFxgMGAwMGAwYDBgXDQwYDBgXDBgNCxgMGBcNFwAF3AAAAAAAAAAAAAAAAA=='
-        travel_time: 13
-      - name: 书房幕布
-        command_open: 'b64:JgDGACoPKQ8pDykQDikOKg4qDykPKA4qKQ8PKQ8pKA8QKSgQKQ8pDw8pKBApDykPDykpDykPDykpDw8pKQ8PKQ8pKAAD0igQKBAoECgQDykPKQ8oDykPKQ8pKBAPKQ8oKRAPKCkQKBAoEA8oKBEoECgQDykoECgQDykoEA8pKBAPKA8pKQAD0SkPKRAoECgQDygQKA8pDykPKQ8oKRAPKA4qKQ8PKSkPKQ8pDw8pKQ8pDykQDygpECgQDikqDw8oKQ8PKQ8pKQANBQAA'
-        command_stop: 'b64:JgDGACoPKg8pDykPDygQKBEnDykQKBAnECgpDw8pKBAPKSgQKg4qDg8pECgqDikPDykQKA8pKBApDykPKQ8PKRAoDwAD6ioOKQ8pECkPDygQKA8pECgPKQ8oDykoEA8pKQ8PKSgQKQ8qDg8pECgoECoODykPKQ8oKRAoECkPKQ8PKQ8oEAAD6ikPKQ8qDikQDikPKQ8pDykPKBAoDykpDw8pKQ8PKSgQKQ8pDw8pDykoECkPDioPKQ8oKRAoECgQKBAPKQ8oEAANBQAA'
-        command_close: 'b64:JgDGACoPKRAoECgQDykPKBAoDykPKSgQDykPKA8pKQ8PKSkPKQ4qECgQDygpECgQKBAPKSgQKBAPKQ8oKRAPKA8pKQAD0SgQKQ8pDykPECgPKQ8pDykPKCkQDygPKQ8pKBAPKSgQKQ8pDykPDykoECkPKQ8PKSkOKg8PKQ8pKQwSKQ8pKAAD0igQKBAoECkPDykPKQ8oDykPKSkPDykPKQ8oKRAPKCkQKBAoECgQDykoECgQKA8QKSgQKQ8PKQ8pKBAPKBAoKQANBQAA'
-        travel_time: 45
+    travel: 13
+    command: dooya_cover
+  - platform: zhiremote
+    name: 书房幕布
+    sender: remote.shu_fang_yao_kong
+    travel: 45
+    command: elite_screen
 
 media_player:
-  - platform: smartir
+  - platform: zhiremote
     name: 书房投影仪
-    device_code: 6666
-    controller_data: remote.shu_fang_yao_kong
-    power_sensor: device_tracker.projector
+    sender: remote.shu_fang_yao_kong
+    command: viewsonic_projector
   # - platform: braviatv
   #   host: X9300d
   #   name: 主卧电视
@@ -710,9 +691,6 @@ vacuum:
 #     name: 扫地机
 #     host: Vacuum
 #     token: !secret vacuum_token
-
-smartir:
-  check_updates: false
 
 zhiact:
 
@@ -754,6 +732,7 @@ zhibot:
   - platform: ding
     name: 儿童房音箱
     token: !secret zhibot_token
+
 # By Intergration
 # switch.broadlink
 #   餐厅除湿机
