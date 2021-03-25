@@ -46,7 +46,7 @@
 
 ### 9. [ZhiRemote](https://github.com/Yonsm/ZhiRemote)
 
-基于 `remote` 遥控器的通用 `fan` `cover` `climate` `media_player` 组件。
+基于 `remote` 遥控器的通用组件。
 
 ### 10. [ZhiSaswell](https://github.com/Yonsm/ZhiSaswell)
 

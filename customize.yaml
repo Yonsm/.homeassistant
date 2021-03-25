@@ -4,7 +4,7 @@ binary_sensor.door_window_sensor_158d0001f3d2d1:
   dash_click: /config/integrations
   friendly_name: 厨房门
 binary_sensor.door_window_sensor_158d0001f3e5be:
-  dash_click: /
+  dash_click: /zhilace-type
   friendly_name: 入户门
 binary_sensor.door_window_sensor_158d000228a52b:
   dash_click: /config/logs
@@ -103,6 +103,7 @@ light.zhu_wo_xi_ding_deng:
 media_player.shu_fang_tou_ying_yi:
   icon: mdi:projector
 sensor.can_ting_ke_li_wu:
+  dash_click: /zhilace-zone
   dash_relation: fan.can_ting_jing_hua_qi
   friendly_name: 餐厅颗粒物
 sensor.ci_wo_ke_li_wu:
@@ -113,6 +114,8 @@ sensor.er_tong_fang_ke_li_wu:
   dash_click: https://www.lewei50.com/u/g/33981
   dash_relation: fan.er_tong_fang_jing_hua_qi
   device_class: pm25
+sensor.guo_dao_ke_li_wu:
+  dash_click: /zhilace-type
 sensor.illumination_34ce0090901a:
   friendly_name: 餐厅亮度
 sensor.ke_ting_er_yang_hua_tan:
