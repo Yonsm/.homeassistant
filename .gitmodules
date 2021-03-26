@@ -40,6 +40,3 @@
 [submodule "modules/ZhiViomi"]
 	path = modules/ZhiViomi
 	url = git@github.com:Yonsm/ZhiViomi.git
-[submodule "modules/xiaomi_fan"]
-	path = modules/xiaomi_fan
-	url = git@github.com:syssi/xiaomi_fan.git
