@@ -1,0 +1,31 @@
+auto_start: false
+filter:
+  exclude_domains:
+    - automation
+    - camera
+    - device_tracker
+    - input_boolean
+    - media_player
+    - remote
+    - script
+  exclude_entities:
+    - binary_sensor.switch_158d0001e59b33
+    - binary_sensor.switch_158d000201a73f
+    - binary_sensor.switch_158d00054e98b0
+    - climate.ke_ting_di_nuan
+    - climate.zhu_wo_di_nuan
+    - sensor.er_tong_fang_er_yang_hua_tan
+    - sensor.zhu_wo_er_yang_hua_tan
+    - switch.can_ting_tong_deng
+    - switch.ke_ting_tong_deng
+entity_config:
+  switch.can_ting_chu_shi_ji:
+    type: outlet
+  switch.yi_ju_chu_shi_ji:
+    type: outlet
+  media_player.zhu_wo_dian_shi:
+    feature_list:
+      - feature: on_off
+  media_player.ke_ting_dian_shi:
+    feature_list:
+      - feature: on_off
