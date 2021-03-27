@@ -58,7 +58,7 @@
 #         entity_id: binary_sensor.switch_158d000201a73f
 #         click_type: single
 #   action:
-#     - service: zhimsg.miai
+#     - service: zhimsg.ke_ting_yin_xiang
 #       data:
 #         message: 正在开关卷帘
 
@@ -83,7 +83,7 @@
         entity_id: binary_sensor.switch_158d000201a73f
         click_type: long_click_press
   action:
-    - service: zhimsg.miai
+    - service: zhimsg.ke_ting_yin_xiang
       data_template:
         message: '正在{% if is_state("media_player.shu_fang_tou_ying_yi", "on") %}关闭{% else %}打开{% endif %}投影仪'
     - service: media_player.toggle
