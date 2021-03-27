@@ -180,6 +180,7 @@ media_player:
     name: 书房投影仪
     sender: remote.shu_fang_yao_kong
     command: viewsonic_projector
+    sensor: device_tracker.projector
   # - platform: braviatv
   #   host: X9300d
   #   name: 主卧电视
