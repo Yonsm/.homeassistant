@@ -107,21 +107,23 @@
         - thu
         - fri
         - sun
-    - service: automation.trigger
-      entity_id: automation.shui_mian_yan_chang
-
-- alias: 睡眠延长
-  trigger:
-    - platform: time
-      at: '10:00:00'
-  condition:
-    - condition: time
-      weekday:
-        - sat
-  action:
     - service: cover.open_cover
       entity_id: cover.shu_fang_chuang_lian
-    # - service: fan.set_speed
-    #   data:
-    #     entity_id: fan.zhu_wo_xin_feng_ji
-    #     speed: Middle
+    # - service: automation.trigger
+    #   entity_id: automation.shui_mian_yan_chang
+
+# - alias: 睡眠延长
+#   trigger:
+#     - platform: time
+#       at: '10:00:00'
+#   condition:
+#     - condition: time
+#       weekday:
+#         - sat
+#   action:
+#     - service: cover.open_cover
+#       entity_id: cover.shu_fang_chuang_lian
+#     - service: fan.set_speed
+#       data:
+#         entity_id: fan.zhu_wo_xin_feng_ji
+#         speed: Middle
