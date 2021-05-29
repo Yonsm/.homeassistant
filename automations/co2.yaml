@@ -25,6 +25,6 @@
         alt_sensor_values: [500, 700, 900, 1300]
         entity_id: fan.zhu_wo_xin_feng_ji
         entity_attr: speed
-        entity_values: [Auto, Low, Middle, Strong]
+        entity_values: [Slient, Low, Middle, Strong]
         condition_attr: mode
-        condition_values: [auto, low, middle, strong]
+        condition_values: [slient, low, middle, strong]
