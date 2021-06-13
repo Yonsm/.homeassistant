@@ -61,6 +61,7 @@ logger:
   default: warning
   logs:
     custom_components: info
+    custom_components.zhibot: debug
 
 recorder:
   purge_keep_days: 2
@@ -85,10 +86,9 @@ device_tracker:
   - platform: ping
     scan_interval: 120
     hosts:
+      xphone: 192.168.1.22
       yphone: 192.168.1.23
       zphone: 192.168.1.24
-      bphone: 192.168.1.26
-      cphone: 192.168.1.27
       x9300d: 192.168.1.6
       x9400e: 192.168.1.7
       projector: 192.168.1.8
@@ -100,12 +100,9 @@ person:
   - name: 妈妈
     id: mama
     device_trackers: device_tracker.zphone
-  - name: 外公
-    id: waigong
-    device_trackers: device_tracker.bphone
-  - name: 外婆
-    id: waipo
-    device_trackers: device_tracker.cphone
+  - name: 爷爷
+    id: yeye
+    device_trackers: device_tracker.xphone
 
 weather:
   - platform: zhicaiyun
