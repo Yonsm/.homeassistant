@@ -1,0 +1,21 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Device is already configured"
+        },
+        "error": {
+            "connection_error": "Can't connect to Mijia Circulator."
+        },
+        "flow_title": "Mijia Circulator: {name}",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "token": "Token",
+                    "model": "Model"
+                },
+                "description": "Please enter connection settings of your Mijia Circulator."
+            }
+        }
+    }
+}

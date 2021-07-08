@@ -1,7 +1,0 @@
-- alias: 延迟启动家庭服务
-  trigger:
-    - platform: homeassistant
-      event: start
-  action:
-    - delay: 00:03
-    - service: homekit.start
