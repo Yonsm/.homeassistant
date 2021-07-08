@@ -46,7 +46,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     }
 
     async_add_entities(
-        [BraviaTVMediaPlayer(coordinator, DEFAULT_NAME, unique_id, device_info)]
+        [BraviaTVMediaPlayer(coordinator, device_info['model'], unique_id, device_info)]
     )
 
 
