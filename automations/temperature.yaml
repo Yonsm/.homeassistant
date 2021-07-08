@@ -161,7 +161,7 @@
 #         delay: 0
 
 - alias: 书房温度变化-调控风扇
-  initial_state: false
+  #initial_state: false
   trigger:
     - platform: time
       at: '20:30:01'
@@ -188,7 +188,7 @@
         delay: 0
 
 - alias: 儿童房温度变化-调控风扇
-  initial_state: false
+  #initial_state: false
   trigger:
     - platform: time
       at: '20:00:01'
@@ -212,8 +212,8 @@
         entity_values: [Level 1, Level 2, Level 3, Level 4]
         delay: 0
 
-- alias: 主卧房温度变化-调控风扇
-  initial_state: false
+- alias: 主卧温度变化-调控风扇
+  #initial_state: false
   trigger:
     - platform: time
       at: '20:00:01'
