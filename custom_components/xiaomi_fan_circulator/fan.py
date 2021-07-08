@@ -529,7 +529,7 @@ class XiaomiFanFA1(XiaomiGenericDevice):
                 "get_properties",
                 [{"piid": 1, "siid": 2, "did": self._did}]
             )
-            _LOGGER.info("Got new status: %s", status)
+            _LOGGER.debug("Got new status: %s", status)
 
             if status[0]['code'] == 0:
                 self._state = status[0]['value']
