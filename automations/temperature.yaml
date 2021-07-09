@@ -178,12 +178,10 @@
         #sensor_values: [24, 27.5, 30, 32] #feng_shan_wen_du
         #alt_sensor_values: [25, 28.5, 32, 34]
         sensor_values: [26, 28.5, 32, 33]
-        alt_sensor_values: [27, 30, 32, 34]
-        alt_time_range: [2, 8]
+        alt_sensor_values: [27, 30, 33, 34]
+        alt_time_range: [1, 8]
         entity_id: fan.shu_fang_feng_shan
-        entity_attr: speed_level
-        #service: set_speed
-        service_attr: speed
+        entity_attr: preset_mode
         entity_values: [Level 1, Level 2, Level 3, Level 4]
         delay: 0
 
@@ -202,13 +200,11 @@
     - service: zhiact.actuate
       data:
         sensor_id: sensor.er_tong_fang_wen_du
-        sensor_values: [19, 21.2, 24, 25]
-        alt_sensor_values: [20, 23, 25, 26]
-        alt_time_range: [2, 8]
+        sensor_values: [24, 26, 28, 30]
+        alt_sensor_values: [25, 27, 29, 31]
+        alt_time_range: [1, 8]
         entity_id: fan.er_tong_fang_feng_shan
-        entity_attr: speed_level
-        #service: set_speed
-        service_attr: speed
+        entity_attr: preset_mode
         entity_values: [Level 1, Level 2, Level 3, Level 4]
         delay: 0
 
@@ -227,10 +223,10 @@
     - service: zhiact.actuate
       data:
         sensor_id: sensor.zhu_wo_wen_du
-        sensor_values: [19, 21.2, 24, 25]
-        alt_sensor_values: [20, 23, 25, 26]
-        alt_time_range: [2, 8]
+        sensor_values: [24, 26, 28, 30]
+        alt_sensor_values: [25, 27, 29, 31]
+        alt_time_range: [1, 8]
         entity_id: fan.zhu_wo_feng_shan
-        entity_attr: percentage
-        entity_values: [25, 50, 75, 100]
+        entity_attr: speed
+        entity_values: [Level 1, Level 2, Level 3, Level 4]
         delay: 0
