@@ -170,7 +170,7 @@
   condition:
     - condition: time
       after: '20:30'
-      before: '07:20'
+      before: '07:58'
   action:
     - service: zhiact.actuate
       data:
@@ -183,7 +183,6 @@
         entity_id: fan.shu_fang_feng_shan
         entity_attr: preset_mode
         entity_values: [Level 1, Level 2, Level 3, Level 4]
-        delay: 0
 
 - alias: 儿童房温度变化-调控风扇
   #initial_state: false
@@ -195,18 +194,17 @@
   condition:
     - condition: time
       after: '20:00'
-      before: '07:20'
+      before: '07:58'
   action:
     - service: zhiact.actuate
       data:
         sensor_id: sensor.er_tong_fang_wen_du
-        sensor_values: [24, 26, 28, 30]
-        alt_sensor_values: [25, 27, 29, 31]
+        sensor_values: [19, 21.2, 24, 25]
+        alt_sensor_values: [20, 23, 25, 26]
         alt_time_range: [1, 8]
         entity_id: fan.er_tong_fang_feng_shan
         entity_attr: preset_mode
         entity_values: [Level 1, Level 2, Level 3, Level 4]
-        delay: 0
 
 - alias: 主卧温度变化-调控风扇
   #initial_state: false
@@ -218,15 +216,14 @@
   condition:
     - condition: time
       after: '20:00'
-      before: '07:20'
+      before: '07:58'
   action:
     - service: zhiact.actuate
       data:
         sensor_id: sensor.zhu_wo_wen_du
-        sensor_values: [24, 26, 28, 30]
-        alt_sensor_values: [25, 27, 29, 31]
+        sensor_values: [24, 26, 28, 30, 33]
+        alt_sensor_values: [25, 27, 29, 31, 35]
         alt_time_range: [1, 8]
         entity_id: fan.zhu_wo_feng_shan
         entity_attr: speed
-        entity_values: [Level 1, Level 2, Level 3, Level 4]
-        delay: 0
+        entity_values: [Level 1, Level 2, Level 3, Level 4, Level 5]
