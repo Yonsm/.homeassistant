@@ -95,12 +95,12 @@
     #   entity_id: climate.er_tong_fang_kong_diao
     # - service: climate.turn_off
     #   entity_id: climate.shu_fang_kong_diao
-    - service: fan.turn_off
-      entity_id: fan.er_tong_fang_feng_shan
+    # - service: fan.turn_off
+    #   entity_id: fan.er_tong_fang_feng_shan
     - service: fan.turn_off
       entity_id: fan.shu_fang_feng_shan
-    - service: fan.turn_off
-      entity_id: fan.zhu_wo_feng_shan
+    # - service: fan.turn_off
+    #   entity_id: fan.zhu_wo_feng_shan
     - service: cover.open_cover
       entity_id: cover.shu_fang_chuang_lian
     - service: fan.set_speed
