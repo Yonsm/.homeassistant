@@ -199,8 +199,8 @@
     - service: zhiact.actuate
       data:
         sensor_id: sensor.er_tong_fang_wen_du
-        sensor_values: [19, 21.2, 24, 25]
-        alt_sensor_values: [20, 23, 25, 26]
+        sensor_values: [19, 21.2, 23.5, 25]
+        alt_sensor_values: [20, 23, 24, 26]
         alt_time_range: [1, 8]
         entity_id: fan.er_tong_fang_feng_shan
         entity_attr: preset_mode
