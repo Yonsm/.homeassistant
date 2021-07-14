@@ -27,6 +27,14 @@
     #     entity_id: climate.er_tong_fang_kong_diao
     #     temperature: 25
     #     #hvac_mode: cool
+    - service: climate.set_fan_mode
+      data:
+        entity_id: climate.zhu_wo_kong_diao
+        fan_mode: 五档
+    - service: climate.set_fan_mode
+      data:
+        entity_id: climate.er_tong_fang_kong_diao
+        fan_mode: 五档
 
 - alias: 睡眠开始
   trigger:
@@ -41,6 +49,14 @@
     #   data:
     #     entity_id: fan.zhu_wo_xin_feng_ji
     #     speed: Auto
+    - service: climate.set_fan_mode
+      data:
+        entity_id: climate.zhu_wo_kong_diao
+        fan_mode: 一档
+    - service: climate.set_fan_mode
+      data:
+        entity_id: climate.er_tong_fang_kong_diao
+        fan_mode: 一档
 
 # - alias: 睡眠深入
 #   trigger:
@@ -81,14 +97,14 @@
     - service: zhimsg.ke_ting_yin_xiang
       data:
         message: 音量30
-    # - service: climate.set_fan_mode
-    #   data:
-    #     entity_id: climate.zhu_wo_kong_diao
-    #     fan_mode: 自动
-    # - service: climate.set_fan_mode
-    #   data:
-    #     entity_id: climate.er_tong_fang_kong_diao
-    #     fan_mode: 自动
+    - service: climate.set_fan_mode
+      data:
+        entity_id: climate.zhu_wo_kong_diao
+        fan_mode: 自动
+    - service: climate.set_fan_mode
+      data:
+        entity_id: climate.er_tong_fang_kong_diao
+        fan_mode: 自动
     # - service: climate.turn_off
     #   entity_id: climate.zhu_wo_kong_diao
     # - service: climate.turn_off
