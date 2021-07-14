@@ -1,37 +1,23 @@
 binary_sensor.cube_158d0002a66db1:
   friendly_name: 儿童房魔方
 binary_sensor.door_window_sensor_158d0001f3d2d1:
-  dash_click: /config/integrations
   friendly_name: 厨房门
-  dash_extra_forced: 集成
 binary_sensor.door_window_sensor_158d0001f3e5be:
-  dash_click: /
   friendly_name: 入户门
-  dash_extra_forced: 概览
 binary_sensor.door_window_sensor_158d000228a52b:
-  dash_click: /config/logs
   friendly_name: 阳台门
-  dash_extra_forced: 日志
 binary_sensor.door_window_sensor_158d0003cf4735:
-  dash_click: /config/customize
   friendly_name: 洗手间门
-  dash_extra_forced: 自定义
 binary_sensor.door_window_sensor_158d00041c74da:
-  dash_click: /config/automation
   friendly_name: 过道门
-  dash_extra_forced: 自动化
 binary_sensor.door_window_sensor_158d0004611461:
-  dash_click: /config/server_control
   friendly_name: 浴室门
-  dash_extra_forced: 服务控制
 binary_sensor.motion_sensor_158d0001d66ce9:
   friendly_name: 过道感应
 binary_sensor.motion_sensor_158d0001f4a238:
   friendly_name: 洗手间感应
 binary_sensor.motion_sensor_158d0003d0d46e:
-  dash_click: /local/aha.html
   friendly_name: 书房感应
-  dash_extra_forced: 啊哈网校
 binary_sensor.switch_158d0001e59b33:
   friendly_name: 浴室按钮
 binary_sensor.switch_158d000201a73f:
@@ -111,9 +97,9 @@ media_player.shu_fang_tou_ying_yi:
   icon: mdi:projector
 sensor.can_ting_ke_li_wu:
   dash_click: /zhilace-type
+  dash_extra_forced: 分类
   dash_relation: fan.can_ting_jing_hua_qi
   friendly_name: 餐厅颗粒物
-  dash_extra_forced: 分类
 sensor.ci_wo_ke_li_wu:
   device_class: pm25
 sensor.er_tong_fang_er_yang_hua_tan:
@@ -131,8 +117,8 @@ sensor.ke_ting_er_yang_hua_tan:
   device_class: co2
 sensor.ke_ting_ke_li_wu:
   dash_click: /zhilace-zone
-  device_class: pm25
   dash_extra_forced: 分区
+  device_class: pm25
 sensor.shu_fang_er_yang_hua_tan:
   device_class: co2
 sensor.shu_fang_wen_du:
@@ -142,16 +128,18 @@ sensor.yang_tai_ke_li_wu:
   dash_order: '3'
   device_class: pm25
 sensor.yang_tai_shi_du:
-  dash_click: https://m.weathercn.com/index.do?id=106832  
-  dash_order: '2'
+  dash_click: https://m.weathercn.com/index.do?id=106832
   dash_extra_forced: 杭州天气
+  dash_order: '2'
 sensor.yang_tai_wen_du:
   dash_click: http://m.nmc.cn/publish/forecast/AZJ/hangzhou.html
-  dash_order: '1'
   dash_extra_forced: 中央气象台
+  dash_order: '1'
 sensor.zhu_wo_er_yang_hua_tan:
   device_class: co2
 sensor.zhu_wo_ke_li_wu:
+  dash_click: /local/aha.html
+  dash_extra_forced: 啊哈网校
   dash_relation: fan.zhu_wo_jing_hua_qi
   device_class: pm25
 sun.sun:
