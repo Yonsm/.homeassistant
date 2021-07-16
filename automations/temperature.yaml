@@ -166,7 +166,7 @@
     - platform: time
       at: '20:30:01'
     - platform: state
-      entity_id: sensor.shu_fang_wen_du
+      entity_id: sensor.shu_fang_feng_shan
   condition:
     - condition: time
       after: '20:30'
@@ -174,11 +174,10 @@
   action:
     - service: zhiact.actuate
       data:
-        sensor_id: sensor.shu_fang_wen_du
-        #sensor_values: [24, 27.5, 30, 32] #feng_shan_wen_du
-        #alt_sensor_values: [25, 28.5, 32, 34]
-        sensor_values: [26, 28.5, 32, 33]
-        alt_sensor_values: [27, 30, 33, 34]
+        sensor_id: sensor.shu_fang_feng_shan
+        sensor_attr: temperature
+        sensor_values: [24, 27.5, 30, 32]
+        alt_sensor_values: [25, 28.5, 32, 34]
         alt_time_range: [1, 8]
         entity_id: fan.shu_fang_feng_shan
         entity_attr: preset_mode
@@ -203,7 +202,7 @@
         alt_sensor_values: [20, 23, 24, 26]
         alt_time_range: [1, 8]
         entity_id: fan.er_tong_fang_feng_shan
-        entity_attr: preset_mode
+        entity_attr: speed
         entity_values: [Level 1, Level 2, Level 3, Level 4]
 
 - alias: 主卧温度变化-调控风扇
@@ -221,9 +220,9 @@
     - service: zhiact.actuate
       data:
         sensor_id: sensor.zhu_wo_wen_du
-        sensor_values: [24, 26, 28, 30, 33]
-        alt_sensor_values: [25, 27, 29, 31, 35]
+        sensor_values: [24, 26, 28, 30]
+        alt_sensor_values: [25, 27, 29, 31]
         alt_time_range: [1, 8]
         entity_id: fan.zhu_wo_feng_shan
-        entity_attr: speed
-        entity_values: [Level 1, Level 2, Level 3, Level 4, Level 5]
+        entity_attr: preset_mode
+        entity_values: [Level 1, Level 2, Level 3, Level 4]

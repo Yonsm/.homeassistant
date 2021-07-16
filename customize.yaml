@@ -53,8 +53,6 @@ fan.can_ting_jing_hua_qi:
 fan.ci_wo_jing_hua_qi:
   dash_icon: ${aqi}
   icon: mdi:cupcake
-fan.er_tong_fang_feng_shan:
-  dash_icon: ${temperature}
 fan.er_tong_fang_jing_hua_qi:
   dash_icon: ${sensor.er_tong_fang_ke_li_wu}
   icon: mdi:cupcake
@@ -62,7 +60,7 @@ fan.ke_ting_xin_feng_ji:
   dash_icon: ${co2}
   icon: mdi:leaf
 fan.shu_fang_feng_shan:
-  dash_icon: ${sensor.shu_fang_wen_du}
+  dash_icon: ${temperature}
 fan.shu_fang_jing_hua_qi:
   icon: mdi:cupcake
 fan.zhu_wo_jing_hua_qi:
