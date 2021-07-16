@@ -166,7 +166,7 @@
     - platform: time
       at: '20:30:01'
     - platform: state
-      entity_id: sensor.shu_fang_feng_shan
+      entity_id: sensor.shu_fang_feng_shan_wen_du
   condition:
     - condition: time
       after: '20:30'
