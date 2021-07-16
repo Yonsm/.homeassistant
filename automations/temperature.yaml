@@ -176,8 +176,8 @@
       data:
         sensor_id: sensor.shu_fang_feng_shan
         sensor_attr: temperature
-        sensor_values: [24, 27.5, 30, 32]
-        alt_sensor_values: [25, 28.5, 32, 34]
+        sensor_values: [24, 26.5, 30, 32]
+        alt_sensor_values: [25, 27.5, 32, 34]
         alt_time_range: [1, 8]
         entity_id: fan.shu_fang_feng_shan
         entity_attr: preset_mode
