@@ -12,7 +12,7 @@
     - service: climate.set_temperature
       data:
         entity_id: climate.zhu_wo_kong_diao
-        temperature: 25
+        temperature: 24
         hvac_mode: cool
     - service: climate.set_temperature
       data:
@@ -75,8 +75,8 @@
   condition:
     - condition: numeric_state
       entity_id: sensor.yang_tai_wen_du
-      below: 28
-action:
+      below: 27
+  action:
     - service: climate.turn_off
       entity_id: climate.zhu_wo_kong_diao
     - service: climate.turn_off

@@ -38,7 +38,6 @@
 #       entity_id: climate.ke_ting_kong_diao
 
 - alias: 客厅温度正常-关空调
-  initial_state: false
   trigger:
     - platform: state
       entity_id: binary_sensor.door_window_sensor_158d000228a52b
@@ -84,7 +83,6 @@
       entity_id: climate.can_ting_kong_diao
 
 - alias: 主卧温度变化-调控空调
-  initial_state: false
   trigger:
     - platform: time
       at: '20:30:01'
@@ -98,13 +96,12 @@
     - service: zhiact.actuate
       data:
         sensor_id: sensor.zhu_wo_wen_du
-        sensor_values: [27.5, 29.3, 30, 31, 32]
+        sensor_values: [27, 28, 29, 30, 31]
         entity_id: climate.zhu_wo_kong_diao
         entity_attr: fan_mode
         entity_values: [一档, 二档, 三档, 四档, 五档]
 
 - alias: 儿童房温度变化-调控空调
-  initial_state: false
   trigger:
     - platform: time
       at: '20:00:01'
@@ -118,14 +115,12 @@
     - service: zhiact.actuate
       data:
         sensor_id: sensor.er_tong_fang_wen_du
-        sensor_values: [22, 22.5, 23, 24, 25]
+        sensor_values: [21, 22, 23, 24, 25]
         entity_id: climate.er_tong_fang_kong_diao
         entity_attr: fan_mode
         entity_values: [一档, 二档, 三档, 四档, 五档]
-        # delay: 0
 
 - alias: 书房温度变化-调控空调
-  initial_state: false
   trigger:
     - platform: time
       at: '20:30:01'
@@ -139,7 +134,7 @@
     - service: zhiact.actuate
       data:
         sensor_id: sensor.shu_fang_wen_du
-        sensor_values: [29.7, 30.5, 32, 33]
+        sensor_values: [29, 30, 31, 32]
         entity_id: climate.shu_fang_kong_diao
         entity_attr: fan_mode
         entity_values: [低档, 中档, 高档, 超高]
