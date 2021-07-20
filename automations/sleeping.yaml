@@ -68,22 +68,6 @@
         entity_id: climate.er_tong_fang_kong_diao
         temperature: 27
 
-- alias: 睡眠空调
-  trigger:
-    - platform: time
-      at: '00:02:01'
-  condition:
-    - condition: numeric_state
-      entity_id: sensor.yang_tai_wen_du
-      below: 27
-  action:
-    - service: climate.turn_off
-      entity_id: climate.zhu_wo_kong_diao
-    - service: climate.turn_off
-      entity_id: climate.er_tong_fang_kong_diao
-    - service: climate.turn_off
-      entity_id: climate.shu_fang_kong_diao
-
 - alias: 睡眠早起
   trigger:
     - platform: time
@@ -121,6 +105,12 @@
       entity_id: fan.shu_fang_feng_shan
     # - service: fan.turn_off
     #   entity_id: fan.zhu_wo_feng_shan
+    - service: climate.turn_off
+      entity_id: climate.zhu_wo_kong_diao
+    - service: climate.turn_off
+      entity_id: climate.er_tong_fang_kong_diao
+    - service: climate.turn_off
+      entity_id: climate.shu_fang_kong_diao
     - service: cover.open_cover
       entity_id: cover.shu_fang_chuang_lian
     - service: fan.set_speed
