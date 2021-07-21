@@ -4,13 +4,13 @@
       at: '12:30:00'
     - platform: numeric_state
       entity_id: sensor.shu_fang_liang_du
-      above: 200
+      above: 120
       for:
         minutes: 10
   condition:
     - condition: numeric_state
       entity_id: sensor.shu_fang_liang_du
-      above: 180
+      above: 100
     - condition: time
       after: '12:00'
       before: '16:00'
@@ -58,6 +58,7 @@
     - platform: state
       entity_id: cover.curtain_158d000405d535
       to: open
+      for: 00:10:00
   action:
     - service_template: 'fan.turn_{% if is_state("cover.curtain_158d000405d535", "closed") %}on{% else %}off{% endif %}'
       entity_id: fan.zhu_wo_feng_shan
@@ -78,6 +79,7 @@
     - platform: state
       entity_id: cover.curtain_158d00042cf265
       to: open
+      for: 00:10:00
   action:
     - service_template: 'fan.turn_{% if is_state("cover.curtain_158d00042cf265", "closed") %}on{% else %}off{% endif %}'
       entity_id: fan.er_tong_fang_feng_shan
