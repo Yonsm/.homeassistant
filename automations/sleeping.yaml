@@ -5,10 +5,6 @@
   action:
     - service: cover.close_cover
       entity_id: cover.shu_fang_chuang_lian
-    # - service: fan.set_speed
-    #   data:
-    #     entity_id: fan.ci_wo_jing_hua_qi
-    #     speed: Silent
     - service: climate.set_temperature
       data:
         entity_id: climate.zhu_wo_kong_diao
@@ -113,10 +109,10 @@
       entity_id: climate.shu_fang_kong_diao
     - service: cover.open_cover
       entity_id: cover.shu_fang_chuang_lian
-    - service: fan.set_speed
+    - service: fan.set_preset_mode
       data:
         entity_id: fan.zhu_wo_xin_feng_ji
-        speed: Middle
+        preset_mode: Middle
     # - condition: time
     #   weekday:
     #     - mon

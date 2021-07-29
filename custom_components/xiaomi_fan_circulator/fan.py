@@ -16,13 +16,12 @@ from miio import Device, DeviceException
 from homeassistant.components.fan import (
     FanEntity,
     PLATFORM_SCHEMA,
-    SUPPORT_SET_SPEED,
+    SUPPORT_PRESET_MODE,
     DOMAIN,
     SPEED_OFF,
     SUPPORT_OSCILLATE,
     SUPPORT_DIRECTION,
-    ATTR_SPEED,
-    ATTR_SPEED_LIST,
+    ATTR_PRESET_MODE,
     ATTR_OSCILLATING,
     ATTR_DIRECTION,
 )
@@ -360,7 +359,7 @@ class XiaomiGenericDevice(FanEntity):
     @property
     def supported_features(self):
         """Flag supported features."""
-        return SUPPORT_SET_SPEED
+        return SUPPORT_PRESET_MODE
 
     @property
     def should_poll(self):
@@ -493,7 +492,7 @@ class XiaomiFanFA1(XiaomiGenericDevice):
         self._oscillate = None
         self._natural_mode = False
         self._retry = retries
-        self._state_attrs[ATTR_SPEED] = None
+        self._state_attrs[ATTR_PRESET_MODE] = None
         self._state_attrs.update(
             {attribute: None for attribute in self._available_attributes}
         )
@@ -502,7 +501,7 @@ class XiaomiFanFA1(XiaomiGenericDevice):
     @property
     def supported_features(self) -> int:
         """Supported features."""
-        return SUPPORT_SET_SPEED | SUPPORT_OSCILLATE | SUPPORT_DIRECTION | FEATURE_SET_NATURAL_MODE
+        return SUPPORT_PRESET_MODE | SUPPORT_OSCILLATE | SUPPORT_DIRECTION | FEATURE_SET_NATURAL_MODE
 
     async def async_update(self):
         """Fetch state from the device."""
@@ -603,7 +602,7 @@ class XiaomiFanFA1(XiaomiGenericDevice):
                 for level, value in FAN_SPEED_LIST_FA1.items():
                     if status[0]['value'] == value:
                         self._speed = level
-                        self._state_attrs[ATTR_SPEED] = level
+                        self._state_attrs[ATTR_PRESET_MODE] = level
                         break
 
             else:
@@ -628,12 +627,12 @@ class XiaomiFanFA1(XiaomiGenericDevice):
                 )
 
     @property
-    def speed_list(self) -> list:
+    def preset_modes(self) -> list:
         """Get the list of available speeds."""
         return self._speed_list
 
     @property
-    def speed(self):
+    def preset_mode(self):
         """Return the current speed."""
         return self._speed
 
@@ -666,9 +665,9 @@ class XiaomiFanFA1(XiaomiGenericDevice):
             self._state = False
             self._skip_update = True
 
-    async def async_set_speed(self, speed: str) -> None:
+    async def async_set_preset_mode(self, speed: str) -> None:
         """Set the speed of the fan."""
-        if self.supported_features & SUPPORT_SET_SPEED == 0:
+        if self.supported_features & SUPPORT_PRESET_MODE == 0:
             return
 
         if speed.isdigit():

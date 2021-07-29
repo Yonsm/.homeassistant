@@ -65,10 +65,10 @@
 #       data:
 #         entity_id: fan.can_ting_jing_hua_qi
 #         oscillating: true
-#     - service: fan.set_speed
+#     - service: fan.set_preset_mode
 #       data:
 #         entity_id: fan.can_ting_jing_hua_qi
-#         speed: low
+#         preset_mode: low
 
 # - alias: 餐厅湿度正常-关加湿器
 #   initial_state: true
@@ -101,10 +101,10 @@
 #       data:
 #         entity_id: fan.zhu_wo_jing_hua_qi
 #         oscillating: true
-#     - service: fan.set_speed
+#     - service: fan.set_preset_mode
 #       data:
 #         entity_id: fan.zhu_wo_jing_hua_qi
-#         speed: low
+#         preset_mode: low
 
 # - alias: 主卧湿度正常-关加湿器
 #   initial_state: true
@@ -137,10 +137,10 @@
 #       data:
 #         entity_id: fan.er_tong_fang_jing_hua_qi
 #         oscillating: true
-#     - service: fan.set_speed
+#     - service: fan.set_preset_mode
 #       data:
 #         entity_id: fan.er_tong_fang_jing_hua_qi
-#         speed: low
+#         preset_mode: low
 
 # - alias: 儿童房湿度正常-关加湿器
 #   initial_state: true

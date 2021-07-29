@@ -200,33 +200,3 @@
     # shu_fang_kong_diao_mo_shi:
     #   friendly_name: 书房空调模式
     #   value_template: '{% set mode = state_attr("climate.shu_fang_kong_diao", "fan_mode") %}{% if is_state("climate.shu_fang_kong_diao", "off") %}off{% elif mode == "low" %}一{% elif mode == "mid" %}二{% elif mode == "high" %}三{% elif mode == "highest" %}四{% else %}{{ mode }}{% endif %}'
-
-    # er_tong_fang_feng_shan_mo_shi:
-    #   friendly_name: 儿童房风扇模式
-    #   value_template: '{% set mode = state_attr("fan.er_tong_fang_feng_shan", "speed") %}{% if is_state("fan.er_tong_fang_feng_shan", "off") %}off{% elif mode == "Level 1" %}一{% elif mode == "Level 2" %}二{% elif mode == "Level 3" %}三{% elif mode == "Level 4" %}四{% else %}{{ mode }}{% endif %}'
-    # shu_fang_feng_shan_mo_shi:
-    #   friendly_name: 书房风扇模式
-    #   value_template: '{% set mode = state_attr("fan.shu_fang_feng_shan", "speed") %}{% if is_state("fan.shu_fang_feng_shan", "off") %}off{% elif mode == "Level 1" %}一{% elif mode == "Level 2" %}二{% elif mode == "Level 3" %}三{% elif mode == "Level 4" %}四{% else %}{{ mode }}{% endif %}'
-
-    # ke_ting_xin_feng_ji_mo_shi:
-    #   friendly_name: 客厅新风机模式
-    #   value_template: '{% set mode = state_attr("fan.ke_ting_xin_feng_ji", "speed") %}{% if is_state("fan.ke_ting_xin_feng_ji", "off") %}off{% elif mode == "Auto" %}自{% elif mode == "Silent" %}静{% elif mode == "Interval" %}间{% elif mode == "Low" %}一{% elif mode == "Middle" %}二{% elif mode == "Strong" %}三{% else %}{{ mode }}{% endif %}'
-    # zhu_wo_xin_feng_ji_mo_shi:
-    #   friendly_name: 主卧新风机模式
-    #   value_template: '{% set mode = state_attr("fan.zhu_wo_xin_feng_ji", "speed") %}{% if is_state("fan.zhu_wo_xin_feng_ji", "off") %}off{% elif mode == "Auto" %}自{% elif mode == "Silent" %}静{% elif mode == "Interval" %}间{% elif mode == "Low" %}一{% elif mode == "Middle" %}二{% elif mode == "Strong" %}三{% else %}{{ mode }}{% endif %}'
-
-    # ci_wo_jing_hua_qi_mo_shi:
-    #   friendly_name: 次卧净化器模式
-    #   value_template: '{% set mode = state_attr("fan.ci_wo_jing_hua_qi", "speed") %}{% if is_state("fan.ci_wo_jing_hua_qi", "off") %}off{% elif mode == "Auto" %}自{% elif mode == "Silent" %}静{% elif mode == "Favorite" %}{{ state_attr("fan.ci_wo_jing_hua_qi", "favorite_level") }}{% else %}{{ mode }}{% endif %}'
-    # shu_fang_jing_hua_qi_mo_shi:
-    #   friendly_name: 书房净化器模式
-    #   value_template: '{% set mode = state_attr("fan.shu_fang_jing_hua_qi", "speed") %}{% if is_state("fan.shu_fang_jing_hua_qi", "off") %}off{% elif mode == "low" %}一{% elif mode == "medium" %}二{% elif mode == "high" %}三{% else %}{{ mode }}{% endif %}'
-    # can_ting_jing_hua_qi_mo_shi:
-    #   friendly_name: 餐厅净化器模式
-    #   value_template: '{% set mode = state_attr("fan.can_ting_jing_hua_qi", "speed") %}{% if is_state("fan.can_ting_jing_hua_qi", "off") %}off{% elif mode == "low" %}一{% elif mode == "medium" %}二{% elif mode == "high" %}三{% else %}{{ mode }}{% endif %}'
-    # zhu_wo_jing_hua_qi_mo_shi:
-    #   friendly_name: 主卧净化器模式
-    #   value_template: '{% set mode = state_attr("fan.zhu_wo_jing_hua_qi", "speed") %}{% if is_state("fan.zhu_wo_jing_hua_qi", "off") %}off{% elif mode == "low" %}一{% elif mode == "medium" %}二{% elif mode == "high" %}三{% else %}{{ mode }}{% endif %}'
-    # er_tong_fang_jing_hua_qi_mo_shi:
-    #   friendly_name: 儿童房净化器模式
-    #   value_template: '{% set mode = state_attr("fan.er_tong_fang_jing_hua_qi", "speed") %}{% if is_state("fan.er_tong_fang_jing_hua_qi", "off") %}off{% elif mode == "low" %}一{% elif mode == "medium" %}二{% elif mode == "high" %}三{% else %}{{ mode }}{% endif %}'
