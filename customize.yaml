@@ -63,8 +63,8 @@ fan.ke_ting_xin_feng_ji:
   icon: mdi:leaf
 fan.shu_fang_feng_shan:
   dash_icon: ${temperature}
-fan.shu_fang_jing_hua_qi:
-  icon: mdi:cupcake
+# fan.shu_fang_jing_hua_qi:
+#   icon: mdi:cupcake
 fan.zhu_wo_feng_shan:
   dash_icon: ${sensor.zhu_wo_wen_du}
 fan.zhu_wo_jing_hua_qi:

@@ -23,25 +23,25 @@
 #   host: Fresher2
 #   model: zhimi.airfresh.va2
 #   token: !secret fresher2_token
-- platform: mqtt
-  name: 书房净化器
-  state_topic: NodeMCU3/relay/0
-  command_topic: NodeMCU3/relay/0/set
-  availability_topic: NodeMCU3/status
-  oscillation_state_topic: NodeMCU3/relay/1
-  oscillation_command_topic: NodeMCU3/relay/1/set
-  preset_mode_state_topic: NodeMCU3/relay/0
-  preset_mode_command_topic: NodeMCU3/relay/0/set
-  state_value_template: '{% if value == "0" %}OFF{% else %}ON{% endif %}'
-  preset_modes:
-    - 'off'
-    - low
-    - medium
-    - high
-  preset_mode_command_template: '{% if value == "off" %}OFF{% elif value == "low" %}1{% elif value == "high" %}3{% else %}2{% endif %}'
-  preset_mode_value_template: '{% if value == "0" %}off{% elif value == "1" %}low{% elif value == "3" %}high{% else %}medium{% endif %}'
-  payload_oscillation_on: 'ON'
-  payload_oscillation_off: 'OFF'
+# - platform: mqtt
+#   name: 书房净化器
+#   state_topic: NodeMCU3/relay/0
+#   command_topic: NodeMCU3/relay/0/set
+#   availability_topic: NodeMCU3/status
+#   oscillation_state_topic: NodeMCU3/relay/1
+#   oscillation_command_topic: NodeMCU3/relay/1/set
+#   preset_mode_state_topic: NodeMCU3/relay/0
+#   preset_mode_command_topic: NodeMCU3/relay/0/set
+#   state_value_template: '{% if value == "0" %}OFF{% else %}ON{% endif %}'
+#   preset_modes:
+#     - 'off'
+#     - low
+#     - medium
+#     - high
+#   preset_mode_command_template: '{% if value == "off" %}OFF{% elif value == "low" %}1{% elif value == "high" %}3{% else %}2{% endif %}'
+#   preset_mode_value_template: '{% if value == "0" %}off{% elif value == "1" %}low{% elif value == "3" %}high{% else %}medium{% endif %}'
+#   payload_oscillation_on: 'ON'
+#   payload_oscillation_off: 'OFF'
 - platform: mqtt
   name: 餐厅净化器
   state_topic: NodeMCU4/relay/0

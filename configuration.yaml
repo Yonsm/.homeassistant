@@ -103,6 +103,9 @@ person:
   - name: 爷爷
     id: yeye
     device_trackers: device_tracker.xphone
+  - name: 奶奶
+    id: nainai
+    device_trackers: device_tracker.vphone
 
 weather:
   - platform: zhicaiyun
