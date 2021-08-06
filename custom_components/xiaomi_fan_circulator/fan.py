@@ -406,14 +406,14 @@ class XiaomiGenericDevice(FanEntity):
             self._available = False
             return False
 
-    async def async_turn_on(self, speed: str = None, **kwargs) -> None:
+    async def async_turn_on(self, preset_mode: str = None, **kwargs) -> None:
         # pylint: disable=unused-argument
         """Turn the device on."""
         result = await self._try_command(
             "Turning the miio device on failed.", self._device.on
         )
-        if speed:
-            result = await self.async_set_speed(speed)
+        if preset_mode:
+            result = await self.async_set_preset_mode(preset_mode)
 
         if result:
             self._state = True
@@ -501,7 +501,7 @@ class XiaomiFanFA1(XiaomiGenericDevice):
     @property
     def supported_features(self) -> int:
         """Supported features."""
-        return SUPPORT_PRESET_MODE | SUPPORT_OSCILLATE | SUPPORT_DIRECTION | FEATURE_SET_NATURAL_MODE
+        return SUPPORT_PRESET_MODE| SUPPORT_OSCILLATE | SUPPORT_DIRECTION | FEATURE_SET_NATURAL_MODE
 
     async def async_update(self):
         """Fetch state from the device."""
@@ -636,7 +636,7 @@ class XiaomiFanFA1(XiaomiGenericDevice):
         """Return the current speed."""
         return self._speed
 
-    async def async_turn_on(self, speed: str = None, **kwargs) -> None:
+    async def async_turn_on(self, preset_mode: str = None, **kwargs) -> None:
         """Turn the device on."""
         result = await self._try_command(
             "Turning the miio device on failed.",
@@ -644,8 +644,8 @@ class XiaomiFanFA1(XiaomiGenericDevice):
             "set_properties",
             [{"piid": 1, "siid": 2, "did": self._did, "value": True}]
         )
-        if speed:
-            result = await self.async_set_speed(speed)
+        if preset_mode:
+            result = await self.async_set_speed(preset_mode)
 
         if result:
             self._state = True
@@ -665,27 +665,27 @@ class XiaomiFanFA1(XiaomiGenericDevice):
             self._state = False
             self._skip_update = True
 
-    async def async_set_preset_mode(self, speed: str) -> None:
+    async def async_set_preset_mode(self, preset_mode: str) -> None:
         """Set the speed of the fan."""
         if self.supported_features & SUPPORT_PRESET_MODE == 0:
             return
 
-        if speed.isdigit():
-            speed = int(speed)
+        if preset_mode.isdigit():
+            preset_mode = int(preset_mode)
 
-        if speed in [SPEED_OFF, 0]:
+        if preset_mode in [SPEED_OFF, 0]:
             await self.async_turn_off()
             return
 
         # Map speed level to speed
-        if speed in FAN_SPEED_VALUES_FA1.keys():
-            speed = FAN_SPEED_VALUES_FA1[speed]
+        if preset_mode in FAN_SPEED_VALUES_FA1.keys():
+            preset_mode = FAN_SPEED_VALUES_FA1[preset_mode]
 
         await self._try_command(
             "Setting fan speed of the miio device failed.",
             self._device.send,
             "set_properties",
-            [{"piid": 2, "siid": 2, "did": self._did, "value": speed}]
+            [{"piid": 2, "siid": 2, "did": self._did, "value": preset_mode}]
         )
 
     async def async_oscillate(self, oscillating: bool) -> None:
