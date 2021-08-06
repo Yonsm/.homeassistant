@@ -157,7 +157,7 @@
     - platform: time
       at: '20:30:01'
     - platform: state
-      entity_id: sensor.shu_fang_feng_shan_wen_du
+      entity_id: sensor.guo_dao_wen_du
   condition:
     - condition: time
       after: '20:30'
@@ -211,7 +211,7 @@
     - service: zhiact.actuate
       data:
         sensor_id: sensor.zhu_wo_wen_du
-        sensor_values: [24, 26, 28.5, 30]
+        sensor_values: [24, 26, 29, 30]
         alt_sensor_values: [25, 27, 30, 32]
         alt_time_range: [1, 8]
         entity_id: fan.zhu_wo_feng_shan
