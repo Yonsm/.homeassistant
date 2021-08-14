@@ -78,10 +78,15 @@
 - alias: 书房按钮长按—开关投影仪
   trigger:
     - platform: event
-      event_type: xiaomi_aqara.click
+      event_type: xiaomi_aqara.cube_action
       event_data:
-        entity_id: binary_sensor.switch_158d000201a73f
-        click_type: long_click_press
+        entity_id: binary_sensor.cube_158d0002a66db1
+        action_type: shake_air
+    # - platform: event
+    #   event_type: xiaomi_aqara.click
+    #   event_data:
+    #     entity_id: binary_sensor.switch_158d000201a73f
+    #     click_type: long_click_press
   action:
     - service: zhimsg.ke_ting_yin_xiang
       data_template:

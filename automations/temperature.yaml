@@ -98,7 +98,7 @@
     - service: zhiact.actuate
       data:
         sensor_id: sensor.zhu_wo_wen_du
-        sensor_values: [27.5, 28, 28.5, 29, 29.5]
+        sensor_values: [28, 28.2, 28.5, 29, 29.5]
         alt_sensor_values: [29, 30, 30.5, 31, 31.5]
         alt_time_range: [1, 8]
         entity_id: climate.zhu_wo_kong_diao
@@ -121,7 +121,7 @@
     - service: zhiact.actuate
       data:
         sensor_id: sensor.er_tong_fang_wen_du
-        sensor_values: [22, 22, 23, 24, 25]
+        sensor_values: [23, 23.2, 23.5, 24, 25]
         alt_sensor_values: [23.5, 24.5, 25, 25.5, 26]
         alt_time_range: [1, 8]
         entity_id: climate.er_tong_fang_kong_diao
@@ -144,7 +144,7 @@
     - service: zhiact.actuate
       data:
         sensor_id: sensor.shu_fang_feng_shan_wen_du
-        sensor_values: [26, 27, 28, 29]
+        sensor_values: [27, 27, 28, 29]
         alt_sensor_values: [28, 29, 30, 31]
         alt_time_range: [1, 8]
         entity_id: climate.shu_fang_kong_diao
