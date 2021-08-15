@@ -96,7 +96,7 @@ device_tracker:
 person:
   - name: 爸爸
     id: baba
-    device_trackers: device_tracker.yphone
+    device_trackers: device_tracker.gphone
   - name: 妈妈
     id: mama
     device_trackers: device_tracker.zphone
@@ -105,7 +105,7 @@ person:
     device_trackers: device_tracker.xphone
   - name: 奶奶
     id: nainai
-    device_trackers: device_tracker.vphone
+    device_trackers: device_tracker.yphone
 
 weather:
   - platform: zhicaiyun
