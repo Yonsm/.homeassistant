@@ -86,12 +86,13 @@ device_tracker:
   - platform: ping
     scan_interval: 120
     hosts:
-      xphone: 192.168.1.22
-      yphone: 192.168.1.23
-      zphone: 192.168.1.24
       x9300d: 192.168.1.6
       x9400e: 192.168.1.7
       projector: 192.168.1.8
+      gphone: 192.168.1.22
+      zphone: 192.168.1.23
+      xphone: 192.168.1.24
+      yphone: 192.168.1.25
 
 person:
   - name: 爸爸
