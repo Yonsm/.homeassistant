@@ -244,7 +244,7 @@ zhimsg:
 
 zhibot:
   - platform: genie
-    token: !secret zhibot_token
+    #token: !secret zhibot_token
   - platform: miai
     token: !secret zhibot_token
   - platform: ding

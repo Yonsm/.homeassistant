@@ -165,7 +165,7 @@
   action:
     - service: zhiact.actuate
       data:
-        sensor_id: sensor.shu_fang_feng_shan
+        sensor_id: fan.shu_fang_feng_shan
         sensor_attr: temperature
         sensor_values: [24, 26, 29, 31]
         alt_sensor_values: [25, 27.5, 32, 34]
