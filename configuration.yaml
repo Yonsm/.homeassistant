@@ -6,6 +6,11 @@ homeassistant:
   unit_system: metric
   time_zone: Asia/Shanghai
   customize: !include customize.yaml
+  auth_providers:
+    - type: trusted_networks
+      trusted_networks: 192.168.1.0/24
+      allow_bypass_login: true
+    - type: homeassistant
 
 http:
   ssl_key: ~/.homeassistant/ssl.key
@@ -245,7 +250,7 @@ zhimsg:
 
 zhibot:
   - platform: genie
-    #token: !secret zhibot_token
+    token: !secret zhibot_token
   - platform: miai
     token: !secret zhibot_token
   - platform: ding
