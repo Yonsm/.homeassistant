@@ -123,8 +123,6 @@ sensor.ke_ting_ke_li_wu:
   device_class: pm25
 sensor.shu_fang_er_yang_hua_tan:
   device_class: co2
-sensor.shu_fang_feng_shan_wen_du:
-  dash_relation: fan.shu_fang_feng_shan
 sensor.yang_tai_ke_li_wu:
   dash_click: https://www.lewei50.com/u/g/34131
   dash_order: '3'

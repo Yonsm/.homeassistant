@@ -179,12 +179,6 @@
       unit_of_measurement: ppm
       icon_template: mdi:molecule-co2
 
-    feng_shan_wen_du:
-      friendly_name: 书房风扇温度
-      device_class: temperature
-      value_template: '{{ state_attr("fan.shu_fang_feng_shan", "temperature") }}'
-      unit_of_measurement: °C
-
     # ke_ting_kong_diao_mo_shi:
     #   friendly_name: 客厅空调模式
     #   value_template: '{% set mode = state_attr("climate.ke_ting_kong_diao", "fan_mode") %}{% if is_state("climate.ke_ting_kong_diao", "off") %}off{% elif mode == "自动" %}自{% elif mode == "一档" %}一{% elif mode == "二档" %}二{% elif mode == "三档" %}三{% elif mode == "四档" %}四{% elif mode == "五档" %}五{% else %}{{ mode }}{% endif %}'
