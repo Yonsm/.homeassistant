@@ -259,7 +259,7 @@ zhibot:
     name: 客厅音箱
     token: !secret zhibot_token
   - platform: ding
-    name: 过道音箱
+    name: 次卧音箱
     token: !secret zhibot_token
   - platform: ding
     name: 儿童房音箱

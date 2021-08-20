@@ -97,9 +97,13 @@
   action:
     - service: zhiact.actuate
       data:
-        sensor_id: sensor.zhu_wo_wen_du
-        sensor_values: [28, 28.2, 28.5, 29, 29.5]
-        alt_sensor_values: [29, 30, 30.5, 31, 31.5]
+        # sensor_id: sensor.zhu_wo_wen_du
+        # sensor_values: [28, 28.2, 28.5, 29, 29.5]
+        # alt_sensor_values: [29, 30, 30.5, 31, 31.5]
+        sensor_id: climate.zhu_wo_kong_diao
+        sensor_attr: temperature
+        sensor_values: [26, 27, 28, 29, 30]
+        alt_sensor_values: [29, 30, 31, 32, 33]
         alt_time_range: [1, 8]
         entity_id: climate.zhu_wo_kong_diao
         entity_attr: fan_mode
@@ -120,9 +124,13 @@
   action:
     - service: zhiact.actuate
       data:
-        sensor_id: sensor.er_tong_fang_wen_du
-        sensor_values: [23, 23.2, 23.5, 24, 25]
-        alt_sensor_values: [23.5, 24.5, 25, 25.5, 26]
+        # sensor_id: sensor.er_tong_fang_wen_du
+        # sensor_values: [23, 23.2, 23.5, 24, 25]
+        # alt_sensor_values: [23.5, 24.5, 25, 25.5, 26]
+        sensor_id: climate.er_tong_fang_kong_diao
+        sensor_attr: temperature
+        sensor_values: [26, 27, 28, 29, 30]
+        alt_sensor_values: [28, 29, 30, 31, 32]
         alt_time_range: [1, 8]
         entity_id: climate.er_tong_fang_kong_diao
         entity_attr: fan_mode
@@ -135,7 +143,7 @@
     - platform: time
       at: '02:00:01'
     - platform: state
-      entity_id: sensor.shu_fang_feng_shan_wen_du
+      entity_id: sensor.shu_fang_wen_du
   condition:
     - condition: time
       after: '20:30'
@@ -157,7 +165,7 @@
     - platform: time
       at: '20:30:01'
     - platform: state
-      entity_id: sensor.guo_dao_wen_du
+      entity_id: sensor.shu_fang_wen_du
   condition:
     - condition: time
       after: '20:30'

@@ -63,8 +63,6 @@ fan.ke_ting_xin_feng_ji:
   icon: mdi:leaf
 fan.shu_fang_feng_shan:
   dash_icon: ${temperature}
-# fan.shu_fang_jing_hua_qi:
-#   icon: mdi:cupcake
 fan.zhu_wo_feng_shan:
   dash_icon: ${sensor.zhu_wo_wen_du}
 fan.zhu_wo_jing_hua_qi:
@@ -103,6 +101,8 @@ sensor.can_ting_ke_li_wu:
   dash_relation: fan.can_ting_jing_hua_qi
   friendly_name: 餐厅颗粒物
 sensor.ci_wo_ke_li_wu:
+  dash_click: /local/iptv.html
+  dash_extra_forced: 数字电视
   device_class: pm25
 sensor.er_tong_fang_er_yang_hua_tan:
   device_class: co2
