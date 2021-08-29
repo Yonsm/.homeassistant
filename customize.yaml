@@ -82,6 +82,8 @@ light.gateway_light_34ce0090901a:
   icon: mdi:car-light-high
 light.guo_dao_ju_deng:
   icon: mdi:car-light-dimmed
+light.guo_dao_tong_deng:
+  icon: mdi:track-light
 light.ke_ting_tong_deng:
   icon: mdi:track-light
 light.shu_fang_liang_yi_deng:
