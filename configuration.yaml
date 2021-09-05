@@ -6,11 +6,11 @@ homeassistant:
   unit_system: metric
   time_zone: Asia/Shanghai
   customize: !include customize.yaml
-  auth_providers:
-    - type: trusted_networks
-      trusted_networks: 192.168.1.0/24
-      allow_bypass_login: true
-    - type: homeassistant
+  # auth_providers:
+  #   - type: trusted_networks
+  #     trusted_networks: 192.168.1.0/24
+  #     allow_bypass_login: true
+  #   - type: homeassistant
 
 http:
   ssl_key: ~/.homeassistant/ssl.key
