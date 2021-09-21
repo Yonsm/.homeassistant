@@ -38,6 +38,7 @@
 #       entity_id: climate.ke_ting_kong_diao
 
 - alias: 客厅温度正常-关空调
+  initial_state: false
   trigger:
     - platform: state
       entity_id: binary_sensor.door_window_sensor_158d000228a52b
@@ -83,6 +84,7 @@
       entity_id: climate.can_ting_kong_diao
 
 - alias: 主卧温度变化-调控空调
+  initial_state: false
   trigger:
     - platform: time
       at: '21:00:01'
@@ -110,6 +112,7 @@
         entity_values: [一档, 二档, 三档, 四档, 五档]
 
 - alias: 儿童房温度变化-调控空调
+  initial_state: false
   trigger:
     - platform: time
       at: '21:00:01'
@@ -137,6 +140,7 @@
         entity_values: [一档, 二档, 三档, 四档, 五档]
 
 - alias: 书房温度变化-调控空调
+  initial_state: false
   trigger:
     - platform: time
       at: '21:30:01'
@@ -161,7 +165,7 @@
         entity_values: [低档, 中档, 高档, 超高]
 
 - alias: 书房温度变化-调控风扇
-  #initial_state: false
+  initial_state: false
   trigger:
     - platform: time
       at: '20:30:01'
@@ -184,7 +188,7 @@
         entity_values: [Level 1, Level 2, Level 3, Level 4]
 
 - alias: 儿童房温度变化-调控风扇
-  #initial_state: false
+  initial_state: false
   trigger:
     - platform: time
       at: '20:00:01'
@@ -206,7 +210,7 @@
         entity_values: [Level 1, Level 2, Level 3, Level 4]
 
 - alias: 主卧温度变化-调控风扇
-  #initial_state: false
+  initial_state: false
   trigger:
     - platform: time
       at: '20:00:01'

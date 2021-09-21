@@ -76,6 +76,7 @@
 #       entity_id: automation.shu_fang_an_niu_chang_an_kai_guan_tou_ying_yi
 
 - alias: 书房按钮长按—开关投影仪
+  initial_state: false
   trigger:
     - platform: event
       event_type: xiaomi_aqara.cube_action
