@@ -23,6 +23,10 @@
       data:
         entity_id: climate.er_tong_fang_kong_diao
         fan_mode: 五档
+    - service: fan.set_preset_mode
+      data:
+        entity_id: fan.zhu_wo_xin_feng_ji
+        preset_mode: Silent
 
 - alias: 睡眠开始
   trigger:

@@ -25,6 +25,6 @@
         alt_sensor_values: [500, 700, 900, 1300]
         entity_id: fan.zhu_wo_xin_feng_ji
         entity_attr: preset_mode
-        entity_values: [Silent, Low, Middle, Strong]
+        entity_values: [Auto, Low, Middle, Strong]
         condition_attr: mode
-        condition_values: [silent, low, middle, strong]
+        condition_values: [Auto, low, middle, strong]
