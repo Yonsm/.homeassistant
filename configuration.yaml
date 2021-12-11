@@ -94,10 +94,10 @@ device_tracker:
       x9300d: 192.168.1.6
       x9400e: 192.168.1.7
       projector: 192.168.1.8
-      gphone: 192.168.1.22
       zphone: 192.168.1.23
-      xphone: 192.168.1.24
+      gphone: 192.168.1.24
       yphone: 192.168.1.25
+      # xphone: 192.168.1.26
 
 person:
   - name: 爸爸
@@ -106,9 +106,9 @@ person:
   - name: 妈妈
     id: mama
     device_trackers: device_tracker.zphone
-  - name: 爷爷
-    id: yeye
-    device_trackers: device_tracker.xphone
+  # - name: 爷爷
+  #   id: yeye
+  #   device_trackers: device_tracker.xphone
   - name: 奶奶
     id: nainai
     device_trackers: device_tracker.yphone
@@ -208,10 +208,10 @@ camera:
   - platform: ffmpeg
     name: 过道摄像机
     input: rtsp://Camera2/ch0_1.h264
-  - platform: generic
-    name: 主卧摄像机
-    still_image_url: http://Camera5/last.cgi
-    #stream_source: rtsp://Camera5/live/ch00_0
+#  - platform: generic
+#    name: 主卧摄像机
+#    still_image_url: http://Camera5/last.cgi
+#    #stream_source: rtsp://Camera5/live/ch00_0
 
 vacuum:
   - platform: zhiviomi
