@@ -19,6 +19,11 @@
   state_topic: Hassmart2/relay/1
   command_topic: Hassmart2/relay/1/set
   availability_topic: Hassmart2/status
+- platform: mqtt
+  name: 浴室排气扇
+  state_topic: Hassmart3/relay/1
+  command_topic: Hassmart3/relay/1/set
+  availability_topic: Hassmart3/status
 - platform: zhimqtt
   name: 书房音箱
   state_topic: NodeMCU2/relay/0
