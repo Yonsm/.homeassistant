@@ -164,7 +164,7 @@ climate:
     name: 书房空调
     sender: remote.shu_fang_yao_kong
     command: mitsubishi_climate
-    sensor: sensor.guo_dao_wen_du
+    sensor: sensor.shu_fang_wen_du
 
 cover:
   - platform: zhimrbond

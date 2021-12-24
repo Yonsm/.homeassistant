@@ -95,29 +95,29 @@
   state_topic: device/zm1/b0f8931ea148/sensor
   value_template: '{{ value_json.formaldehyde }}'
 
-- platform: mqtt
-  name: 过道温度
-  device_class: temperature
-  state_topic: device/zm1/b0f893249132/sensor
-  value_template: '{{ value_json.temperature }}'
-  unit_of_measurement: °C
-- platform: mqtt
-  name: 过道湿度
-  device_class: humidity
-  state_topic: device/zm1/b0f893249132/sensor
-  value_template: '{{ value_json.humidity }}'
-  unit_of_measurement: '%'
-- platform: mqtt
-  name: 过道颗粒物
-  icon: mdi:blur
-  state_topic: device/zm1/b0f893249132/sensor
-  value_template: '{{ value_json.PM25 }}'
-  unit_of_measurement: μg/m³
-- platform: mqtt
-  name: 过道甲醛
-  icon: mdi:biohazard
-  state_topic: device/zm1/b0f893249132/sensor
-  value_template: '{{ value_json.formaldehyde }}'
+# - platform: mqtt
+#   name: 过道温度
+#   device_class: temperature
+#   state_topic: device/zm1/b0f893249132/sensor
+#   value_template: '{{ value_json.temperature }}'
+#   unit_of_measurement: °C
+# - platform: mqtt
+#   name: 过道湿度
+#   device_class: humidity
+#   state_topic: device/zm1/b0f893249132/sensor
+#   value_template: '{{ value_json.humidity }}'
+#   unit_of_measurement: '%'
+# - platform: mqtt
+#   name: 过道颗粒物
+#   icon: mdi:blur
+#   state_topic: device/zm1/b0f893249132/sensor
+#   value_template: '{{ value_json.PM25 }}'
+#   unit_of_measurement: μg/m³
+# - platform: mqtt
+#   name: 过道甲醛
+#   icon: mdi:biohazard
+#   state_topic: device/zm1/b0f893249132/sensor
+#   value_template: '{{ value_json.formaldehyde }}'
 
 - platform: template
   sensors:
