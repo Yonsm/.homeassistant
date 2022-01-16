@@ -59,8 +59,8 @@
       to: open
       # for: 00:10:00
   action:
-    - service_template: 'fan.turn_{% if is_state("cover.curtain_158d000405d535", "closed") %}on{% else %}off{% endif %}'
-      entity_id: fan.zhu_wo_feng_shan
+    # - service_template: 'fan.turn_{% if is_state("cover.curtain_158d000405d535", "closed") %}on{% else %}off{% endif %}'
+    #   entity_id: fan.zhu_wo_feng_shan
     - service: fan.set_preset_mode
       data_template:
         entity_id: fan.zhu_wo_xin_feng_ji

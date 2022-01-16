@@ -20,9 +20,10 @@
 
 - alias: 洗手间感应延时-关灯
   initial_state: false
+  mode: restart
   trigger:
     - platform: time_pattern
-      minutes: '/3'
+      minutes: '/5'
   condition:
     - condition: state
       entity_id: binary_sensor.motion_sensor_158d0001f4a238
