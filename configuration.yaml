@@ -77,7 +77,7 @@ recorder:
 #     api_key: !secret baidu_api_key
 #     secret_key: !secret baidu_secret_key
 
-homekit: !include homekit.yaml
+#homekit: !include homekit.yaml
 
 mqtt:
   broker: Hass
