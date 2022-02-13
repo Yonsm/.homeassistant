@@ -77,7 +77,7 @@ recorder:
 #     api_key: !secret baidu_api_key
 #     secret_key: !secret baidu_secret_key
 
-#homekit: !include homekit.yaml
+homekit: !include homekit.yaml
 
 mqtt:
   broker: Hass
@@ -197,17 +197,17 @@ media_player:
   #   name: 天猫精灵
   #   url: http://Magic:49153/description.xml
 
-camera:
-  - platform: ffmpeg
-    name: 书房摄像机
-    input: !secret rtsp_camera6
-  - platform: generic
-    name: 餐厅摄像机
-    still_image_url: http://Camera1/last.cgi
-    #stream_source: rtsp://Camera1/live/ch00_0
-  - platform: ffmpeg
-    name: 过道摄像机
-    input: rtsp://Camera2/ch0_1.h264
+# camera:
+#   - platform: ffmpeg
+#     name: 书房摄像机
+#     input: !secret rtsp_camera6
+#   - platform: generic
+#     name: 餐厅摄像机
+#     still_image_url: http://Camera1/last.cgi
+#     #stream_source: rtsp://Camera1/live/ch00_0
+#   - platform: ffmpeg
+#     name: 过道摄像机
+#     input: rtsp://Camera2/ch0_1.h264
 #  - platform: generic
 #    name: 主卧摄像机
 #    still_image_url: http://Camera5/last.cgi
