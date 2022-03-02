@@ -41,11 +41,11 @@
   unit_of_measurement: lm
   availability_topic: NodeMCU2/status
 - platform: mqtt
-  name: 主卧亮度
+  name: 餐厅亮度
   device_class: illuminance
   state_topic: NodeMCU5/analog
   availability_topic: NodeMCU5/status
-  #unit_of_measurement: lm
+  unit_of_measurement: lm
 - platform: mqtt
   name: 儿童房温度
   device_class: temperature

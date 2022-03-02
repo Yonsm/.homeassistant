@@ -7,9 +7,9 @@
     # - condition: state
     #   entity_id: light.xi_shou_jian_deng
     #   state: 'off'
-    - condition: state
-      entity_id: sun.sun
-      state: below_horizon
+    - condition: time
+      after: '18:00'
+      before: '22:00'
   action:
     - service: light.turn_on
       entity_id: light.xi_shou_jian_deng

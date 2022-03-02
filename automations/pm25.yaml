@@ -1,4 +1,5 @@
 - alias: 餐厅颗粒物变化-调控净化器
+  mode: restart  
   trigger:
     - platform: state
       entity_id: sensor.can_ting_ke_li_wu
@@ -13,24 +14,26 @@
         # condition_attr: oscillating
         # condition_values: [false]
 
-- alias: 主卧颗粒物变化-调控净化器
-  trigger:
-    - platform: state
-      entity_id: sensor.zhu_wo_ke_li_wu
-  action:
-    - service: zhiact.actuate
-      data:
-        sensor_id: sensor.zhu_wo_ke_li_wu
-        sensor_values: [7, 15, 40]
-        alt_sensor_values: [12, 30, 50]
-        entity_id: fan.zhu_wo_jing_hua_qi
-        entity_attr: preset_mode
-        entity_values: [low, medium, high]
-        # condition_attr: oscillating
-        # condition_values: [false]
-        #delay: 0
+# - alias: 主卧颗粒物变化-调控净化器
+#  mode: restart  
+#   trigger:
+#     - platform: state
+#       entity_id: sensor.zhu_wo_ke_li_wu
+#   action:
+#     - service: zhiact.actuate
+#       data:
+#         sensor_id: sensor.zhu_wo_ke_li_wu
+#         sensor_values: [7, 15, 40]
+#         alt_sensor_values: [12, 30, 50]
+#         entity_id: fan.zhu_wo_jing_hua_qi
+#         entity_attr: preset_mode
+#         entity_values: [low, medium, high]
+#         # condition_attr: oscillating
+#         # condition_values: [false]
+#         #delay: 0
 
 - alias: 次卧颗粒物变化-调控净化器
+  mode: restart  
   trigger:
     - platform: state
       entity_id: sensor.ci_wo_ke_li_wu
@@ -48,6 +51,7 @@
         condition_values: [idle, favorite]
 
 - alias: 儿童房颗粒物变化-调控净化器
+  mode: restart  
   trigger:
     - platform: state
       entity_id: sensor.er_tong_fang_ke_li_wu

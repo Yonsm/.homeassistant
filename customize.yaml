@@ -78,7 +78,7 @@ light.er_tong_fang_tai_deng:
 light.er_tong_fang_xi_ding_deng:
   icon: mdi:ceiling-light
 light.gateway_light_34ce0090901a:
-  friendly_name: 餐厅壁灯
+  friendly_name: 客厅壁灯
   icon: mdi:car-light-high
 light.guo_dao_ju_deng:
   icon: mdi:car-light-dimmed
@@ -115,7 +115,7 @@ sensor.er_tong_fang_ke_li_wu:
   dash_relation: fan.er_tong_fang_jing_hua_qi
   device_class: pm25
 sensor.illumination_34ce0090901a:
-  friendly_name: 餐厅亮度
+  friendly_name: 客厅亮度
 sensor.ke_ting_er_yang_hua_tan:
   device_class: co2
 sensor.ke_ting_ke_li_wu:

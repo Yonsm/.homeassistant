@@ -84,6 +84,7 @@
       entity_id: climate.can_ting_kong_diao
 
 - alias: 主卧温度变化-调控空调
+  mode: restart  
   initial_state: false
   trigger:
     - platform: time
@@ -112,6 +113,7 @@
         entity_values: [一档, 二档, 三档, 四档, 五档]
 
 - alias: 儿童房温度变化-调控空调
+  mode: restart  
   initial_state: false
   trigger:
     - platform: time
@@ -140,6 +142,7 @@
         entity_values: [一档, 二档, 三档, 四档, 五档]
 
 - alias: 书房温度变化-调控空调
+  mode: restart  
   initial_state: false
   trigger:
     - platform: time
@@ -165,6 +168,7 @@
         entity_values: [低档, 中档, 高档, 超高]
 
 - alias: 书房温度变化-调控风扇
+  mode: restart  
   initial_state: false
   trigger:
     - platform: time
@@ -188,6 +192,7 @@
         entity_values: [Level 1, Level 2, Level 3, Level 4]
 
 - alias: 儿童房温度变化-调控风扇
+  mode: restart  
   initial_state: false
   trigger:
     - platform: time
@@ -210,6 +215,7 @@
         entity_values: [Level 1, Level 2, Level 3, Level 4]
 
 - alias: 主卧温度变化-调控风扇
+  mode: restart  
   initial_state: false
   trigger:
     - platform: time
