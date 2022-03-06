@@ -1,24 +1,24 @@
-- alias: 餐厅湿度高-开除湿机
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.can_ting_shi_du
-      above: 74
-      for:
-        minutes: 10
-  action:
-    - service: switch.turn_on
-      entity_id: switch.can_ting_chu_shi_ji
+# - alias: 餐厅湿度高-开除湿机
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.can_ting_shi_du
+#       above: 74
+#       for:
+#         minutes: 10
+#   action:
+#     - service: switch.turn_on
+#       entity_id: switch.can_ting_chu_shi_ji
 
-- alias: 餐厅湿度正常-关除湿机
-  trigger:
-    - platform: numeric_state
-      entity_id: sensor.can_ting_shi_du
-      below: 70
-      for:
-        minutes: 10
-  action:
-    - service: switch.turn_off
-      entity_id: switch.can_ting_chu_shi_ji
+# - alias: 餐厅湿度正常-关除湿机
+#   trigger:
+#     - platform: numeric_state
+#       entity_id: sensor.can_ting_shi_du
+#       below: 70
+#       for:
+#         minutes: 10
+#   action:
+#     - service: switch.turn_off
+#       entity_id: switch.can_ting_chu_shi_ji
 
 # - alias: 儿童房湿度高-开除湿机
 #   initial_state: true

@@ -249,7 +249,9 @@ zhimsg:
     model: lx04
 
 zhibot:
-  - platform: genie
+  - platform: genie2
+    file: !secret genie2bot_file
+    text: !secret genie2bot_text
     token: !secret zhibot_token
   - platform: miai
     token: !secret zhibot_token
