@@ -13,9 +13,9 @@ homeassistant:
   #   - type: homeassistant
 
 http:
-  server_port: 88
-  ssl_key: ~/.homeassistant/ssl.key
-  ssl_certificate: ~/.homeassistant/ssl.crt
+  server_port: 80
+  #ssl_key: ~/.homeassistant/extras/setup/ssl.key
+  #ssl_certificate: ~/.homeassistant/extras/setup/ssl.crt
 
 # default_config:
 
