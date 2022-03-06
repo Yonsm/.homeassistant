@@ -13,9 +13,9 @@ homeassistant:
   #   - type: homeassistant
 
 http:
-  server_port: 80
-  #ssl_key: ~/.homeassistant/extras/setup/ssl.key
-  #ssl_certificate: ~/.homeassistant/extras/setup/ssl.crt
+  server_port: 88
+  ssl_key: ~/.homeassistant/extras/setup/ssl.key
+  ssl_certificate: ~/.homeassistant/extras/setup/ssl.crt
 
 # default_config:
 
@@ -257,6 +257,8 @@ zhimsg:
     model: lx04
 
 zhibot:
+  # - platform: genie
+  #   token: !secret zhibot_token
   - platform: genie2
     file: !secret genie2bot_file
     text: !secret genie2bot_text
