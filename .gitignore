@@ -12,3 +12,4 @@ __pycache__
 .*
 nginx.conf
 trojan.conf
+ss.conf

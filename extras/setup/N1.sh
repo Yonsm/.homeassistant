@@ -173,8 +173,8 @@ ln -s ~/.homeassistant/extras/setup/trojan /usr/local/bin/
 ln -s ~/.homeassistant/extras/setup/ss-local /usr/local/bin/
 
 # Trojan
-echo '{"run_type":"client","local_addr":"0.0.0.0","local_port":1080,"remote_addr":"xxx","remote_port":443,"password":["***"],"ssl":{"verify":false}}' >> ~/trojan.conf
-echo '{"server":"host","server_port":port,"local_address":"0.0.0.0","local_port":1080,"password":"password","method":"aes-256-gcm"}' >> ~/ss.conf
+#echo '{"run_type":"client","local_addr":"0.0.0.0","local_port":1080,"remote_addr":"xxx","remote_port":443,"password":["***"],"ssl":{"verify":false}}' >> /root/.homeassistant/extras/setup/.trojan.conf
+#echo '{"server":"host","server_port":port,"local_address":"0.0.0.0","local_port":1080,"password":"password","method":"aes-256-gcm"}' >> /root/.homeassistant/extras/setup/ss.conf
 cat <<EOF > /etc/systemd/system/trojan.service
 [Unit]
 Description=Trojan Proxy
@@ -183,8 +183,8 @@ After=network-online.target
 [Service]
 Type=simple
 User=root
-ExecStart=/usr/local/bin/trojan -c /root/trojan.conf
-#ExecStart=/usr/local/bin/ss-local -c /root/ss.conf
+ExecStart=/usr/local/bin/trojan -c /root/.homeassistant/extras/setup/trojan.conf
+#ExecStart=/usr/local/bin/ss-local -c /root/.homeassistant/extras/setup/ss.conf
 
 [Install]
 WantedBy=multi-user.target
