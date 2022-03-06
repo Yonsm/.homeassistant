@@ -13,6 +13,7 @@ homeassistant:
   #   - type: homeassistant
 
 http:
+  server_port: 88
   ssl_key: ~/.homeassistant/ssl.key
   ssl_certificate: ~/.homeassistant/ssl.crt
 
@@ -93,11 +94,12 @@ device_tracker:
     hosts:
       x9300d: 192.168.1.6
       x9400e: 192.168.1.7
-      projector: 192.168.1.8
+      projector: 192.168.1.9
       zphone: 192.168.1.23
       gphone: 192.168.1.24
       yphone: 192.168.1.25
-      # xphone: 192.168.1.26
+      jphone: 192.168.1.26
+      aphone: 192.168.1.26
 
 person:
   - name: 爸爸
@@ -112,6 +114,12 @@ person:
   - name: 奶奶
     id: nainai
     device_trackers: device_tracker.yphone
+  - name: 姐姐
+    id: jiejie
+    device_trackers: device_tracker.jphone
+  - name: 阿姨
+    id: ayi
+    device_trackers: device_tracker.aphone
 
 weather:
   - platform: zhicaiyun
