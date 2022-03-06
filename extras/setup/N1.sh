@@ -153,17 +153,24 @@ alias lla='ls $LS_OPTIONS -la'
 alias l='ls $LS_OPTIONS -lA'
 alias mqttsub='mqttsub() { mosquitto_sub -v -t "$1#"; }; mqttsub'
 alias mqttre='systemctl stop mosquitto; sleep 2; rm -rf /var/lib/mosquitto/mosquitto.db; systemctl start mosquitto'
-alias hassup='systemctl stop homeassistant; pip3 install homeassistant --upgrade; systemctl start homeassistant'
 alias hassre='echo .>~/.homeassistant/home-assistant.log; systemctl restart homeassistant'
 alias hasste='systemctl stop homeassistant; hass'
+alias hassup='systemctl stop homeassistant; pip3 install homeassistant --upgrade; systemctl start homeassistant'
 alias hasslog='tail -f ~/.homeassistant/home-assistant.log'
 alias hassrl='hassre; hasslog'
 
 EOF
 
+# nginx
+apt install nginx
+ln -s ~/.homeassistant/extras/setup/nginx.conf /etc/nginx/sites-enabled/default
+
+ln -s ~/.homeassistant/extras/setup/adb /usr/local/bin/
+ln -s ~/.homeassistant/extras/setup/ffmpeg /usr/local/bin/
+ln -s ~/.homeassistant/extras/setup/trojan /usr/local/bin/
+ln -s ~/.homeassistant/extras/setup/ss-local /usr/local/bin/
+
 # Trojan
-scp trojan root@hass:/usr/local/bin
-scp ss-local root@hass:/usr/local/bin
 echo '{"run_type":"client","local_addr":"0.0.0.0","local_port":1080,"remote_addr":"xxx","remote_port":443,"password":["***"],"ssl":{"verify":false}}' >> ~/trojan.conf
 echo '{"server":"host","server_port":port,"local_address":"0.0.0.0","local_port":1080,"password":"password","method":"aes-256-gcm"}' >> ~/ss.conf
 cat <<EOF > /etc/systemd/system/trojan.service
