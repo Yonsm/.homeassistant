@@ -99,7 +99,7 @@ device_tracker:
       gphone: 192.168.1.24
       yphone: 192.168.1.25
       jphone: 192.168.1.26
-      aphone: 192.168.1.27
+      # aphone: 192.168.1.27
 
 person:
   - name: 爸爸
@@ -117,9 +117,9 @@ person:
   - name: 姐姐
     id: jiejie
     device_trackers: device_tracker.jphone
-  - name: 阿姨
-    id: ayi
-    device_trackers: device_tracker.aphone
+  # - name: 阿姨
+  #   id: ayi
+  #   device_trackers: device_tracker.aphone
 
 weather:
   - platform: zhicaiyun
