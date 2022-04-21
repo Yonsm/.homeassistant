@@ -53,7 +53,7 @@ scp ~/.ssh/authorized_keys admin@hass:~/.ssh/
 scp ~/.ssh/id_rsa admin@hass:~/.ssh/
 scp ~/.ssh/config admin@hass:~/.ssh/
 
-sed -i "s/Port 22/Port 28/" /etc/ssh/sshd_config
+sed -i "s/Port 22/Port 89/" /etc/ssh/sshd_config
 
 ssh root@hass
 
