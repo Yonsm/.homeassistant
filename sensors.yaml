@@ -28,12 +28,12 @@
   state_topic: NodeMCU2/humidity
   unit_of_measurement: '%'
   availability_topic: NodeMCU2/status
-# - platform: mqtt
-#   name: 书房二氧化碳
-#   icon: mdi:molecule-co2
-#   state_topic: NodeMCU2/co2
-#   unit_of_measurement: ppm
-#   availability_topic: NodeMCU2/status
+- platform: mqtt
+  name: 书房二氧化碳
+  icon: mdi:molecule-co2
+  state_topic: NodeMCU2/co2
+  unit_of_measurement: ppm
+  availability_topic: NodeMCU2/status
 - platform: mqtt
   name: 书房亮度
   device_class: illuminance
