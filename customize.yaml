@@ -48,7 +48,7 @@ cover.shu_fang_mu_bu:
   genie_name: 电视盒子
   icon: mdi:projector-screen
 fan.can_ting_jing_hua_qi:
-  dash_icon: ${sensor.can_ting_ke_li_wu}
+  dash_icon: ${sensor.can_ting_kong_qi_zhi_liang}
   icon: mdi:cupcake
 fan.ci_wo_jing_hua_qi:
   dash_icon: ${aqi}
@@ -56,7 +56,7 @@ fan.ci_wo_jing_hua_qi:
 fan.er_tong_fang_feng_shan:
   dash_icon: ${sensor.er_tong_fang_wen_du}
 fan.er_tong_fang_jing_hua_qi:
-  dash_icon: ${sensor.er_tong_fang_ke_li_wu}
+  dash_icon: ${sensor.er_tong_fang_kong_qi_zhi_liang}
   icon: mdi:cupcake
 fan.ke_ting_xin_feng_ji:
   dash_icon: ${co2}
@@ -66,7 +66,7 @@ fan.shu_fang_feng_shan:
 fan.zhu_wo_feng_shan:
   dash_icon: ${sensor.zhu_wo_wen_du}
 fan.zhu_wo_jing_hua_qi:
-  dash_icon: ${sensor.zhu_wo_ke_li_wu}
+  dash_icon: ${sensor.zhu_wo_kong_qi_zhi_liang}
   icon: mdi:cupcake
 fan.zhu_wo_xin_feng_ji:
   dash_icon: ${co2}
@@ -99,18 +99,17 @@ light.zhu_wo_xi_ding_deng:
   icon: mdi:ceiling-light
 media_player.shu_fang_tou_ying_yi:
   icon: mdi:projector
-sensor.can_ting_ke_li_wu:
+sensor.can_ting_kong_qi_zhi_liang:
   dash_click: /zhilace-type
   dash_extra_forced: 分类
   dash_relation: fan.can_ting_jing_hua_qi
-  friendly_name: 餐厅颗粒物
-sensor.ci_wo_ke_li_wu:
+sensor.ci_wo_kong_qi_zhi_liang:
   dash_click: https://www.hao123.com/rili
   dash_extra_forced: 万年历
   device_class: pm25
 sensor.er_tong_fang_er_yang_hua_tan:
   device_class: co2
-sensor.er_tong_fang_ke_li_wu:
+sensor.er_tong_fang_kong_qi_zhi_liang:
   dash_click: https://www.lewei50.com/u/g/33981
   dash_relation: fan.er_tong_fang_jing_hua_qi
   device_class: pm25
@@ -118,13 +117,13 @@ sensor.illumination_34ce0090901a:
   friendly_name: 客厅亮度
 sensor.ke_ting_er_yang_hua_tan:
   device_class: co2
-sensor.ke_ting_ke_li_wu:
+sensor.ke_ting_kong_qi_zhi_liang:
   dash_click: /zhilace-zone
   dash_extra_forced: 分区
   device_class: pm25
 sensor.shu_fang_er_yang_hua_tan:
   device_class: co2
-sensor.yang_tai_ke_li_wu:
+sensor.yang_tai_kong_qi_zhi_liang:
   dash_click: https://www.lewei50.com/u/g/34131
   dash_order: '3'
   device_class: pm25
@@ -138,7 +137,7 @@ sensor.yang_tai_wen_du:
   dash_order: '1'
 sensor.zhu_wo_er_yang_hua_tan:
   device_class: co2
-sensor.zhu_wo_ke_li_wu:
+sensor.zhu_wo_kong_qi_zhi_liang:
   dash_click: /local/aha.html
   dash_extra_forced: 啊哈网校
   dash_relation: fan.zhu_wo_jing_hua_qi

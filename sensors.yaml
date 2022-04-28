@@ -11,7 +11,7 @@
   unit_of_measurement: '%'
   availability_topic: NodeMCU1/status
 - platform: mqtt
-  name: 阳台颗粒物
+  name: 阳台空气质量
   icon: mdi:blur
   state_topic: NodeMCU1/pm2dot5
   unit_of_measurement: μg/m³
@@ -59,7 +59,7 @@
   unit_of_measurement: '%'
   availability_topic: NodeMCU6/status
 - platform: mqtt
-  name: 儿童房颗粒物
+  name: 儿童房空气质量
   icon: mdi:blur
   state_topic: NodeMCU6/pm2dot5
   unit_of_measurement: μg/m³
@@ -84,7 +84,7 @@
   value_template: '{{ value_json.humidity }}'
   unit_of_measurement: '%'
 - platform: mqtt
-  name: 餐厅颗粒物
+  name: 餐厅空气质量
   icon: mdi:blur
   state_topic: device/zm1/b0f8931ea148/sensor
   value_template: '{{ value_json.PM25 }}'
@@ -108,7 +108,7 @@
 #   value_template: '{{ value_json.humidity }}'
 #   unit_of_measurement: '%'
 # - platform: mqtt
-#   name: 过道颗粒物
+#   name: 过道空气质量
 #   icon: mdi:blur
 #   state_topic: device/zm1/b0f893249132/sensor
 #   value_template: '{{ value_json.PM25 }}'
@@ -131,8 +131,8 @@
       device_class: humidity
       value_template: '{{ state_attr("fan.ci_wo_jing_hua_qi", "humidity") }}'
       unit_of_measurement: '%'
-    ci_wo_ke_li_wu:
-      friendly_name: 次卧颗粒物
+    ci_wo_kong_qi_zhi_liang:
+      friendly_name: 次卧空气质量
       value_template: '{{ state_attr("fan.ci_wo_jing_hua_qi", "aqi") }}'
       unit_of_measurement: μg/m³
       icon_template: mdi:blur
@@ -147,8 +147,8 @@
       device_class: humidity
       value_template: '{{ state_attr("fan.ke_ting_xin_feng_ji", "humidity") }}'
       unit_of_measurement: '%'
-    ke_ting_ke_li_wu:
-      friendly_name: 客厅颗粒物
+    ke_ting_kong_qi_zhi_liang:
+      friendly_name: 客厅空气质量
       value_template: '{{ state_attr("fan.ke_ting_xin_feng_ji", "aqi") }}'
       unit_of_measurement: μg/m³
       icon_template: mdi:blur
@@ -168,8 +168,8 @@
       device_class: humidity
       value_template: '{{ state_attr("fan.zhu_wo_xin_feng_ji", "humidity") }}'
       unit_of_measurement: '%'
-    zhu_wo_ke_li_wu:
-      friendly_name: 主卧颗粒物
+    zhu_wo_kong_qi_zhi_liang:
+      friendly_name: 主卧空气质量
       value_template: '{{ state_attr("fan.zhu_wo_xin_feng_ji", "aqi") }}'
       unit_of_measurement: μg/m³
       icon_template: mdi:blur

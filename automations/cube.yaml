@@ -61,7 +61,7 @@
 #   action:
 #     - service: zhimsg.ke_ting_yin_xiang
 #       data_template:
-#         message: '阳台PM2.5为{{ states("sensor.yang_tai_ke_li_wu") }}，餐厅PM2.5为{{ states("sensor.can_ting_ke_li_wu") }}，主卧PM2.5为{{ states("sensor.zhu_wo_ke_li_wu") }}。客厅二氧化碳浓度为{{ states("sensor.ke_ting_er_yang_hua_tan") }}，主卧二氧化碳浓度为{{ states("sensor.zhu_wo_er_yang_hua_tan") }}，儿童房二氧化碳浓度为{{ states("sensor.er_tong_fang_er_yang_hua_tan") }}'
+#         message: '阳台PM2.5为{{ states("sensor.yang_tai_kong_qi_zhi_liang") }}，餐厅PM2.5为{{ states("sensor.can_ting_kong_qi_zhi_liang") }}，主卧PM2.5为{{ states("sensor.zhu_wo_kong_qi_zhi_liang") }}。客厅二氧化碳浓度为{{ states("sensor.ke_ting_er_yang_hua_tan") }}，主卧二氧化碳浓度为{{ states("sensor.zhu_wo_er_yang_hua_tan") }}，儿童房二氧化碳浓度为{{ states("sensor.er_tong_fang_er_yang_hua_tan") }}'
 
 # - alias: 儿童房魔方摇摆
 #   trigger:

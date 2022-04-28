@@ -1,7 +1,7 @@
 - alias: 室外空气好
   trigger:
     - platform: numeric_state
-      entity_id: sensor.yang_tai_ke_li_wu
+      entity_id: sensor.yang_tai_kong_qi_zhi_liang
       below: 20
       for:
         minutes: 10
@@ -19,7 +19,7 @@
     - condition: or
       conditions:
         - condition: numeric_state
-          entity_id: sensor.can_ting_ke_li_wu
+          entity_id: sensor.can_ting_kong_qi_zhi_liang
           above: 20
         - condition: numeric_state
           entity_id: sensor.ke_ting_er_yang_hua_tan
@@ -33,7 +33,7 @@
   mode: restart
   trigger:
     - platform: numeric_state
-      entity_id: sensor.can_ting_ke_li_wu
+      entity_id: sensor.can_ting_kong_qi_zhi_liang
       above: 35
       for:
         minutes: 2
@@ -44,10 +44,10 @@
   action:
     - service: zhimsg.ke_ting_yin_xiang
       data_template:
-        message: '客厅PM2.5为{{ states("sensor.can_ting_ke_li_wu") }}，空气不好。{% if is_state("binary_sensor.door_window_sensor_158d0001f3d2d1", "on") or is_state("binary_sensor.door_window_sensor_158d0003cf4735", "on") or is_state("binary_sensor.door_window_sensor_158d000228a52b", "on") %}请关好{% if is_state("binary_sensor.door_window_sensor_158d0001f3d2d1", "on") %}厨房门、{% endif %}{% if is_state("binary_sensor.door_window_sensor_158d0003cf4735", "on") %}洗手间门、{% endif %}{% if is_state("binary_sensor.door_window_sensor_158d000228a52b", "on") %}阳台门{% endif %}{% endif %}'
+        message: '客厅PM2.5为{{ states("sensor.can_ting_kong_qi_zhi_liang") }}，空气不好。{% if is_state("binary_sensor.door_window_sensor_158d0001f3d2d1", "on") or is_state("binary_sensor.door_window_sensor_158d0003cf4735", "on") or is_state("binary_sensor.door_window_sensor_158d000228a52b", "on") %}请关好{% if is_state("binary_sensor.door_window_sensor_158d0001f3d2d1", "on") %}厨房门、{% endif %}{% if is_state("binary_sensor.door_window_sensor_158d0003cf4735", "on") %}洗手间门、{% endif %}{% if is_state("binary_sensor.door_window_sensor_158d000228a52b", "on") %}阳台门{% endif %}{% endif %}'
     - delay: 600
     - condition: numeric_state
-      entity_id: sensor.can_ting_ke_li_wu
+      entity_id: sensor.can_ting_kong_qi_zhi_liang
       above: 40
     - condition: or
       conditions:
@@ -70,4 +70,4 @@
   action:
     - service: zhimsg.ding
       data_template:
-        message: '室内PM2.5为{{ states("sensor.can_ting_ke_li_wu") }}，温度为{{ states("sensor.can_ting_wen_du") }}，CO2为客厅{{ states("sensor.ke_ting_er_yang_hua_tan") }}/主卧{{ states("sensor.zhu_wo_er_yang_hua_tan") }}/儿童房{{ states("sensor.er_tong_fang_er_yang_hua_tan") }}。室外PM2.5为{{ states("sensor.yang_tai_ke_li_wu") }}，温度为{{ states("sensor.yang_tai_wen_du") }}；{{ state_attr("weather.tian_qi", "attribution") }}'
+        message: '室内PM2.5为{{ states("sensor.can_ting_kong_qi_zhi_liang") }}，温度为{{ states("sensor.can_ting_wen_du") }}，CO2为客厅{{ states("sensor.ke_ting_er_yang_hua_tan") }}/主卧{{ states("sensor.zhu_wo_er_yang_hua_tan") }}/儿童房{{ states("sensor.er_tong_fang_er_yang_hua_tan") }}。室外PM2.5为{{ states("sensor.yang_tai_kong_qi_zhi_liang") }}，温度为{{ states("sensor.yang_tai_wen_du") }}；{{ state_attr("weather.tian_qi", "attribution") }}'

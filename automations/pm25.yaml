@@ -1,12 +1,12 @@
-- alias: 餐厅颗粒物变化-调控净化器
+- alias: 餐厅空气质量变化-调控净化器
   mode: restart  
   trigger:
     - platform: state
-      entity_id: sensor.can_ting_ke_li_wu
+      entity_id: sensor.can_ting_kong_qi_zhi_liang
   action:
     - service: zhiact.actuate
       data:
-        sensor_id: sensor.can_ting_ke_li_wu
+        sensor_id: sensor.can_ting_kong_qi_zhi_liang
         sensor_values: [10, 20, 50]
         entity_id: fan.can_ting_jing_hua_qi
         entity_attr: preset_mode
@@ -14,15 +14,15 @@
         # condition_attr: oscillating
         # condition_values: [false]
 
-# - alias: 主卧颗粒物变化-调控净化器
+# - alias: 主卧空气质量变化-调控净化器
 #  mode: restart  
 #   trigger:
 #     - platform: state
-#       entity_id: sensor.zhu_wo_ke_li_wu
+#       entity_id: sensor.zhu_wo_kong_qi_zhi_liang
 #   action:
 #     - service: zhiact.actuate
 #       data:
-#         sensor_id: sensor.zhu_wo_ke_li_wu
+#         sensor_id: sensor.zhu_wo_kong_qi_zhi_liang
 #         sensor_values: [7, 15, 40]
 #         alt_sensor_values: [12, 30, 50]
 #         entity_id: fan.zhu_wo_jing_hua_qi
@@ -32,15 +32,15 @@
 #         # condition_values: [false]
 #         #delay: 0
 
-- alias: 次卧颗粒物变化-调控净化器
+- alias: 次卧空气质量变化-调控净化器
   mode: restart  
   trigger:
     - platform: state
-      entity_id: sensor.ci_wo_ke_li_wu
+      entity_id: sensor.ci_wo_kong_qi_zhi_liang
   action:
     - service: zhiact.actuate
       data:
-        sensor_id: sensor.ci_wo_ke_li_wu
+        sensor_id: sensor.ci_wo_kong_qi_zhi_liang
         sensor_values: [15, 25, 35, 45, 50, 60, 70, 80, 90, 100]
         entity_id: fan.ci_wo_jing_hua_qi
         entity_attr: favorite_level
@@ -50,15 +50,15 @@
         condition_attr: mode
         condition_values: [idle, favorite]
 
-- alias: 儿童房颗粒物变化-调控净化器
+- alias: 儿童房空气质量变化-调控净化器
   mode: restart  
   trigger:
     - platform: state
-      entity_id: sensor.er_tong_fang_ke_li_wu
+      entity_id: sensor.er_tong_fang_kong_qi_zhi_liang
   action:
     - service: zhiact.actuate
       data:
-        sensor_id: sensor.er_tong_fang_ke_li_wu
+        sensor_id: sensor.er_tong_fang_kong_qi_zhi_liang
         sensor_values: [10, 20, 50]
         alt_sensor_values: [12, 30, 50]
         entity_id: fan.er_tong_fang_jing_hua_qi
