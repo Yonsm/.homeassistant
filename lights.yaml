@@ -16,11 +16,11 @@
   state_topic: Hassmart2/relay/0
   command_topic: Hassmart2/relay/0/set
   availability_topic: Hassmart2/status
-- platform: mqtt
-  name: 浴室灯
-  state_topic: Hassmart3/relay/1
-  command_topic: Hassmart3/relay/1/set
-  availability_topic: Hassmart3/status
+# - platform: mqtt
+#   name: 浴室灯
+#   state_topic: Hassmart3/relay/1
+#   command_topic: Hassmart3/relay/1/set
+#   availability_topic: Hassmart3/status
 - platform: mqtt
   name: 过道柜灯
   state_topic: Sonoff1/relay/0

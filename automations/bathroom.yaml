@@ -1,35 +1,35 @@
-- alias: 浴室感应-开灯
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.motion_sensor_158d0003d0d46e
-      to: 'on'
-  condition:
-    # - condition: state
-    #   entity_id: light.yu_shi_deng
-    #   state: 'off'
-    - condition: time
-      after: '18:00'
-      before: '22:00'
-  action:
-    - service: light.turn_on
-      entity_id: light.yu_shi_deng
-    - service: automation.turn_off
-      entity_id: automation.yu_shi_gan_ying_yan_shi_guan_deng
-    - service: automation.turn_on
-      entity_id: automation.yu_shi_gan_ying_yan_shi_guan_deng
+# - alias: 浴室感应-开灯
+#   trigger:
+#     - platform: state
+#       entity_id: binary_sensor.motion_sensor_158d0003d0d46e
+#       to: 'on'
+#   condition:
+#     # - condition: state
+#     #   entity_id: light.yu_shi_deng
+#     #   state: 'off'
+#     - condition: time
+#       after: '18:00'
+#       before: '22:00'
+#   action:
+#     - service: light.turn_on
+#       entity_id: light.yu_shi_deng
+#     - service: automation.turn_off
+#       entity_id: automation.yu_shi_gan_ying_yan_shi_guan_deng
+#     - service: automation.turn_on
+#       entity_id: automation.yu_shi_gan_ying_yan_shi_guan_deng
 
-- alias: 浴室感应延时-关灯
-  initial_state: false
-  mode: restart
-  trigger:
-    - platform: time_pattern
-      minutes: '/10'
-  condition:
-    - condition: state
-      entity_id: binary_sensor.motion_sensor_158d0003d0d46e
-      state: 'off'
-  action:
-    - service: light.turn_off
-      entity_id: light.yu_shi_deng
-    - service: automation.turn_off
-      entity_id: automation.yu_shi_gan_ying_yan_shi_guan_deng
+# - alias: 浴室感应延时-关灯
+#   initial_state: false
+#   mode: restart
+#   trigger:
+#     - platform: time_pattern
+#       minutes: '/10'
+#   condition:
+#     - condition: state
+#       entity_id: binary_sensor.motion_sensor_158d0003d0d46e
+#       state: 'off'
+#   action:
+#     - service: light.turn_off
+#       entity_id: light.yu_shi_deng
+#     - service: automation.turn_off
+#       entity_id: automation.yu_shi_gan_ying_yan_shi_guan_deng
