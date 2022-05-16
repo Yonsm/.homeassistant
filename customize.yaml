@@ -23,7 +23,7 @@ binary_sensor.switch_158d0001e59b33:
 binary_sensor.switch_158d000201a73f:
   friendly_name: 书房按钮
 binary_sensor.switch_158d00054e98b0:
-  friendly_name: 主卧按钮
+  friendly_name: 入户门按钮
 camera.can_ting_she_xiang_ji:
   dash_click: mihome://device?did=79750727&uid=8816080&server=cn
 camera.er_tong_fang_she_xiang_ji:

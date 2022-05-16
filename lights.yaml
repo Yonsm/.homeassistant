@@ -1,6 +1,10 @@
-- platform: zhimrbond
+- platform: zhimi
   name: 书房晾衣灯
   did: 57379167
+  siid: 3
+- platform: zhimi
+  name: 浴室浴霸灯
+  did: 493852339
 - platform: mqtt
   name: 客厅筒灯
   state_topic: Hassmart1/relay/0
