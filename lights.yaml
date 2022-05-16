@@ -5,6 +5,7 @@
 - platform: zhimi
   name: 浴室浴霸灯
   did: 493852339
+  piid_brightness: 3
 - platform: mqtt
   name: 客厅筒灯
   state_topic: Hassmart1/relay/0

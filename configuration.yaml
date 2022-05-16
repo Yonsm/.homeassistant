@@ -68,6 +68,7 @@ logger:
   logs:
     custom_components: info
     custom_components.zhibot: debug
+    custom_components.zhimi: debug
 
 recorder:
   purge_keep_days: 2
@@ -156,9 +157,9 @@ xiaomi_aqara:
 fan: !include fans.yaml
 
 climate:
-  - platform: zhisaswell
-    username: !secret saswell_username
-    password: !secret saswell_password
+  # - platform: zhisaswell
+  #   username: !secret saswell_username
+  #   password: !secret saswell_password
   - platform: zhimodbus
     name: [餐厅空调, 客厅空调, 主卧空调, 儿童房空调]
     fan_mode: { registers: [6, 10, 14, 18] }
@@ -268,10 +269,10 @@ zhibot:
   - platform: ding
     token: !secret zhibot_token
   - platform: ding
-    name: 客厅音箱
+    name: 过道音箱
     token: !secret zhibot_token
   - platform: ding
-    name: 次卧音箱
+    name: 客厅音箱
     token: !secret zhibot_token
   - platform: ding
     name: 儿童房音箱
