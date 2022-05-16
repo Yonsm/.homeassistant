@@ -12,7 +12,7 @@
       before: '22:00'
   action:
     - service: light.turn_on
-      entity_id: light.zhu_wo_yu_ba_deng
+      entity_id: light.yu_shi_yu_ba_deng
     - service: automation.turn_off
       entity_id: automation.yu_shi_gan_ying_yan_shi_guan_deng
     - service: automation.turn_on
@@ -33,6 +33,6 @@
       state: 'on'
   action:
     - service: light.turn_off
-      entity_id: light.zhu_wo_yu_ba_deng
+      entity_id: light.yu_shi_yu_ba_deng
     - service: automation.turn_off
       entity_id: automation.yu_shi_gan_ying_yan_shi_guan_deng
