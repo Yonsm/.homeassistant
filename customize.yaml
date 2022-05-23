@@ -117,6 +117,7 @@ sensor.illumination_34ce0090901a:
   friendly_name: 客厅亮度
 sensor.ke_ting_er_yang_hua_tan:
   device_class: co2
+  dash_click: /local/iptv.html
 sensor.ke_ting_kong_qi_zhi_liang:
   dash_click: /zhilace-zone
   dash_extra_forced: 分区

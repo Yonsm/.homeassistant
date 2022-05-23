@@ -67,8 +67,8 @@ logger:
   default: warning
   logs:
     custom_components: info
-    custom_components.zhibot: debug
     custom_components.zhimi: debug
+    custom_components.zhimijia: debug
 
 recorder:
   purge_keep_days: 2

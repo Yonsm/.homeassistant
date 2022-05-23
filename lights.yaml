@@ -1,8 +1,8 @@
-- platform: zhimi
+- platform: zhimijia
   name: 书房晾衣灯
   did: 57379167
   siid: 3
-- platform: zhimi
+- platform: zhimijia
   name: 浴室浴霸灯
   did: 493852339
   piid_brightness: 3
