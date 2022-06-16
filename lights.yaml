@@ -5,6 +5,7 @@
 - platform: zhimijia
   name: 浴室浴霸灯
   did: 493852339
+  ignore_state: true
   piid_brightness: 3
 - platform: mqtt
   name: 客厅筒灯

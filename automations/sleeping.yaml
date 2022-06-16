@@ -99,8 +99,8 @@
       data:
         entity_id: climate.er_tong_fang_kong_diao
         fan_mode: 自动
-    # - service: fan.turn_off
-    #   entity_id: fan.er_tong_fang_feng_shan
+    - service: fan.turn_off
+      entity_id: fan.er_tong_fang_feng_shan
     - service: fan.turn_off
       entity_id: fan.shu_fang_feng_shan
     # - service: fan.turn_off

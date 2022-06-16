@@ -169,7 +169,7 @@
 
 - alias: 书房温度变化-调控风扇
   mode: restart  
-  initial_state: false
+  #initial_state: false
   trigger:
     - platform: time
       at: '20:30:01'
@@ -193,7 +193,7 @@
 
 - alias: 儿童房温度变化-调控风扇
   mode: restart  
-  initial_state: false
+  #initial_state: false
   trigger:
     - platform: time
       at: '20:00:01'
@@ -214,25 +214,25 @@
         entity_attr: speed
         entity_values: [Level 1, Level 2, Level 3, Level 4]
 
-- alias: 主卧温度变化-调控风扇
-  mode: restart  
-  initial_state: false
-  trigger:
-    - platform: time
-      at: '20:00:01'
-    - platform: state
-      entity_id: sensor.zhu_wo_wen_du
-  condition:
-    - condition: time
-      after: '20:00'
-      before: '07:58'
-  action:
-    - service: zhiact.actuate
-      data:
-        sensor_id: sensor.zhu_wo_wen_du
-        sensor_values: [24, 26, 29, 30]
-        alt_sensor_values: [25, 27, 30, 32]
-        alt_time_range: [1, 8]
-        entity_id: fan.zhu_wo_feng_shan
-        entity_attr: preset_mode
-        entity_values: [Level 1, Level 2, Level 3, Level 4]
+# - alias: 主卧温度变化-调控风扇
+#   mode: restart  
+#   initial_state: false
+#   trigger:
+#     - platform: time
+#       at: '20:00:01'
+#     - platform: state
+#       entity_id: sensor.zhu_wo_wen_du
+#   condition:
+#     - condition: time
+#       after: '20:00'
+#       before: '07:58'
+#   action:
+#     - service: zhiact.actuate
+#       data:
+#         sensor_id: sensor.zhu_wo_wen_du
+#         sensor_values: [24, 26, 29, 30]
+#         alt_sensor_values: [25, 27, 30, 32]
+#         alt_time_range: [1, 8]
+#         entity_id: fan.zhu_wo_feng_shan
+#         entity_attr: preset_mode
+#         entity_values: [Level 1, Level 2, Level 3, Level 4]
