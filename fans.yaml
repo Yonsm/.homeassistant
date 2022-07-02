@@ -4,7 +4,7 @@
 #   model: zhimi.airpurifier.m1
 #   token: !secret purifier_token
 - platform: xiaomi_miio_fan
-  name: 书房风扇
+  name: 儿童房风扇
   host: Fan
   model: zhimi.fan.v3
   token: !secret fan_token

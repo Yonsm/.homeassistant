@@ -15,7 +15,7 @@
         condition_values: [auto, low, middle, strong]
 
 - alias: 主卧二氧化碳变化-调控新风机
-  mode: restart  
+  mode: restart
   trigger:
     - platform: state
       entity_id: sensor.zhu_wo_er_yang_hua_tan

@@ -67,6 +67,7 @@ logger:
   default: warning
   logs:
     custom_components: info
+    custom_components.zhiact: debug
     custom_components.zhimi: debug
     custom_components.zhimijia: debug
 
@@ -96,10 +97,11 @@ device_tracker:
       x9300d: 192.168.1.6
       x9400e: 192.168.1.7
       projector: 192.168.1.9
-      zphone: 192.168.1.23
-      gphone: 192.168.1.24
-      yphone: 192.168.1.25
-      jphone: 192.168.1.26
+      gphone: 192.168.1.20
+      zphone: 192.168.1.21
+      yphone: 192.168.1.22
+      # xphone: 192.168.1.23
+      jphone: 192.168.1.24
       # aphone: 192.168.1.27
 
 person:
@@ -115,8 +117,8 @@ person:
   - name: 奶奶
     id: nainai
     device_trackers: device_tracker.yphone
-  - name: 姐姐
-    id: jiejie
+  - name: 大宝
+    id: dabao
     device_trackers: device_tracker.jphone
   # - name: 阿姨
   #   id: ayi
@@ -224,10 +226,9 @@ media_player:
 
 vacuum:
   - platform: zhiviomi
+    model: v13
     name: 浴室洗衣机
-    host: Washer
-    token: !secret washer_token
-    did: 238295145
+    did: 410056542
 #   - platform: xiaomi_miio
 #     name: 扫地机
 #     host: Vacuum
