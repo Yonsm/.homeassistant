@@ -67,7 +67,6 @@ logger:
   default: warning
   logs:
     custom_components: info
-    custom_components.zhiact: debug
     custom_components.zhimi: debug
     custom_components.zhimijia: debug
 
