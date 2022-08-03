@@ -9,7 +9,7 @@
     #   state: 'off'
     - condition: time
       after: '18:00'
-      before: '22:00'
+      before: '23:59'
   action:
     - service: light.turn_on
       entity_id: light.yu_shi_yu_ba_deng

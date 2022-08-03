@@ -225,7 +225,7 @@ media_player:
 
 vacuum:
   - platform: zhimijia
-    model: voimi.washer.v13
+    model: viomi.washer.v13
     name: 浴室洗衣机
     did: 410056542
 #   - platform: xiaomi_miio
