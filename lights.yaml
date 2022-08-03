@@ -1,12 +1,12 @@
 - platform: zhimijia
   name: 书房晾衣灯
   did: 57379167
-  siid: 3
+  power_prop: 3-1
 - platform: zhimijia
   name: 浴室浴霸灯
   did: 493852339
-  ignore_state: true
-  piid_brightness: 3
+  #ignore_state: true
+  brightness_prop: bright
 - platform: mqtt
   name: 客厅筒灯
   state_topic: Hassmart1/relay/0

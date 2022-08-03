@@ -224,8 +224,8 @@ media_player:
 #    #stream_source: rtsp://Camera5/live/ch00_0
 
 vacuum:
-  - platform: zhiviomi
-    model: v13
+  - platform: zhimijia
+    model: voimi.washer.v13
     name: 浴室洗衣机
     did: 410056542
 #   - platform: xiaomi_miio
