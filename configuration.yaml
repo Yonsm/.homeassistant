@@ -177,7 +177,7 @@ climate:
     sensor: sensor.shu_fang_wen_du
 
 cover:
-  - platform: zhimrbond
+  - platform: zhimijia
     name: 书房晾衣架
     did: 57379167
   - platform: zhiremote
