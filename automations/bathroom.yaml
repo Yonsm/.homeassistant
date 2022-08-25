@@ -23,14 +23,14 @@
   mode: restart
   trigger:
     - platform: time_pattern
-      minutes: '/3'
+      minutes: '/5'
   condition:
     - condition: state
       entity_id: binary_sensor.motion_sensor_158d0003d0d46e
       state: 'off'
-    - condition: state
-      entity_id: binary_sensor.door_window_sensor_158d0004611461
-      state: 'on'
+    # - condition: state
+    #   entity_id: binary_sensor.door_window_sensor_158d0004611461
+    #   state: 'on'
   action:
     - service: light.turn_off
       entity_id: light.yu_shi_yu_ba_deng

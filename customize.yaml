@@ -103,27 +103,45 @@ sensor.can_ting_kong_qi_zhi_liang:
   dash_click: /zhilace-type
   dash_extra_forced: 分类
   dash_relation: fan.can_ting_jing_hua_qi
+sensor.can_ting_wen_du:
+  dash_click: /zhilace-zone/can_ting
+  dash_extra_forced: 餐厅
 sensor.ci_wo_kong_qi_zhi_liang:
-  dash_click: https://www.hao123.com/rili
+  dash_click: https://qq.ip138.com/day
   dash_extra_forced: 万年历
   device_class: pm25
+sensor.ci_wo_wen_du:
+  dash_click: /zhilace-zone/ci_wo
+  dash_extra_forced: 次卧
 sensor.er_tong_fang_er_yang_hua_tan:
   device_class: co2
 sensor.er_tong_fang_kong_qi_zhi_liang:
   dash_click: https://www.lewei50.com/u/g/33981
   dash_relation: fan.er_tong_fang_jing_hua_qi
   device_class: pm25
+sensor.er_tong_fang_wen_du:
+  dash_click: /zhilace-zone/er_tong_fang
+  dash_extra_forced: 儿童房
+sensor.guo_dao_wen_du:
+  dash_click: /zhilace-zone/guo_dao
+  dash_extra_forced: 过道
 sensor.illumination_34ce0090901a:
   friendly_name: 客厅亮度
 sensor.ke_ting_er_yang_hua_tan:
-  device_class: co2
   dash_click: /local/iptv.html
+  device_class: co2
 sensor.ke_ting_kong_qi_zhi_liang:
   dash_click: /zhilace-zone
   dash_extra_forced: 分区
   device_class: pm25
+sensor.ke_ting_wen_du:
+  dash_click: /zhilace-zone/ke_ting
+  dash_extra_forced: 客厅
 sensor.shu_fang_er_yang_hua_tan:
   device_class: co2
+sensor.shu_fang_wen_du:
+  dash_click: /zhilace-zone/shu_fang
+  dash_extra_forced: 书房
 sensor.yang_tai_kong_qi_zhi_liang:
   dash_click: https://www.lewei50.com/u/g/34131
   dash_order: '3'
@@ -143,6 +161,9 @@ sensor.zhu_wo_kong_qi_zhi_liang:
   dash_extra_forced: 啊哈网校
   dash_relation: fan.zhu_wo_jing_hua_qi
   device_class: pm25
+sensor.zhu_wo_wen_du:
+  dash_click: /zhilace-zone/zhu_wo
+  dash_extra_forced: 主卧
 sun.sun:
   friendly_name: 日照
 switch.can_ting_chu_shi_ji:

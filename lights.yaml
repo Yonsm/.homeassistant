@@ -1,4 +1,14 @@
 - platform: zhimijia
+  name: 书房台灯
+  did: 65074727
+  power_prop: 2-1
+  brightness_prop: 2-2
+- platform: zhimijia
+  name: 儿童房台灯
+  did: 119154367
+  power_prop: 2-1
+  brightness_prop: 2-2
+- platform: zhimijia
   name: 书房晾衣灯
   did: 57379167
   power_prop: 3-1

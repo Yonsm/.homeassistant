@@ -8,7 +8,7 @@
     - service: climate.set_temperature
       data:
         entity_id: climate.zhu_wo_kong_diao
-        temperature: 24
+        temperature: 20
         hvac_mode: cool
     - service: climate.set_temperature
       data:
@@ -51,10 +51,10 @@
       at: '00:00:01'
   action:
     - service: shell_command.magic_off
-    - service: climate.set_fan_mode
-      data:
-        entity_id: climate.zhu_wo_kong_diao
-        fan_mode: 一档
+    # - service: climate.set_fan_mode
+    #   data:
+    #     entity_id: climate.zhu_wo_kong_diao
+    #     fan_mode: 一档
     - service: climate.set_fan_mode
       data:
         entity_id: climate.er_tong_fang_kong_diao
@@ -62,7 +62,7 @@
     - service: climate.set_temperature
       data:
         entity_id: climate.zhu_wo_kong_diao
-        temperature: 26
+        temperature: 22
     - service: climate.set_temperature
       data:
         entity_id: climate.er_tong_fang_kong_diao
@@ -91,10 +91,10 @@
     - service: zhimsg.ke_ting_yin_xiang
       data:
         message: 音量30
-    - service: climate.set_fan_mode
-      data:
-        entity_id: climate.zhu_wo_kong_diao
-        fan_mode: 自动
+    # - service: climate.set_fan_mode
+    #   data:
+    #     entity_id: climate.zhu_wo_kong_diao
+    #     fan_mode: 自动
     - service: climate.set_fan_mode
       data:
         entity_id: climate.er_tong_fang_kong_diao
