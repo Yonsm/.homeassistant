@@ -10,7 +10,7 @@
         sensor_values: [490, 540, 650, 720]
         entity_id: fan.ke_ting_xin_feng_ji
         entity_attr: preset_mode
-        entity_values: [Auto, Low, Middle, Strong]
+        entity_values: [自动, 低档, 中档, 高档]
         condition_attr: mode
         condition_values: [auto, low, middle, strong]
 
@@ -27,6 +27,6 @@
         alt_sensor_values: [500, 700, 900, 1300]
         entity_id: fan.zhu_wo_xin_feng_ji
         entity_attr: preset_mode
-        entity_values: [Auto, Low, Middle, Strong]
+        entity_values: [自动, 低档, 中档, 高档]
         condition_attr: mode
-        condition_values: [Auto, low, middle, strong]
+        condition_values: [auto, low, middle, strong]

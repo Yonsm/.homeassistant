@@ -4,26 +4,6 @@
   host: Station
   turn_off:
     service: shell_command.station_off
-- platform: mqtt
-  name: 餐厅筒灯
-  state_topic: Sonoff1/relay/1
-  command_topic: Sonoff1/relay/1/set
-  availability_topic: Sonoff1/status
-- platform: mqtt
-  name: 客厅筒灯
-  state_topic: Sonoff1/relay/2
-  command_topic: Sonoff1/relay/2/set
-  availability_topic: Sonoff1/status
-- platform: mqtt
-  name: 洗手间排气扇
-  state_topic: Hassmart2/relay/1
-  command_topic: Hassmart2/relay/1/set
-  availability_topic: Hassmart2/status
-# - platform: mqtt
-#   name: 浴室排气扇
-#   state_topic: Hassmart3/relay/0
-#   command_topic: Hassmart3/relay/0/set
-#   availability_topic: Hassmart3/status
 - platform: zhimqtt
   name: 书房音箱
   state_topic: NodeMCU2/relay/0

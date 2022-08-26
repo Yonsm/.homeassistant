@@ -1,0 +1,278 @@
+#broker: Hass
+
+# binary_sensor:
+#   - device_class: motion
+#     state_topic: NodeMCU5/digital
+#     payload_on: 1
+#     payload_off: 0
+#     name: 主卧感应
+#     availability_topic: NodeMCU5/status
+
+sensor:
+  - name: 阳台温度
+    device_class: temperature
+    state_topic: NodeMCU1/temperature
+    unit_of_measurement: °C
+    availability_topic: NodeMCU1/status
+  - name: 阳台湿度
+    device_class: humidity
+    state_topic: NodeMCU1/humidity
+    unit_of_measurement: '%'
+    availability_topic: NodeMCU1/status
+  - name: 阳台空气质量
+    icon: mdi:blur
+    state_topic: NodeMCU1/pm2dot5
+    unit_of_measurement: μg/m³
+    availability_topic: NodeMCU1/status
+  - name: 书房温度
+    device_class: temperature
+    state_topic: NodeMCU2/temperature
+    unit_of_measurement: °C
+    availability_topic: NodeMCU2/status
+  - name: 书房湿度
+    device_class: humidity
+    state_topic: NodeMCU2/humidity
+    unit_of_measurement: '%'
+    availability_topic: NodeMCU2/status
+  - name: 书房二氧化碳
+    icon: mdi:molecule-co2
+    state_topic: NodeMCU2/co2
+    unit_of_measurement: ppm
+    availability_topic: NodeMCU2/status
+  - name: 书房亮度
+    device_class: illuminance
+    state_topic: NodeMCU2/lux
+    unit_of_measurement: lm
+    availability_topic: NodeMCU2/status
+  - name: 餐厅亮度
+    device_class: illuminance
+    state_topic: NodeMCU5/analog
+    availability_topic: NodeMCU5/status
+    unit_of_measurement: lm
+  - name: 儿童房温度
+    device_class: temperature
+    state_topic: NodeMCU6/temperature
+    unit_of_measurement: °C
+    availability_topic: NodeMCU6/status
+  - name: 儿童房湿度
+    device_class: humidity
+    state_topic: NodeMCU6/humidity
+    unit_of_measurement: '%'
+    availability_topic: NodeMCU6/status
+  - name: 儿童房空气质量
+    icon: mdi:blur
+    state_topic: NodeMCU6/pm2dot5
+    unit_of_measurement: μg/m³
+    availability_topic: NodeMCU6/status
+  - name: 儿童房二氧化碳
+    icon: mdi:molecule-co2
+    state_topic: NodeMCU6/co2
+    unit_of_measurement: ppm
+    availability_topic: NodeMCU6/status
+
+  - name: 餐厅温度
+    device_class: temperature
+    state_topic: device/zm1/b0f8931ea148/sensor
+    value_template: '{{ value_json.temperature }}'
+    unit_of_measurement: °C
+  - name: 餐厅湿度
+    device_class: humidity
+    state_topic: device/zm1/b0f8931ea148/sensor
+    value_template: '{{ value_json.humidity }}'
+    unit_of_measurement: '%'
+  - name: 餐厅空气质量
+    icon: mdi:blur
+    state_topic: device/zm1/b0f8931ea148/sensor
+    value_template: '{{ value_json.PM25 }}'
+    unit_of_measurement: μg/m³
+  - name: 餐厅甲醛
+    icon: mdi:biohazard
+    state_topic: device/zm1/b0f8931ea148/sensor
+    value_template: '{{ value_json.formaldehyde }}'
+# - name: 过道温度
+#   device_class: temperature
+#   state_topic: device/zm1/b0f893249132/sensor
+#   value_template: '{{ value_json.temperature }}'
+#   unit_of_measurement: °C
+# - name: 过道湿度
+#   device_class: humidity
+#   state_topic: device/zm1/b0f893249132/sensor
+#   value_template: '{{ value_json.humidity }}'
+#   unit_of_measurement: '%'
+# - name: 过道空气质量
+#   icon: mdi:blur
+#   state_topic: device/zm1/b0f893249132/sensor
+#   value_template: '{{ value_json.PM25 }}'
+#   unit_of_measurement: μg/m³
+# - name: 过道甲醛
+#   icon: mdi:biohazard
+#   state_topic: device/zm1/b0f893249132/sensor
+#   value_template: '{{ value_json.formaldehyde }}'
+
+switch:
+  - name: 餐厅筒灯
+    state_topic: Sonoff1/relay/1
+    command_topic: Sonoff1/relay/1/set
+    availability_topic: Sonoff1/status
+  - name: 客厅筒灯
+    state_topic: Sonoff1/relay/2
+    command_topic: Sonoff1/relay/2/set
+    availability_topic: Sonoff1/status
+  - name: 洗手间排气扇
+    state_topic: Hassmart2/relay/1
+    command_topic: Hassmart2/relay/1/set
+    availability_topic: Hassmart2/status
+  # - name: 浴室排气扇
+  #   state_topic: Hassmart3/relay/0
+  #   command_topic: Hassmart3/relay/0/set
+  #   availability_topic: Hassmart3/status
+
+light:
+  - name: 客厅筒灯
+    state_topic: Hassmart1/relay/0
+    command_topic: Hassmart1/relay/0/set
+    availability_topic: Hassmart1/status
+  - name: 餐厅筒灯
+    state_topic: Hassmart1/relay/1
+    command_topic: Hassmart1/relay/1/set
+    availability_topic: Hassmart1/status
+  - name: 洗手间灯
+    state_topic: Hassmart2/relay/0
+    command_topic: Hassmart2/relay/0/set
+    availability_topic: Hassmart2/status
+  # - name: 浴室灯
+  #   state_topic: Hassmart3/relay/1
+  #   command_topic: Hassmart3/relay/1/set
+  #   availability_topic: Hassmart3/status
+  - name: 过道柜灯
+    state_topic: Sonoff1/relay/0
+    command_topic: Sonoff1/relay/0/set
+    availability_topic: Sonoff1/status
+  - name: 过道筒灯
+    state_topic: Sonoff2/relay/0
+    command_topic: Sonoff2/relay/0/set
+    availability_topic: Sonoff2/status
+# - name: 主卧吸顶灯
+#   state_topic: NodeMCU5/analog
+#   state_value_template: '{% if (value | int > 1000) or ((value | int > 600) and is_state("sun.sun", "below_horizon")) %}3526,1658,426,418,426,1292,426,420,426,1288,428,418,426,1290,430,418,426,1290,428,418,426,418,426,416,426,1290,428,416,430,1290,428,1290,428,418,428,1288,428,416,428,418,426,418,428,1288,428,1288,428,1290,428,418,428,1290,428,418,428,1290,428,416,428,1290,428,1290,428,416,428,418,426,418,428,416,428,418,426,416,428,418,426,416,428,416,428,418,426,1292,426,418,428,1290,428,416,428,1292,424,1292,424,1294,424,418,426,1290,426,420,424,418,426,420,424,422,424,1294,424,420,424,420,424,1294,424,420,424,422,422,422,422,1298,422,422,422,1296,422,422,422,1,2,38{% else %}3528,1658,426,418,426,1292,380,462,382,1334,382,464,382,1338,380,462,382,1336,382,462,382,462,382,462,382,1336,382,462,382,1336,380,1336,382,464,382,1338,378,462,384,462,382,464,380,1336,382,1336,382,1336,382,462,382,1334,384,464,382,1336,382,462,382,1336,382,1336,382,464,382,462,382,464,382,464,380,462,382,462,382,464,382,464,380,464,382,464,382,464,380,1338,380,462,382,464,382,462,380,464,380,464,380,464,380,1334,382,464,380,464,380,464,380,464,382,1336,382,464,382,462,382,1334,382,464,382,464,382,464,380,1336,382,1336,382,464,382,1338,380,1,2,38{% endif %}'
+#   command_topic: NodeMCU5/irout/set
+#   availability_topic: NodeMCU5/status
+#   payload_on: 3526,1658,426,418,426,1292,426,420,426,1288,428,418,426,1290,430,418,426,1290,428,418,426,418,426,416,426,1290,428,416,430,1290,428,1290,428,418,428,1288,428,416,428,418,426,418,428,1288,428,1288,428,1290,428,418,428,1290,428,418,428,1290,428,416,428,1290,428,1290,428,416,428,418,426,418,428,416,428,418,426,416,428,418,426,416,428,416,428,418,426,1292,426,418,428,1290,428,416,428,1292,424,1292,424,1294,424,418,426,1290,426,420,424,418,426,420,424,422,424,1294,424,420,424,420,424,1294,424,420,424,422,422,422,422,1298,422,422,422,1296,422,422,422,1,2,38
+#   payload_off: 3528,1658,426,418,426,1292,380,462,382,1334,382,464,382,1338,380,462,382,1336,382,462,382,462,382,462,382,1336,382,462,382,1336,380,1336,382,464,382,1338,378,462,384,462,382,464,380,1336,382,1336,382,1336,382,462,382,1334,384,464,382,1336,382,462,382,1336,382,1336,382,464,382,462,382,464,382,464,380,462,382,462,382,464,382,464,380,464,382,464,382,464,380,1338,380,462,382,464,382,462,380,464,380,464,380,464,380,1334,382,464,380,464,380,464,380,464,382,1336,382,464,382,462,382,1334,382,464,382,464,382,464,380,1336,382,1336,382,464,382,1338,380,1,2,38
+#   brightness_state_topic: NodeMCU5/analog
+#   brightness_command_topic: NodeMCU5_/analog/set
+#   brightness_scale: 1024
+# - name: 儿童房吸顶灯
+#   command_topic: NodeMCU6/irout/set
+#   availability_topic: NodeMCU6/status
+#   payload_on: 3526,1658,426,418,426,1292,426,420,426,1288,428,418,426,1290,430,418,426,1290,428,418,426,418,426,416,426,1290,428,416,430,1290,428,1290,428,418,428,1288,428,416,428,418,426,418,428,1288,428,1288,428,1290,428,418,428,1290,428,418,428,1290,428,416,428,1290,428,1290,428,416,428,418,426,418,428,416,428,418,426,416,428,418,426,416,428,416,428,418,426,1292,426,418,428,1290,428,416,428,1292,424,1292,424,1294,424,418,426,1290,426,420,424,418,426,420,424,422,424,1294,424,420,424,420,424,1294,424,420,424,422,422,422,422,1298,422,422,422,1296,422,422,422,1,2,38
+#   payload_off: 3528,1658,426,418,426,1292,380,462,382,1334,382,464,382,1338,380,462,382,1336,382,462,382,462,382,462,382,1336,382,462,382,1336,380,1336,382,464,382,1338,378,462,384,462,382,464,380,1336,382,1336,382,1336,382,462,382,1334,384,464,382,1336,382,462,382,1336,382,1336,382,464,382,462,382,464,382,464,380,462,382,462,382,464,382,464,380,464,382,464,382,464,380,1338,380,462,382,464,382,462,380,464,380,464,380,464,380,1334,382,464,380,464,380,464,380,464,382,1336,382,464,382,462,382,1334,382,464,382,464,382,464,380,1336,382,1336,382,464,382,1338,380,1,2,38
+# - name: 餐厅检测仪
+#   schema: template
+#   command_topic: device/zm1/b0f8931ea148/set
+#   state_topic: device/zm1/b0f8931ea148/state
+#   command_on_template: '{"mac":"b0f8931ea148","brightness":{%- if brightness is defined -%}{{ ((brightness-1) / 64 )|int +1 }}{%- else -%}4{%- endif -%}}'
+#   command_off_template: '{"mac":"b0f8931ea148","brightness":0}'
+#   state_template: '{%- if value_json.brightness == 0 -%}off{%- else -%}on{%- endif -%}'
+#   brightness_template: '{%- if value_json.brightness is defined -%}{{ ( value_json.brightness *64 )|int }}{%- endif -%}'
+# - name: 过道检测仪
+#   schema: template
+#   command_topic: device/zm1/b0f893249132/set
+#   state_topic: device/zm1/b0f893249132/state
+#   command_on_template: '{"mac":"b0f893249132","brightness":{%- if brightness is defined -%}{{ ((brightness-1) / 64 )|int +1 }}{%- else -%}4{%- endif -%}}'
+#   command_off_template: '{"mac":"b0f893249132","brightness":0}'
+#   state_template: '{%- if value_json.brightness == 0 -%}off{%- else -%}on{%- endif -%}'
+#   brightness_template: '{%- if value_json.brightness is defined -%}{{ ( value_json.brightness *64 )|int }}{%- endif -%}'
+
+fan:
+  # - name: 书房净化器
+  #   state_topic: NodeMCU3/relay/0
+  #   command_topic: NodeMCU3/relay/0/set
+  #   availability_topic: NodeMCU3/status
+  #   oscillation_state_topic: NodeMCU3/relay/1
+  #   oscillation_command_topic: NodeMCU3/relay/1/set
+  #   preset_mode_state_topic: NodeMCU3/relay/0
+  #   preset_mode_command_topic: NodeMCU3/relay/0/set
+  #   state_value_template: '{% if value == "0" %}OFF{% else %}ON{% endif %}'
+  #   preset_modes:
+  #     - 'off'
+  #     - low
+  #     - medium
+  #     - high
+  #   preset_mode_command_template: '{% if value == "off" %}OFF{% elif value == "low" %}1{% elif value == "high" %}3{% else %}2{% endif %}'
+  #   preset_mode_value_template: '{% if value == "0" %}off{% elif value == "1" %}low{% elif value == "3" %}high{% else %}medium{% endif %}'
+  #   payload_oscillation_on: 'ON'
+  #   payload_oscillation_off: 'OFF'
+  # - name: 客厅净化器
+  #   state_topic: NodeMCU4/relay/0
+  #   command_topic: NodeMCU4/relay/0/set
+  #   availability_topic: NodeMCU4/status
+  #   oscillation_state_topic: NodeMCU4/relay/1
+  #   oscillation_command_topic: NodeMCU4/relay/1/set
+  #   preset_mode_state_topic: NodeMCU4/relay/0
+  #   preset_mode_command_topic: NodeMCU4/relay/0/set
+  #   state_value_template: '{% if value == "0" %}OFF{% else %}ON{% endif %}'
+  #   preset_modes:
+  #     - 'off'
+  #     - low
+  #     - medium
+  #     - high
+  #   preset_mode_command_template: '{% if value == "off" %}OFF{% elif value == "low" %}1{% elif value == "high" %}4{% else %}5{% endif %}'
+  #   preset_mode_value_template: '{% if value == "0" %}off{% elif value == "1" %}low{% elif value == "4" %}high{% else %}medium{% endif %}'
+  #   payload_oscillation_on: 'ON'
+  #   payload_oscillation_off: 'OFF'
+  - name: 餐厅净化器
+    state_topic: NodeMCU5/relay/0
+    command_topic: NodeMCU5/relay/0/set
+    availability_topic: NodeMCU5/status
+    oscillation_state_topic: NodeMCU5/relay/1
+    oscillation_command_topic: NodeMCU5/relay/1/set
+    preset_mode_state_topic: NodeMCU5/relay/0
+    preset_mode_command_topic: NodeMCU5/relay/0/set
+    payload_on: 1
+    payload_off: 0
+    state_value_template: '{% if value == "0" %}0{% else %}1{% endif %}'
+    preset_modes:
+      - 'off'
+      - low
+      - medium
+      - high
+    preset_mode_command_template: '{% if value == "off" %}0{% elif value == "low" %}1{% elif value == "high" %}6{% else %}5{% endif %}'
+    preset_mode_value_template: '{% if value == "0" %}off{% elif value == "1" %}low{% elif value == "6" %}high{% else %}medium{% endif %}'
+    payload_oscillation_on: 'ON'
+    payload_oscillation_off: 'OFF'
+  - name: 儿童房净化器
+    state_topic: NodeMCU6/relay/0
+    command_topic: NodeMCU6/relay/0/set
+    availability_topic: NodeMCU6/status
+    oscillation_state_topic: NodeMCU6/relay/1
+    oscillation_command_topic: NodeMCU6/relay/1/set
+    preset_mode_state_topic: NodeMCU6/relay/0
+    preset_mode_command_topic: NodeMCU6/relay/0/set
+    payload_on: 1
+    payload_off: 0
+    state_value_template: '{% if value == "0" %}0{% else %}1{% endif %}'
+    preset_modes:
+      - 'off'
+      - low
+      - medium
+      - high
+    preset_mode_command_template: '{% if value == "off" %}0{% elif value == "low" %}1{% elif value == "high" %}6{% else %}5{% endif %}'
+    preset_mode_value_template: '{% if value == "0" %}off{% elif value == "1" %}low{% elif value == "6" %}high{% else %}medium{% endif %}'
+    payload_oscillation_on: 'ON'
+    payload_oscillation_off: 'OFF'
+# - name: 主卧壁扇
+#   availability_topic: NodeMCU5/status
+#   command_topic: NodeMCU5/irout/set
+#   payload_on: 9150,4770,380,812,438,782,410,754,436,756,412,778,812,380,812,408,782,384,410,806,810,358,408,808,782,410,782,410,784,408,784,408,782,382,382,814,410,806,384,780,386,806,410,762,432,808,806,386,402,762,808,382,810,384,808,382,808,382,812,380,810,410,382,808,784,382,1208,8334,9130,4796,356,814,408,782,408,782,410,782,408,782,810,382,808,384,808,382,410,782,808,382,412,780,810,382,810,384,832,358,808,382,810,382,384,810,412,780,412,778,412,780,412,780,412,780,810,384,408,782,810,382,810,382,810,382,808,382,834,358,810,382,410,780,810,382,1210,8338,9126,4796,382,812,382,808,382,784,408,808,382,786,806,410,782,410,780,412,382,808,782,410,358,832,758,434,758,434,780,412,758,434,758,434,378,788,386,808,384,830,360,830,360,804,388,832,760,432,360,830,762,430,762,432,760,432,760,430,762,430,762,428,388,804,784,408,1186,1,2,38
+#   payload_off: 9150,4770,380,812,438,782,410,754,436,756,412,778,812,380,812,408,782,384,410,806,810,358,408,808,782,410,782,410,784,408,784,408,782,382,382,814,410,806,384,780,386,806,410,762,432,808,806,386,402,762,808,382,810,384,808,382,808,382,812,380,810,410,382,808,784,382,1208,8334,9130,4796,356,814,408,782,408,782,410,782,408,782,810,382,808,384,808,382,410,782,808,382,412,780,810,382,810,384,832,358,808,382,810,382,384,810,412,780,412,778,412,780,412,780,412,780,810,384,408,782,810,382,810,382,810,382,808,382,834,358,810,382,410,780,810,382,1210,8338,9126,4796,382,812,382,808,382,784,408,808,382,786,806,410,782,410,780,412,382,808,782,410,358,832,758,434,758,434,780,412,758,434,758,434,378,788,386,808,384,830,360,830,360,804,388,832,760,432,360,830,762,430,762,432,760,432,760,430,762,430,762,428,388,804,784,408,1186,1,2,38
+#   oscillation_state_topic: NodeMCU5/status
+#   oscillation_command_topic: NodeMCU5/irout/set
+#   payload_oscillation_on: 9152,4774,428,764,386,832,360,808,384,806,386,830,760,432,758,434,758,434,358,808,784,432,362,830,760,432,760,432,758,434,758,432,760,432,380,790,384,830,360,832,362,830,760,432,360,832,360,830,364,828,762,430,762,428,762,432,760,432,362,802,788,432,762,430,762,430,1162,8334,9158,4766,432,786,388,778,390,826,364,804,388,828,762,430,760,430,762,430,364,828,764,428,364,804,786,430,760,432,760,432,762,430,760,432,380,814,386,806,364,828,362,830,762,432,360,830,362,830,362,830,760,432,760,432,758,434,760,432,360,806,784,434,758,434,758,434,1156,8336,9178,4748,406,790,404,810,382,810,382,786,406,808,782,410,780,412,780,412,380,786,804,412,382,784,806,412,780,412,780,412,780,412,780,410,380,814,382,784,408,810,382,808,782,410,382,784,408,808,384,784,806,412,780,410,780,412,782,410,380,810,780,412,782,410,780,410,1180,1,2,38
+#   payload_oscillation_off: 9152,4774,428,764,386,832,360,808,384,806,386,830,760,432,758,434,758,434,358,808,784,432,362,830,760,432,760,432,758,434,758,432,760,432,380,790,384,830,360,832,362,830,760,432,360,832,360,830,364,828,762,430,762,428,762,432,760,432,362,802,788,432,762,430,762,430,1162,8334,9158,4766,432,786,388,778,390,826,364,804,388,828,762,430,760,430,762,430,364,828,764,428,364,804,786,430,760,432,760,432,762,430,760,432,380,814,386,806,364,828,362,830,762,432,360,830,362,830,362,830,760,432,760,432,758,434,760,432,360,806,784,434,758,434,758,434,1156,8336,9178,4748,406,790,404,810,382,810,382,786,406,808,782,410,780,412,780,412,380,786,804,412,382,784,806,412,780,412,780,412,780,412,780,410,380,814,382,784,408,810,382,808,782,410,382,784,408,808,384,784,806,412,780,410,780,412,782,410,380,810,780,412,782,410,780,410,1180,1,2,38
+#   preset_mode_command_topic: NodeMCU5/irout/set
+#   preset_modes:
+#     - 'off'
+#     - low
+#     - high
+#   preset_mode_command_template: '{% if value == "off" %}OFF{% elif value == "low" %}9126,4798,380,784,438,754,412,780,436,754,438,754,810,382,810,382,810,382,436,756,810,382,412,778,812,380,812,380,810,380,812,382,810,382,408,786,412,778,436,758,434,756,410,780,810,382,434,756,412,780,808,386,806,384,832,360,808,384,832,358,410,778,812,384,808,384,1230,8294,9148,4772,406,786,412,778,418,774,412,780,412,780,812,380,812,380,810,382,412,778,812,382,412,780,810,382,810,382,810,382,810,382,810,382,382,810,412,780,412,780,412,780,410,780,812,382,410,780,412,780,810,384,808,382,808,382,810,382,808,384,412,780,810,384,808,382,1208,8316,9152,4776,378,810,412,778,412,778,412,780,412,780,810,382,810,382,810,382,412,780,810,384,410,780,810,382,810,382,810,382,808,384,810,382,384,810,412,780,412,780,412,780,412,780,812,382,412,780,410,780,810,382,808,382,810,382,810,382,810,380,412,782,808,384,808,382,1208,1,2,38{% else %}9126,4798,380,784,438,754,412,780,436,754,438,754,810,382,810,382,810,382,436,756,810,382,412,778,812,380,812,380,810,380,812,382,810,382,408,786,412,778,436,758,434,756,410,780,810,382,434,756,412,780,808,386,806,384,832,360,808,384,832,358,410,778,812,384,808,384,1230,8294,9148,4772,406,786,412,778,418,774,412,780,412,780,812,380,812,380,810,382,412,778,812,382,412,780,810,382,810,382,810,382,810,382,810,382,382,810,412,780,412,780,412,780,410,780,812,382,410,780,412,780,810,384,808,382,808,382,810,382,808,384,412,780,810,384,808,382,1208,8316,9152,4776,378,810,412,778,412,778,412,780,412,780,810,382,810,382,810,382,412,780,810,384,410,780,810,382,810,382,810,382,808,384,810,382,384,810,412,780,412,780,412,780,412,780,812,382,412,780,410,780,810,382,808,382,810,382,810,382,810,380,412,782,808,384,808,382,1208,1,2,38{% endif %}'

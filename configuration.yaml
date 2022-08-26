@@ -4,13 +4,19 @@ homeassistant:
   longitude: 120.05633
   elevation: 32
   unit_system: metric
+  currency: CNY
   time_zone: Asia/Shanghai
+  # external_url: !secret external_url
+  # internal_url: !secret external_url
   customize: !include customize.yaml
-  # auth_providers:
-  #   - type: trusted_networks
-  #     trusted_networks: 192.168.1.0/24
-  #     allow_bypass_login: true
-  #   - type: homeassistant
+  # allowlist_external_dirs:
+  #   - "/usr/var/dumping-ground"
+  #   - "/tmp"
+  # allowlist_external_urls:
+  #   - "http://images.com/image1.png"
+  # media_dirs:
+  #   media: "/media"
+  #   recordings: "/mnt/recordings"
 
 http:
   server_port: 88
@@ -23,11 +29,18 @@ automation: !include_dir_merge_list automations
 #scene: !include scenes.yaml
 #script: !include scripts.yaml
 
+usb:
+bluetooth:
+
+# backup
 # cloud:
 config:
+# energy:
 frontend:
 mobile_app:
 system_health:
+# homeassistant_alerts:
+webhook:
 # updater:
 
 # dhcp:
@@ -35,6 +48,7 @@ system_health:
 # zeroconf:
 
 input_boolean:
+input_button:
 input_datetime:
 input_number:
 input_select:
@@ -42,11 +56,12 @@ input_text:
 counter:
 timer:
 
-my:
+#my:
 tag:
 sun:
 zone:
 image:
+# stream:
 # media_source:
 
 # map:
@@ -66,7 +81,7 @@ history:
 logger:
   default: warning
   logs:
-    custom_components: info
+    custom_components: debug
     custom_components.zhimi: debug
     custom_components.zhimijia: debug
 
@@ -80,9 +95,6 @@ recorder:
 #     secret_key: !secret baidu_secret_key
 
 homekit: !include homekit.yaml
-
-mqtt:
-  broker: Hass
 
 modbus:
   type: rtuovertcp
@@ -101,12 +113,13 @@ device_tracker:
       yphone: 192.168.1.22
       # xphone: 192.168.1.23
       jphone: 192.168.1.24
+      zpad: 192.168.1.29
       # aphone: 192.168.1.27
 
 person:
-  - name: 爸爸
-    id: baba
-    device_trackers: device_tracker.gphone
+  # - name: 爸爸
+  #   id: baba
+  #   device_trackers: device_tracker.gphone
   - name: 妈妈
     id: mama
     device_trackers: device_tracker.zphone
@@ -119,6 +132,9 @@ person:
   - name: 大宝
     id: dabao
     device_trackers: device_tracker.jphone
+  - name: 小智
+    id: xiaozhi
+    device_trackers: device_tracker.zpad
   # - name: 阿姨
   #   id: ayi
   #   device_trackers: device_tracker.aphone
@@ -127,35 +143,15 @@ weather:
   - platform: zhicaiyun
     name: 天气
 
-# binary_sensor:
-#   - platform: mqtt
-#     device_class: motion
-#     state_topic: NodeMCU5/digital
-#     payload_on: 1
-#     payload_off: 0
-#     name: 主卧感应
-#     availability_topic: NodeMCU5/status
-
 sensor: !include sensors.yaml
-
 switch: !include switches.yaml
-
-yeelight:
-  devices:
-    Lamp:
-      name: 书房台灯
-      model: bslamp1
-    Lamp2:
-      name: 儿童房台灯
-      model: mono1
-
 light: !include lights.yaml
+fan: !include fans.yaml
+mqtt: !include mqtt.yaml
 
 xiaomi_aqara:
   gateways:
     - key: 3ECB50168D7F4AEB
-
-fan: !include fans.yaml
 
 climate:
   # - platform: zhisaswell
@@ -295,18 +291,18 @@ zhilace:
 lovelace:
   mode: storage
   dashboards:
-    zhilace-type:
-      mode: yaml
-      title: 分类
-      icon: mdi:home-currency-usd
-      show_in_sidebar: true
-      filename: zhilace-type.yaml
     zhilace-zone:
       mode: yaml
       title: 分区
-      icon: mdi:home-assistant
+      icon: mdi:home-floor-a
       show_in_sidebar: true
       filename: zhilace-zone.yaml
+    zhilace-type:
+      mode: yaml
+      title: 分类
+      icon: mdi:home-floor-b
+      show_in_sidebar: true
+      filename: zhilace-type.yaml
 
 panel_iframe:
   dash:
