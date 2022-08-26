@@ -28,9 +28,6 @@
 [submodule "modules/ZhiMsg"]
 	path = modules/ZhiMsg
 	url = git@github.com:Yonsm/ZhiMsg.git
-[submodule "modules/ZhiMQTT"]
-	path = modules/ZhiMQTT
-	url = git@github.com:Yonsm/ZhiMQTT.git
 [submodule "modules/ZhiRemote"]
 	path = modules/ZhiRemote
 	url = git@github.com:Yonsm/ZhiRemote.git
