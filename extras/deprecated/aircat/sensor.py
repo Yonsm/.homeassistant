@@ -276,7 +276,7 @@ class AirCatSensor(Entity):
             return round(float(state), 1)
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes."""
         return self.attributes if self._sensor_type == SENSOR_PM25 else None
 
