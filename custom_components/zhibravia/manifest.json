@@ -1,0 +1,9 @@
+{
+	"domain": "zhibravia",
+	"name": "Zhi Bravia TV Component",
+	"documentation": "https://github.com/Yonsm/.homeassistant",
+	"version": "1.0.1",
+	"requirements": [],
+	"dependencies": ["braviatv"],
+	"codeowners": ["@Yonsm"]
+}
