@@ -1,17 +1,23 @@
+from homeassistant.const import CONF_NAME, CONF_HOST, CONF_MAC, CONF_TYPE, CONF_TIMEOUT
+from homeassistant.config_entries import ConfigEntry, SOURCE_USER
+from homeassistant.util import slugify
+import broadlink as blk
 
-# from homeassistant.components.broadlink import async_setup_entry
-# from homeassistant.config_entries import ConfigEntry
-# DOMAIN = 'zhibroad'
 
+async def async_setup(hass, config):
+    confs = config['zhibroad']
+    for conf in confs:
+        name = conf[CONF_NAME]
+        unique_id = slugify(name)
+        if hass.config_entries.async_get_entry(unique_id):
+            continue
 
-# async def async_setup(hass, config):
-#     conf = config.get(DOMAIN)
-#     data = {
-#         'host': conf['host'],
-#         'mac': conf['mac'],
-#         'type': conf['type'],
-#         'timeout': 5,
-#     }
-#     entry = ConfigEntry(version=1, domain='broadlink', entry_id='122333xxx', unique_id='313332', title=conf['name'], data=data, source='user')
-
-#     return await async_setup_entry(hass, entry)
+        device = await hass.async_add_executor_job(blk.hello, conf[CONF_HOST], 80, 5)
+        data = {
+            CONF_HOST: device.host[0],
+            CONF_MAC: device.mac.hex(),
+            CONF_TYPE: device.devtype,
+            CONF_TIMEOUT: device.timeout,
+        }
+        await hass.config_entries.async_add(ConfigEntry(1, 'broadlink', name, data, SOURCE_USER, unique_id=unique_id, entry_id=unique_id))
+    return True

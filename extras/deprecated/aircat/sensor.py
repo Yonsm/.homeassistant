@@ -196,11 +196,11 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 AIRCAT_SENSOR_THREAD_MODE = True
 
 
-def setup_platform(hass, config, add_devices, discovery_info=None):
+def setup_platform(hass, conf, add_devices, discovery_info=None):
     """Set up the AirCat sensor."""
-    name = config[CONF_NAME]
-    macs = config[CONF_MAC]
-    sensors = config[CONF_SENSORS]
+    name = conf[CONF_NAME]
+    macs = conf[CONF_MAC]
+    sensors = conf[CONF_SENSORS]
 
     aircat = AirCatData()
     count = len(macs)

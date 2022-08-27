@@ -12,14 +12,14 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA_MODERN.extend({
 })
 
 
-async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    async_add_entities([ZhiMqttSwitch(hass, config, None, discovery_info)])
+async def async_setup_platform(hass, conf, async_add_entities, discovery_info=None):
+    async_add_entities([ZhiMqttSwitch(hass, conf, None, discovery_info)])
 
 
 class ZhiMqttSwitch(MqttSwitch):
 
-    def __init__(self, hass, config, config_entry, discovery_data):
-        super().__init__(hass, config, config_entry, discovery_data)
+    def __init__(self, hass, conf, config_entry, discovery_data):
+        super().__init__(hass, conf, config_entry, discovery_data)
         self._attributes = None
         self._icon = None
 

@@ -18,11 +18,11 @@ http:
 # default_config:
 
 automation: !include_dir_merge_list automations
-#scene: !include scenes.yaml
-#script: !include scripts.yaml
+# scene: !include scenes.yaml
+# script: !include scripts.yaml
 
-#usb:
-#bluetooth:
+# usb:
+# bluetooth:
 
 # backup
 # cloud:
@@ -183,16 +183,6 @@ media_player:
     sender: remote.shu_fang_yao_kong
     command: viewsonic_projector
     sensor: device_tracker.projector
-  - platform: zhibravia
-    name: 主卧电视
-    host: 192.168.1.6
-    mac: 104FA8EF7F86
-    pin: '0000'
-  - platform: zhibravia
-    name: 客厅电视
-    host: 192.168.1.7
-    mac: 104FA8EF7F86
-    pin: '0000'
   # - platform: dlna_dmr
   #   name: 天猫精灵
   #   url: http://Magic:49153/description.xml
@@ -268,36 +258,23 @@ zhibot:
     name: 儿童房音箱
     token: !secret zhibot_token
 
-remote:
-  - platform: zhibroad
-    name: 书房遥控
-    host: 192.168.1.46
-    mac: 34ea3458735d
-    type: 10141
-  - platform: zhibroad
-    name: 客厅遥控
-    host: 192.168.1.47
-    mac: 34ea3458735d
-    type: 10141
+zhiaqara:
+  name: 小米网关
+  key: 3ECB50168D7F4AEB
 
-# zhiaqara:
-#   name: 小米网关
-#   host: 192.168.1.30
-#   key: 3ECB50168D7F4AEB
-#   mac: 34:ce:00:90:90:1a
-#   sid: 34ce0090901a
+zhibroad:
+  - name: 书房遥控
+    host: Remote
+  - name: 客厅遥控
+    host: Remote2
+  - name: 餐厅除湿机
+    host: Outlet
 
-# By Intergration
-# switch.broadlink
-#   餐厅除湿机
-#   衣柜除湿机
-#   万能遥控
-#   红外遥控
-# vacuum.xiaomi_miio
-#   扫地机
-# media_player.braviatv
-#   主卧电视
-#   客厅电视
+zhibravia:
+  - name: 主卧电视
+    host: 192.168.1.6
+  - name: 客厅电视
+    host: 192.168.1.7
 
 zhilace:
 
