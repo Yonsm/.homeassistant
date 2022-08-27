@@ -1,0 +1,9 @@
+{
+	"domain": "zhiaqara",
+	"name": "Zhi Aqara Gateway Component",
+	"documentation": "https://github.com/Yonsm/.homeassistant",
+	"version": "1.0.1",
+	"requirements": [],
+	"dependencies": ["xiaomi_aqara"],
+	"codeowners": ["@Yonsm"]
+}
