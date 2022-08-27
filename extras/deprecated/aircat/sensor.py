@@ -178,7 +178,7 @@ DEFAULT_SENSORS = [SENSOR_PM25, SENSOR_HCHO,
                    SENSOR_TEMPERATURE, SENSOR_HUMIDITY]
 
 SENSOR_MAP = {
-    SENSOR_PM25: ('μg/m³', 'blur'),
+    SENSOR_PM25: ('µg/m³', 'blur'),
     SENSOR_HCHO: ('mg/m³', 'biohazard'),
     SENSOR_TEMPERATURE: (TEMP_CELSIUS, 'thermometer'),
     SENSOR_HUMIDITY: ('%', 'water-percent')

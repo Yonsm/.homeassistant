@@ -20,7 +20,7 @@ sensor:
   - name: 阳台空气质量
     device_class: pm25
     state_topic: NodeMCU1/pm2dot5
-    unit_of_measurement: μg/m³
+    unit_of_measurement: µg/m³
     availability_topic: NodeMCU1/status
   - name: 书房温度
     device_class: temperature
@@ -58,9 +58,9 @@ sensor:
     unit_of_measurement: '%'
     availability_topic: NodeMCU6/status
   - name: 儿童房空气质量
-    device_class: carbon_dioxide
+    device_class: pm25
     state_topic: NodeMCU6/pm2dot5
-    unit_of_measurement: μg/m³
+    unit_of_measurement: µg/m³
     availability_topic: NodeMCU6/status
   - name: 儿童房二氧化碳
     device_class: carbon_dioxide
@@ -82,7 +82,7 @@ sensor:
     device_class: pm25
     state_topic: device/zm1/b0f8931ea148/sensor
     value_template: '{{ value_json.PM25 }}'
-    unit_of_measurement: μg/m³
+    unit_of_measurement: µg/m³
   - name: 餐厅甲醛
     icon: mdi:biohazard
     state_topic: device/zm1/b0f8931ea148/sensor
@@ -102,7 +102,7 @@ sensor:
 #   icon: mdi:blur
 #   state_topic: device/zm1/b0f893249132/sensor
 #   value_template: '{{ value_json.PM25 }}'
-#   unit_of_measurement: μg/m³
+#   unit_of_measurement: µg/m³
 # - name: 过道甲醛
 #   icon: mdi:biohazard
 #   state_topic: device/zm1/b0f893249132/sensor
