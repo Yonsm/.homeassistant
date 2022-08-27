@@ -165,26 +165,28 @@ EOF
 
 # nginx
 apt install nginx
-ln -s ~/.homeassistant/extras/setup/nginx.conf /etc/nginx/sites-enabled/default
+ln -s /root/.homeassistant/extras/setup/nginx.conf /etc/nginx/sites-enabled/default
 
-ln -s ~/.homeassistant/extras/setup/adb /usr/local/bin/
-ln -s ~/.homeassistant/extras/setup/ffmpeg /usr/local/bin/
-ln -s ~/.homeassistant/extras/setup/trojan /usr/local/bin/
-ln -s ~/.homeassistant/extras/setup/ss-local /usr/local/bin/
+ln -s /root/.homeassistant/extras/setup/adb /usr/local/bin/
+ln -s /root/.homeassistant/extras/setup/ffmpeg /usr/local/bin/
+ln -s /root/.homeassistant/extras/setup/trojan /usr/local/bin/
+ln -s /root/.homeassistant/extras/setup/ss-local /usr/local/bin/
+ln -s /root/.homeassistant/extras/setup/ssr-client /usr/local/bin/
 
 # Trojan
 #echo '{"run_type":"client","local_addr":"0.0.0.0","local_port":1080,"remote_addr":"xxx","remote_port":443,"password":["***"],"ssl":{"verify":false}}' >> /root/.homeassistant/extras/setup/.trojan.conf
 #echo '{"server":"host","server_port":port,"local_address":"0.0.0.0","local_port":1080,"password":"password","method":"aes-256-gcm"}' >> /root/.homeassistant/extras/setup/ss.conf
-cat <<EOF > /etc/systemd/system/trojan.service
+cat <<EOF > /etc/systemd/system/socks5.service
 [Unit]
-Description=Trojan Proxy
+Description=Socks5 Proxy
 After=network-online.target
 
 [Service]
 Type=simple
 User=root
-ExecStart=/usr/local/bin/trojan -c /root/.homeassistant/extras/setup/trojan.conf
-#ExecStart=/usr/local/bin/ss-local -c /root/.homeassistant/extras/setup/ss.conf
+#ExecStart=/root/.homeassistant/extras/setup/trojan -c /root/.homeassistant/extras/setup/trojan.conf
+#ExecStart=/root/.homeassistant/extras/setup/ss-local -c /root/.homeassistant/extras/setup/ss.conf
+ExecStart=/root/.homeassistant/extras/setup/ssr-client -c /root/.homeassistant/extras/setup/ssr.conf
 
 [Install]
 WantedBy=multi-user.target
@@ -192,7 +194,7 @@ WantedBy=multi-user.target
 EOF
 
 systemctl --system daemon-reload
-systemctl enable trojan
+systemctl enable socks5
 
 
 # Install on CoreElec

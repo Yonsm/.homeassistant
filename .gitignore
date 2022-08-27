@@ -10,6 +10,4 @@ __pycache__
 *.log
 *.db
 .*
-nginx.conf
-trojan.conf
-ss.conf
+*.conf
