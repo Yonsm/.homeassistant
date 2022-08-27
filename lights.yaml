@@ -1,19 +1,23 @@
 - platform: zhimijia
   name: 书房台灯
+  icon: mdi:lamp
   did: 65074727
   power_prop: 2-1
   brightness_prop: 2-2
 - platform: zhimijia
   name: 儿童房台灯
+  icon: mdi:lamp
   did: 119154367
   power_prop: 2-1
   brightness_prop: 2-2
 - platform: zhimijia
   name: 书房晾衣灯
+  icon: mdi:spotlight
   did: 57379167
   power_prop: 3-1
 - platform: zhimijia
   name: 浴室浴霸灯
+  icon: mdi:ceiling-light
   did: 493852339
   #ignore_state: true
   brightness_prop: bright

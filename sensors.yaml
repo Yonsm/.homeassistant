@@ -1,75 +1,17 @@
-- platform: template
-  sensors:
-    ci_wo_wen_du:
-      friendly_name: 次卧温度
-      device_class: temperature
-      value_template: '{{ state_attr("fan.ci_wo_jing_hua_qi", "temperature") }}'
-      unit_of_measurement: °C
-    ci_wo_shi_du:
-      friendly_name: 次卧湿度
-      device_class: humidity
-      value_template: '{{ state_attr("fan.ci_wo_jing_hua_qi", "humidity") }}'
-      unit_of_measurement: '%'
-    ci_wo_kong_qi_zhi_liang:
-      friendly_name: 次卧空气质量
-      value_template: '{{ state_attr("fan.ci_wo_jing_hua_qi", "aqi") }}'
-      unit_of_measurement: μg/m³
-      icon_template: mdi:blur
-
-    ke_ting_wen_du:
-      friendly_name: 客厅温度
-      device_class: temperature
-      value_template: '{{ state_attr("fan.ke_ting_xin_feng_ji", "temperature") }}'
-      unit_of_measurement: °C
-    ke_ting_shi_du:
-      friendly_name: 客厅湿度
-      device_class: humidity
-      value_template: '{{ state_attr("fan.ke_ting_xin_feng_ji", "humidity") }}'
-      unit_of_measurement: '%'
-    ke_ting_kong_qi_zhi_liang:
-      friendly_name: 客厅空气质量
-      value_template: '{{ state_attr("fan.ke_ting_xin_feng_ji", "aqi") }}'
-      unit_of_measurement: μg/m³
-      icon_template: mdi:blur
-    ke_ting_er_yang_hua_tan:
-      friendly_name: 客厅二氧化碳
-      value_template: '{{ state_attr("fan.ke_ting_xin_feng_ji", "co2") }}'
-      unit_of_measurement: ppm
-      icon_template: mdi:molecule-co2
-
-    zhu_wo_wen_du:
-      friendly_name: 主卧温度
-      device_class: temperature
-      value_template: '{{ state_attr("fan.zhu_wo_xin_feng_ji", "temperature") }}'
-      unit_of_measurement: °C
-    zhu_wo_shi_du:
-      friendly_name: 主卧湿度
-      device_class: humidity
-      value_template: '{{ state_attr("fan.zhu_wo_xin_feng_ji", "humidity") }}'
-      unit_of_measurement: '%'
-    zhu_wo_kong_qi_zhi_liang:
-      friendly_name: 主卧空气质量
-      value_template: '{{ state_attr("fan.zhu_wo_xin_feng_ji", "aqi") }}'
-      unit_of_measurement: μg/m³
-      icon_template: mdi:blur
-    zhu_wo_er_yang_hua_tan:
-      friendly_name: 主卧二氧化碳
-      value_template: '{{ state_attr("fan.zhu_wo_xin_feng_ji", "co2") }}'
-      unit_of_measurement: ppm
-      icon_template: mdi:molecule-co2
-
-    # ke_ting_kong_diao_mo_shi:
-    #   friendly_name: 客厅空调模式
-    #   value_template: '{% set mode = state_attr("climate.ke_ting_kong_diao", "fan_mode") %}{% if is_state("climate.ke_ting_kong_diao", "off") %}off{% elif mode == "自动" %}自{% elif mode == "一档" %}一{% elif mode == "二档" %}二{% elif mode == "三档" %}三{% elif mode == "四档" %}四{% elif mode == "五档" %}五{% else %}{{ mode }}{% endif %}'
-    # can_ting_kong_diao_mo_shi:
-    #   friendly_name: 餐厅空调模式
-    #   value_template: '{% set mode = state_attr("climate.can_ting_kong_diao", "fan_mode") %}{% if is_state("climate.can_ting_kong_diao", "off") %}off{% elif mode == "自动" %}自{% elif mode == "一档" %}一{% elif mode == "二档" %}二{% elif mode == "三档" %}三{% elif mode == "四档" %}四{% elif mode == "五档" %}五{% else %}{{ mode }}{% endif %}'
-    # zhu_wo_kong_diao_mo_shi:
-    #   friendly_name: 主卧空调模式
-    #   value_template: '{% set mode = state_attr("climate.zhu_wo_kong_diao", "fan_mode") %}{% if is_state("climate.zhu_wo_kong_diao", "off") %}off{% elif mode == "自动" %}自{% elif mode == "一档" %}一{% elif mode == "二档" %}二{% elif mode == "三档" %}三{% elif mode == "四档" %}四{% elif mode == "五档" %}五{% else %}{{ mode }}{% endif %}'
-    # er_tong_fang_kong_diao_mo_shi:
-    #   friendly_name: 儿童房空调模式
-    #   value_template: '{% set mode = state_attr("climate.er_tong_fang_kong_diao", "fan_mode") %}{% if is_state("climate.er_tong_fang_kong_diao", "off") %}off{% elif mode == "自动" %}自{% elif mode == "一档" %}一{% elif mode == "二档" %}二{% elif mode == "三档" %}三{% elif mode == "四档" %}四{% elif mode == "五档" %}五{% else %}{{ mode }}{% endif %}'
-    # shu_fang_kong_diao_mo_shi:
-    #   friendly_name: 书房空调模式
-    #   value_template: '{% set mode = state_attr("climate.shu_fang_kong_diao", "fan_mode") %}{% if is_state("climate.shu_fang_kong_diao", "off") %}off{% elif mode == "low" %}一{% elif mode == "mid" %}二{% elif mode == "high" %}三{% elif mode == "highest" %}四{% else %}{{ mode }}{% endif %}'
+# - platform: template
+#   sensors:
+#     ke_ting_kong_diao_mo_shi:
+#       friendly_name: 客厅空调模式
+#       value_template: '{% set mode = state_attr("climate.ke_ting_kong_diao", "fan_mode") %}{% if is_state("climate.ke_ting_kong_diao", "off") %}off{% elif mode == "自动" %}自{% elif mode == "一档" %}一{% elif mode == "二档" %}二{% elif mode == "三档" %}三{% elif mode == "四档" %}四{% elif mode == "五档" %}五{% else %}{{ mode }}{% endif %}'
+#     can_ting_kong_diao_mo_shi:
+#       friendly_name: 餐厅空调模式
+#       value_template: '{% set mode = state_attr("climate.can_ting_kong_diao", "fan_mode") %}{% if is_state("climate.can_ting_kong_diao", "off") %}off{% elif mode == "自动" %}自{% elif mode == "一档" %}一{% elif mode == "二档" %}二{% elif mode == "三档" %}三{% elif mode == "四档" %}四{% elif mode == "五档" %}五{% else %}{{ mode }}{% endif %}'
+#     zhu_wo_kong_diao_mo_shi:
+#       friendly_name: 主卧空调模式
+#       value_template: '{% set mode = state_attr("climate.zhu_wo_kong_diao", "fan_mode") %}{% if is_state("climate.zhu_wo_kong_diao", "off") %}off{% elif mode == "自动" %}自{% elif mode == "一档" %}一{% elif mode == "二档" %}二{% elif mode == "三档" %}三{% elif mode == "四档" %}四{% elif mode == "五档" %}五{% else %}{{ mode }}{% endif %}'
+#     er_tong_fang_kong_diao_mo_shi:
+#       friendly_name: 儿童房空调模式
+#       value_template: '{% set mode = state_attr("climate.er_tong_fang_kong_diao", "fan_mode") %}{% if is_state("climate.er_tong_fang_kong_diao", "off") %}off{% elif mode == "自动" %}自{% elif mode == "一档" %}一{% elif mode == "二档" %}二{% elif mode == "三档" %}三{% elif mode == "四档" %}四{% elif mode == "五档" %}五{% else %}{{ mode }}{% endif %}'
+#     shu_fang_kong_diao_mo_shi:
+#       friendly_name: 书房空调模式
+#       value_template: '{% set mode = state_attr("climate.shu_fang_kong_diao", "fan_mode") %}{% if is_state("climate.shu_fang_kong_diao", "off") %}off{% elif mode == "low" %}一{% elif mode == "mid" %}二{% elif mode == "high" %}三{% elif mode == "highest" %}四{% else %}{{ mode }}{% endif %}'

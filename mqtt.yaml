@@ -20,7 +20,7 @@ sensor:
     unit_of_measurement: '%'
     availability_topic: NodeMCU1/status
   - name: 阳台空气质量
-    icon: mdi:blur
+    device_class: pm25
     state_topic: NodeMCU1/pm2dot5
     unit_of_measurement: μg/m³
     availability_topic: NodeMCU1/status
@@ -35,7 +35,7 @@ sensor:
     unit_of_measurement: '%'
     availability_topic: NodeMCU2/status
   - name: 书房二氧化碳
-    icon: mdi:molecule-co2
+    device_class: carbon_dioxide
     state_topic: NodeMCU2/co2
     unit_of_measurement: ppm
     availability_topic: NodeMCU2/status
@@ -60,12 +60,12 @@ sensor:
     unit_of_measurement: '%'
     availability_topic: NodeMCU6/status
   - name: 儿童房空气质量
-    icon: mdi:blur
+    device_class: carbon_dioxide
     state_topic: NodeMCU6/pm2dot5
     unit_of_measurement: μg/m³
     availability_topic: NodeMCU6/status
   - name: 儿童房二氧化碳
-    icon: mdi:molecule-co2
+    device_class: carbon_dioxide
     state_topic: NodeMCU6/co2
     unit_of_measurement: ppm
     availability_topic: NodeMCU6/status
@@ -81,7 +81,7 @@ sensor:
     value_template: '{{ value_json.humidity }}'
     unit_of_measurement: '%'
   - name: 餐厅空气质量
-    icon: mdi:blur
+    device_class: pm25
     state_topic: device/zm1/b0f8931ea148/sensor
     value_template: '{{ value_json.PM25 }}'
     unit_of_measurement: μg/m³
@@ -89,6 +89,7 @@ sensor:
     icon: mdi:biohazard
     state_topic: device/zm1/b0f8931ea148/sensor
     value_template: '{{ value_json.formaldehyde }}'
+    unit_of_measurement: mg/m³
 # - name: 过道温度
 #   device_class: temperature
 #   state_topic: device/zm1/b0f893249132/sensor
@@ -122,6 +123,7 @@ switch:
     state_topic: Hassmart2/relay/1
     command_topic: Hassmart2/relay/1/set
     availability_topic: Hassmart2/status
+    icon: mdi:fan
   # - name: 浴室排气扇
   #   state_topic: Hassmart3/relay/0
   #   command_topic: Hassmart3/relay/0/set
@@ -129,26 +131,32 @@ switch:
 
 light:
   - name: 客厅筒灯
+    icon: mdi:track-light
     state_topic: Hassmart1/relay/0
     command_topic: Hassmart1/relay/0/set
     availability_topic: Hassmart1/status
   - name: 餐厅筒灯
+    icon: mdi:track-light
     state_topic: Hassmart1/relay/1
     command_topic: Hassmart1/relay/1/set
     availability_topic: Hassmart1/status
   - name: 洗手间灯
+    icon: mdi:ceiling-light
     state_topic: Hassmart2/relay/0
     command_topic: Hassmart2/relay/0/set
     availability_topic: Hassmart2/status
   # - name: 浴室灯
+  #   icon: mdi:ceiling-light
   #   state_topic: Hassmart3/relay/1
   #   command_topic: Hassmart3/relay/1/set
   #   availability_topic: Hassmart3/status
   - name: 过道柜灯
+    icon: mdi:car-light-dimmed
     state_topic: Sonoff1/relay/0
     command_topic: Sonoff1/relay/0/set
     availability_topic: Sonoff1/status
   - name: 过道筒灯
+    icon: mdi:track-light
     state_topic: Sonoff2/relay/0
     command_topic: Sonoff2/relay/0/set
     availability_topic: Sonoff2/status
@@ -222,6 +230,7 @@ fan:
   #   payload_oscillation_on: 'ON'
   #   payload_oscillation_off: 'OFF'
   - name: 餐厅净化器
+    icon: mdi:cupcake
     state_topic: NodeMCU5/relay/0
     command_topic: NodeMCU5/relay/0/set
     availability_topic: NodeMCU5/status
@@ -242,6 +251,7 @@ fan:
     payload_oscillation_on: 'ON'
     payload_oscillation_off: 'OFF'
   - name: 儿童房净化器
+    icon: mdi:cupcake
     state_topic: NodeMCU6/relay/0
     command_topic: NodeMCU6/relay/0/set
     availability_topic: NodeMCU6/status

@@ -1,0 +1,9 @@
+{
+	"domain": "zhibroad",
+	"name": "Zhi Broadlink Component",
+	"documentation": "https://github.com/Yonsm/.homeassistant",
+	"version": "1.0.1",
+	"requirements": [],
+	"dependencies": ["broadlink"],
+	"codeowners": ["@Yonsm"]
+}

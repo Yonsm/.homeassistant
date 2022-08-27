@@ -13,15 +13,32 @@
 - platform: zhimijia
   model: zhimi.airfresh.va2
   name: 客厅新风机
+  icon: mdi:leaf
   did: 80578920
+  sensors:
+    temp_dec: 客厅温度
+    humidity: 客厅湿度
+    aqi: 客厅空气质量
+    co2: 客厅二氧化碳
 - platform: zhimijia
   model: zhimi.airfresh.va2
   name: 主卧新风机
+  icon: mdi:leaf
   did: 99281481
+  sensors:
+    temp_dec: 主卧温度
+    humidity: 主卧湿度
+    aqi: 主卧空气质量
+    co2: 主卧二氧化碳
 - platform: zhimijia
   model: zhimi.airpurifier.m1
   name: 次卧净化器
+  icon: mdi:cupcake
   did: 61061613
+  sensors:
+    temp_dec: 次卧温度
+    humidity: 次卧湿度
+    aqi: 次卧空气质量
 - platform: zhiremote
   name: 客厅风扇
   sender: remote.ke_ting_yao_kong

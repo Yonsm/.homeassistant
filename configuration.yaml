@@ -6,17 +6,9 @@ homeassistant:
   unit_system: metric
   currency: CNY
   time_zone: Asia/Shanghai
-  # external_url: !secret external_url
-  # internal_url: !secret external_url
+  external_url: !secret external_url
+  internal_url: !secret external_url
   customize: !include customize.yaml
-  # allowlist_external_dirs:
-  #   - "/usr/var/dumping-ground"
-  #   - "/tmp"
-  # allowlist_external_urls:
-  #   - "http://images.com/image1.png"
-  # media_dirs:
-  #   media: "/media"
-  #   recordings: "/mnt/recordings"
 
 http:
   server_port: 88
@@ -29,8 +21,8 @@ automation: !include_dir_merge_list automations
 #scene: !include scenes.yaml
 #script: !include scripts.yaml
 
-usb:
-bluetooth:
+#usb:
+#bluetooth:
 
 # backup
 # cloud:
@@ -117,9 +109,9 @@ device_tracker:
       # aphone: 192.168.1.27
 
 person:
-  # - name: 爸爸
-  #   id: baba
-  #   device_trackers: device_tracker.gphone
+  - name: 爸爸
+    id: baba
+    device_trackers: device_tracker.gphone
   - name: 妈妈
     id: mama
     device_trackers: device_tracker.zphone
@@ -143,15 +135,11 @@ weather:
   - platform: zhicaiyun
     name: 天气
 
-sensor: !include sensors.yaml
+#sensor: !include sensors.yaml
 switch: !include switches.yaml
 light: !include lights.yaml
 fan: !include fans.yaml
 mqtt: !include mqtt.yaml
-
-xiaomi_aqara:
-  gateways:
-    - key: 3ECB50168D7F4AEB
 
 climate:
   # - platform: zhisaswell
@@ -183,6 +171,7 @@ cover:
     command: dooya_cover
   - platform: zhiremote
     name: 书房幕布
+    icon: mdi:projector-screen
     sender: remote.shu_fang_yao_kong
     travel: 45
     command: elite_screen
@@ -190,15 +179,20 @@ cover:
 media_player:
   - platform: zhiremote
     name: 书房投影仪
+    icon: mdi:projector
     sender: remote.shu_fang_yao_kong
     command: viewsonic_projector
     sensor: device_tracker.projector
-  # - platform: braviatv
-  #   host: X9300d
-  #   name: 主卧电视
-  # - platform: braviatv
-  #   host: X9400e
-  #   name: 客厅电视
+  - platform: zhibravia
+    name: 主卧电视
+    host: 192.168.1.6
+    mac: 104FA8EF7F86
+    pin: '0000'
+  - platform: zhibravia
+    name: 客厅电视
+    host: 192.168.1.7
+    mac: 104FA8EF7F86
+    pin: '0000'
   # - platform: dlna_dmr
   #   name: 天猫精灵
   #   url: http://Magic:49153/description.xml
@@ -273,6 +267,25 @@ zhibot:
   - platform: ding
     name: 儿童房音箱
     token: !secret zhibot_token
+
+remote:
+  - platform: zhibroad
+    name: 书房遥控
+    host: 192.168.1.46
+    mac: 34ea3458735d
+    type: 10141
+  - platform: zhibroad
+    name: 客厅遥控
+    host: 192.168.1.47
+    mac: 34ea3458735d
+    type: 10141
+
+# zhiaqara:
+#   name: 小米网关
+#   host: 192.168.1.30
+#   key: 3ECB50168D7F4AEB
+#   mac: 34:ce:00:90:90:1a
+#   sid: 34ce0090901a
 
 # By Intergration
 # switch.broadlink
