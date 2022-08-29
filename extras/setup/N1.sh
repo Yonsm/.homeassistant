@@ -59,35 +59,36 @@ ssh root@hass
 
 #
 echo "admin ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-echo "LC_ALL=en_US.UTF-8" >> /etc/default/locale
+#echo "LC_ALL=en_US.UTF-8" >> /etc/default/locale
 
 armbian-config #Hostname, wifi,timezone, apt-source
 #echo "Asia/Shanghai" > /etc/timezone && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 # ============================== Home Assistant ==============================
-cat <<\EOF > /etc/apt/sources.list
-deb http://mirrors.aliyun.com/debian/ buster main non-free contrib
-deb-src http://mirrors.aliyun.com/debian/ buster main non-free contrib
-deb http://mirrors.aliyun.com/debian-security buster/updates main
-deb-src http://mirrors.aliyun.com/debian-security buster/updates main
-deb http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib
-deb-src http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib
-deb http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib
-deb-src http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib
-EOF
+# cat <<\EOF > /etc/apt/sources.list
+# deb http://mirrors.aliyun.com/debian/ jammy main non-free contrib
+# deb-src http://mirrors.aliyun.com/debian/ jammy main non-free contrib
+# deb http://mirrors.aliyun.com/debian-security jammy/updates main
+# deb-src http://mirrors.aliyun.com/debian-security jammy/updates main
+# deb http://mirrors.aliyun.com/debian/ jammy-updates main non-free contrib
+# deb-src http://mirrors.aliyun.com/debian/ jammy-updates main non-free contrib
+# deb http://mirrors.aliyun.com/debian/ jammy-backports main non-free contrib
+# deb-src http://mirrors.aliyun.com/debian/ jammy-backports main non-free contrib
+# EOF
 
 apt update && apt upgrade -y
 #apt autoclean
 #apt clean
 #apt autoremove -y
 
-apt install mosquitto mosquitto-clients libavahi-compat-libdnssd-dev libturbojpeg0 adb
+apt install mosquitto mosquitto-clients libavahi-compat-libdnssd-dev adb python3-pip
 
 # Armbian
 #apt install python3-pip python3-dev python3-setuptools libffi-dev
 #ln -sf /usr/bin/python3 /usr/bin/python
 
 # Speedtest
+ln -s /usr/bin/python3 /usr/bin/python
 cd /usr/local/bin
 wget -O speedtest https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py; chmod +x speedtest; ./speedtest
 
@@ -101,21 +102,21 @@ wget -O speedtest https://raw.githubusercontent.com/sivel/speedtest-cli/master/s
 #apt install libjpeg-dev zlib1g-dev
 
 # Python 3.9
-apt install build-essential checkinstall
-apt install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev
-cd /opt
-wget -o Python.tgz https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz
-tar xzf Python.tgz
-cd Python
-./configure --prefix=/usr --enable-optimizations
-make build_all
-make altinstall
-ln -s /usr/share/pyshared/lsb_release.py /usr/lib/python3.9/site-packages/lsb_release.py
-ln -s /usr/lib/python3/dist-packages/apt_pkg.cpython-37m-aarch64-linux-gnu.so /usr/lib/python3.9/site-packages/apt_pkg.so
-update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 1
-update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 2
-update-alternatives --config python
-cd /opt && rm -rf Python*
+# apt install build-essential checkinstall
+# apt install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev
+# cd /opt
+# wget -o Python.tgz https://www.python.org/ftp/python/3.9.1/Python-3.9.1.tgz
+# tar xzf Python.tgz
+# cd Python
+# ./configure --prefix=/usr --enable-optimizations
+# make build_all
+# make altinstall
+# ln -s /usr/share/pyshared/lsb_release.py /usr/lib/python3.9/site-packages/lsb_release.py
+# ln -s /usr/lib/python3/dist-packages/apt_pkg.cpython-37m-aarch64-linux-gnu.so /usr/lib/python3.9/site-packages/apt_pkg.so
+# update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 1
+# update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 2
+# update-alternatives --config python
+# cd /opt && rm -rf Python*
 
 # Home Assistant
 pip3 install wheel
