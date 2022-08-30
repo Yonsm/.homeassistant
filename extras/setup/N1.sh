@@ -19,6 +19,11 @@
 # https://github.com/ophub/amlogic-s9xxx-armbian
 # https://github.com/ophub/amlogic-s9xxx-armbian/releases/download/Armbian_Aml_jammy_08.30.0225/Armbian_22.08.0_Aml_s905d_jammy_5.15.62_server_2022.08.30.img.gz
 
+# Write on macOS
+# diskutil list # e.g. /dev/disk3
+# diskutil umount /dev/disk3s1
+# sudo dd if=armbian.img of=/dev/rdisk3 bs=1M
+
 # ============================== Basic Config ==============================
 # Raspberry Pi Only
 #ssh pi@hass
@@ -206,8 +211,10 @@ EOF
 systemctl --system daemon-reload
 systemctl enable socks5
 
+exit 0
 
-# Install on CoreElec
+# ============================== Install on N1 CoreElec ==============================
+# 
 installentware
 opkg update
 opkg install gcc make coreutils-expr
