@@ -54,6 +54,7 @@ scp ~/.ssh/id_rsa admin@hass:~/.ssh/
 scp ~/.ssh/config admin@hass:~/.ssh/
 
 sed -i "s/Port 22/Port 89/" /etc/ssh/sshd_config
+sed -i "s/#Port 22/Port 89/" /etc/ssh/sshd_config
 
 ssh root@hass
 
@@ -81,7 +82,9 @@ apt update && apt upgrade -y
 #apt clean
 #apt autoremove -y
 
-apt install mosquitto mosquitto-clients libavahi-compat-libdnssd-dev adb python3-pip
+apt install mosquitto mosquitto-clients libavahi-compat-libdnssd-dev adb telnet python3-pip libpython3.10-dev
+echo "listener 1883">>/etc/mosquitto/mosquitto.conf
+echo "allow_anonymous true">>/etc/mosquitto/mosquitto.conf
 
 # Armbian
 #apt install python3-pip python3-dev python3-setuptools libffi-dev
@@ -119,8 +122,9 @@ wget -O speedtest https://raw.githubusercontent.com/sivel/speedtest-cli/master/s
 # cd /opt && rm -rf Python*
 
 # Home Assistant
-pip3 install wheel
-pip3 install netdisco
+pip3 install wheel sqlalchemy
+#pip3 install netdisco
+
 pip3 install homeassistant
 
 # Auto start
@@ -168,7 +172,7 @@ EOF
 apt install nginx
 ln -s /root/.homeassistant/extras/setup/nginx.conf /etc/nginx/sites-enabled/default
 
-ln -s /root/.homeassistant/extras/setup/adb /usr/local/bin/
+#ln -s /root/.homeassistant/extras/setup/adb /usr/local/bin/
 ln -s /root/.homeassistant/extras/setup/ffmpeg /usr/local/bin/
 ln -s /root/.homeassistant/extras/setup/trojan /usr/local/bin/
 ln -s /root/.homeassistant/extras/setup/ss-local /usr/local/bin/
