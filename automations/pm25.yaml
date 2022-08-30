@@ -10,27 +10,9 @@
         sensor_values: [10, 20, 50]
         entity_id: fan.can_ting_jing_hua_qi
         entity_attr: preset_mode
-        entity_values: [low, medium, high]
+        entity_values: [自动, 中档, 高档]
         # condition_attr: oscillating
         # condition_values: [false]
-
-# - alias: 主卧空气质量变化-调控净化器
-#  mode: restart  
-#   trigger:
-#     - platform: state
-#       entity_id: sensor.zhu_wo_kong_qi_zhi_liang
-#   action:
-#     - service: zhiact.actuate
-#       data:
-#         sensor_id: sensor.zhu_wo_kong_qi_zhi_liang
-#         sensor_values: [7, 15, 40]
-#         alt_sensor_values: [12, 30, 50]
-#         entity_id: fan.zhu_wo_jing_hua_qi
-#         entity_attr: preset_mode
-#         entity_values: [low, medium, high]
-#         # condition_attr: oscillating
-#         # condition_values: [false]
-#         #delay: 0
 
 - alias: 次卧空气质量变化-调控净化器
   mode: restart  
@@ -44,9 +26,8 @@
         sensor_values: [15, 25, 35, 45, 50, 60, 70, 80, 90, 100]
         entity_id: fan.ci_wo_jing_hua_qi
         entity_attr: favorite_level
-        service: xiaomi_miio.fan_set_favorite_level
-        service_attr: level
-        entity_values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        service_attr: percentage
+        entity_values: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
         condition_attr: mode
         condition_values: [idle, favorite]
 
@@ -63,7 +44,7 @@
         alt_sensor_values: [12, 30, 50]
         entity_id: fan.er_tong_fang_jing_hua_qi
         entity_attr: preset_mode
-        entity_values: [low, medium, high]
+        entity_values: [自动, 中档, 高档]
         # condition_attr: oscillating
         # condition_values: [false]
         #delay: 0

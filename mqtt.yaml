@@ -236,16 +236,10 @@ fan:
     oscillation_command_topic: NodeMCU5/relay/1/set
     preset_mode_state_topic: NodeMCU5/relay/0
     preset_mode_command_topic: NodeMCU5/relay/0/set
-    payload_on: 1
-    payload_off: 0
-    state_value_template: '{% if value == "0" %}0{% else %}1{% endif %}'
-    preset_modes:
-      - 'off'
-      - low
-      - medium
-      - high
-    preset_mode_command_template: '{% if value == "off" %}0{% elif value == "low" %}1{% elif value == "high" %}6{% else %}5{% endif %}'
-    preset_mode_value_template: '{% if value == "0" %}off{% elif value == "1" %}low{% elif value == "6" %}high{% else %}medium{% endif %}'
+    state_value_template: '{% if value == "0" %}OFF{% else %}ON{% endif %}'
+    preset_modes: [关闭, 自动, 梅雨, 花粉, 静音, 中档, 高档]
+    preset_mode_command_template: '{% if value == "自动" %}1{% elif value == "梅雨" %}2{% elif value == "花粉" %}3{% elif value == "静音" %}4{% elif value == "中档" %}5{% elif value == "高档" %}6{% else %}0{% endif %}'
+    preset_mode_value_template: '{% if value == "1" %}自动{% elif value == "2" %}梅雨{% elif value == "3" %}花粉{% elif value == "4" %}静音{% elif value == "5" %}中档{% elif value == "6" %}高档{% else %}关闭{% endif %}'
     payload_oscillation_on: 'ON'
     payload_oscillation_off: 'OFF'
   - name: 儿童房净化器
@@ -257,16 +251,10 @@ fan:
     oscillation_command_topic: NodeMCU6/relay/1/set
     preset_mode_state_topic: NodeMCU6/relay/0
     preset_mode_command_topic: NodeMCU6/relay/0/set
-    payload_on: 1
-    payload_off: 0
-    state_value_template: '{% if value == "0" %}0{% else %}1{% endif %}'
-    preset_modes:
-      - 'off'
-      - low
-      - medium
-      - high
-    preset_mode_command_template: '{% if value == "off" %}0{% elif value == "low" %}1{% elif value == "high" %}6{% else %}5{% endif %}'
-    preset_mode_value_template: '{% if value == "0" %}off{% elif value == "1" %}low{% elif value == "6" %}high{% else %}medium{% endif %}'
+    state_value_template: '{% if value == "0" %}OFF{% else %}ON{% endif %}'
+    preset_modes: [关闭, 自动, 梅雨, 花粉, 静音, 中档, 高档]
+    preset_mode_command_template: '{% if value == "自动" %}1{% elif value == "梅雨" %}2{% elif value == "花粉" %}3{% elif value == "静音" %}4{% elif value == "中档" %}5{% elif value == "高档" %}6{% else %}0{% endif %}'
+    preset_mode_value_template: '{% if value == "1" %}自动{% elif value == "2" %}梅雨{% elif value == "3" %}花粉{% elif value == "4" %}静音{% elif value == "5" %}中档{% elif value == "6" %}高档{% else %}关闭{% endif %}'
     payload_oscillation_on: 'ON'
     payload_oscillation_off: 'OFF'
 # - name: 主卧壁扇
