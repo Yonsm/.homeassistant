@@ -1,18 +1,23 @@
 #!/bin/sh
 
-# N1: Pre-Install to EMMC
+# ============================== N1 Armbian ==============================
+# N1 2020: Pre-Install to EMMC
 # https://www.right.com.cn/forum/thread-4057162-1-1.html
 # https://yadi.sk/d/_rQgn_FosYuW0g
 #dd if=/dev/mmcblk1 of=/root/u-boot-default-aml.img bs=1M count=4 conv=fsync
-echo '/dev/mmcblk1 0x27400000 0x10000' > /etc/fw_env.config
+# echo '/dev/mmcblk1 0x27400000 0x10000' > /etc/fw_env.config
 
-fw_setenv ab 0
-fw_setenv bootcmd 'run start_autoscript; run storeboot'
-fw_setenv start_autoscript 'if mmcinfo; then run start_mmc_autoscript; fi; if usb start; then run start_usb_autoscript; fi; run start_emmc_autoscript'
-fw_setenv start_emmc_autoscript 'if fatload mmc 1 1020000 emmc_autoscript; then autoscr 1020000; fi;'
-fw_setenv start_mmc_autoscript 'if fatload mmc 0 1020000 s905_autoscript; then autoscr 1020000; fi;'
-fw_setenv start_usb_autoscript 'for usbdev in 0 1 2 3; do if fatload usb ${usbdev} 1020000 s905_autoscript; then autoscr 1020000; fi; done'
-./install-aml.sh
+# fw_setenv ab 0
+# fw_setenv bootcmd 'run start_autoscript; run storeboot'
+# fw_setenv start_autoscript 'if mmcinfo; then run start_mmc_autoscript; fi; if usb start; then run start_usb_autoscript; fi; run start_emmc_autoscript'
+# fw_setenv start_emmc_autoscript 'if fatload mmc 1 1020000 emmc_autoscript; then autoscr 1020000; fi;'
+# fw_setenv start_mmc_autoscript 'if fatload mmc 0 1020000 s905_autoscript; then autoscr 1020000; fi;'
+# fw_setenv start_usb_autoscript 'for usbdev in 0 1 2 3; do if fatload usb ${usbdev} 1020000 s905_autoscript; then autoscr 1020000; fi; done'
+# ./install-aml.sh
+
+# N1 2022
+# https://github.com/ophub/amlogic-s9xxx-armbian
+# https://github.com/ophub/amlogic-s9xxx-armbian/releases/download/Armbian_Aml_jammy_08.30.0225/Armbian_22.08.0_Aml_s905d_jammy_5.15.62_server_2022.08.30.img.gz
 
 # ============================== Basic Config ==============================
 # Raspberry Pi Only
