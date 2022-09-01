@@ -100,13 +100,14 @@ device_tracker:
       x9300d: 192.168.1.6
       x9400e: 192.168.1.7
       projector: 192.168.1.9
-      gphone: 192.168.1.20
-      zphone: 192.168.1.21
-      yphone: 192.168.1.22
-      # xphone: 192.168.1.23
-      jphone: 192.168.1.24
+      gphone: 192.168.1.21
+      zphone: 192.168.1.22
+      yphone: 192.168.1.23
+      # xphone: 192.168.1.24
+      jphone: 192.168.1.25
+      aphone: 192.168.1.26
+      jpad: 192.168.1.28
       zpad: 192.168.1.29
-      # aphone: 192.168.1.27
 
 person:
   - name: 爸爸
@@ -123,13 +124,13 @@ person:
     device_trackers: device_tracker.yphone
   - name: 大宝
     id: dabao
-    device_trackers: device_tracker.jphone
+    device_trackers: [device_tracker.jphone, device_tracker.jpad]
   - name: 小智
     id: xiaozhi
     device_trackers: device_tracker.zpad
-  # - name: 阿姨
-  #   id: ayi
-  #   device_trackers: device_tracker.aphone
+  - name: 阿姨
+    id: ayi
+    device_trackers: device_tracker.aphone
 
 weather:
   - platform: zhicaiyun
