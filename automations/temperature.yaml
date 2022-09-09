@@ -187,7 +187,7 @@
         alt_time_range: [1, 8]
         entity_id: fan.shu_fang_feng_shan
         entity_attr: preset_mode
-        entity_values: [档位1, 档位2, 档位3, 档位4]
+        entity_values: [1档, 2档, 3档, 4档]
 
 - alias: 儿童房温度变化-调控风扇
   mode: restart  
@@ -211,7 +211,7 @@
         alt_time_range: [1, 8]
         entity_id: fan.er_tong_fang_feng_shan
         entity_attr: preset_mode
-        entity_values: [档位1, 档位2, 档位3, 档位4]
+        entity_values: [1档, 2档, 3档, 4档]
 
 # - alias: 主卧温度变化-调控风扇
 #   mode: restart  
