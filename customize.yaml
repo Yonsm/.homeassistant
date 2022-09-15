@@ -34,18 +34,12 @@ camera.shu_fang_she_xiang_ji:
   dash_click: videogo://
 camera.zhu_wo_she_xiang_ji:
   dash_click: mihome://device?did=63538723&uid=8816080&server=cn
-climate.ke_ting_di_nuan:
-  genie_name: 取暖器
-climate.zhu_wo_di_nuan:
-  genie_name: 取暖器
 cover.curtain_158d0003f7951d:
   friendly_name: 过道卷帘
 cover.curtain_158d000405d535:
   friendly_name: 主卧窗帘
 cover.curtain_158d00042cf265:
   friendly_name: 儿童房窗帘
-cover.shu_fang_mu_bu:
-  genie_name: 电视盒子
 fan.can_ting_jing_hua_qi:
   dash_icon: ${sensor.can_ting_kong_qi_zhi_liang}
 fan.ci_wo_jing_hua_qi:
@@ -56,8 +50,6 @@ fan.er_tong_fang_jing_hua_qi:
   dash_icon: ${sensor.er_tong_fang_kong_qi_zhi_liang}
 fan.ke_ting_xin_feng_ji:
   dash_icon: ${co2}
-fan.shu_fang_feng_shan:
-  dash_icon: ${sensor.shu_fang_wen_du}
 fan.zhu_wo_xin_feng_ji:
   dash_icon: ${co2}
 light.er_tong_fang_tai_deng:
@@ -65,8 +57,6 @@ light.er_tong_fang_tai_deng:
 light.gateway_light_34ce0090901a:
   friendly_name: 客厅壁灯
   icon: mdi:car-light-high
-light.shu_fang_liang_yi_deng:
-  genie_name: 吊灯
 sensor.can_ting_kong_qi_zhi_liang:
   dash_click: /zhilace-type
   dash_extra_forced: 分类
@@ -133,18 +123,8 @@ switch.plug_158d0003a58422:
 switch.shu_fang_yin_xiang:
   dash_extra: original_state
   dash_extra_click: mqttPublish("NodeMCU2/relay/0/set", "toggle")
-  genie_name: 机顶盒
 switch.wang_luo_cun_chu:
-  genie_name: 书房网关
   icon: mdi:nas
-switch.xi_shou_jian_pai_qi_shan:
-  genie_name: 洗手间顶扇
-switch.yi_ju_chu_shi_ji:
-  device_class: outlet
-switch.yu_shi_pai_qi_shan:
-  genie_name: 浴室顶扇
-switch.zhu_wo_dian_shi:
-  genie_name: 开关
 weather.tian_qi:
   dash_click: https://caiyunapp.com/weather
   dash_name: ${temperature}℃ ${humidity}% ${pm25}μg

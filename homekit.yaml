@@ -6,7 +6,6 @@ filter:
     - device_tracker
     - input_boolean
     - media_player
-    - remote
     - script
   exclude_entities:
     - binary_sensor.switch_158d0001e59b33
@@ -15,9 +14,10 @@ filter:
     - climate.ke_ting_di_nuan
     - climate.zhu_wo_di_nuan
     - sensor.er_tong_fang_er_yang_hua_tan
-    - sensor.zhu_wo_er_yang_hua_tan
     - switch.can_ting_tong_deng
     - switch.ke_ting_tong_deng
+    - remote.ke_ting_yao_kong
+    - remote.shu_fang_yao_kong
 entity_config:
   switch.can_ting_chu_shi_ji:
     type: outlet
