@@ -90,47 +90,47 @@ homekit: !include homekit.yaml
 
 modbus:
   type: rtuovertcp
-  host: ModBus
+  host: KongTiaoWangGuan
   port: 8899
 
 device_tracker:
   - platform: ping
     scan_interval: 120
     hosts:
-      x9300d: 192.168.1.6
-      x9400e: 192.168.1.7
-      projector: 192.168.1.9
-      gphone: 192.168.1.21
-      zphone: 192.168.1.22
-      yphone: 192.168.1.23
-      # xphone: 192.168.1.24
-      jphone: 192.168.1.25
-      aphone: 192.168.1.26
-      jpad: 192.168.1.28
-      zpad: 192.168.1.29
+      zhuwodianshi: 192.168.1.6
+      ketingdianshi: 192.168.1.7
+      touyingyi: 192.168.1.9
+      babashouji: 192.168.1.21
+      mamashouji: 192.168.1.22
+      nainaishouji: 192.168.1.23
+      # yeyeshouji: 192.168.1.24
+      dabaoshouji: 192.168.1.25
+      ayishouji: 192.168.1.26
+      dabaopingban: 192.168.1.28
+      xiaozhipingban: 192.168.1.29
 
 person:
   - name: 爸爸
     id: baba
-    device_trackers: device_tracker.gphone
+    device_trackers: device_tracker.babashouji
   - name: 妈妈
     id: mama
-    device_trackers: device_tracker.zphone
+    device_trackers: device_tracker.mamashouji
   # - name: 爷爷
   #   id: yeye
-  #   device_trackers: device_tracker.xphone
+  #   device_trackers: device_tracker.yeyeshouji
   - name: 奶奶
     id: nainai
-    device_trackers: device_tracker.yphone
+    device_trackers: device_tracker.nainaishouji
   - name: 大宝
     id: dabao
-    device_trackers: [device_tracker.jphone, device_tracker.jpad]
+    device_trackers: [device_tracker.dabaoshouji, device_tracker.dabaopingban]
   - name: 小智
     id: xiaozhi
-    device_trackers: device_tracker.zpad
+    device_trackers: device_tracker.xiaozhipingban
   - name: 阿姨
     id: ayi
-    device_trackers: device_tracker.aphone
+    device_trackers: device_tracker.ayishouji
 
 weather:
   - platform: zhicaiyun
@@ -211,7 +211,7 @@ vacuum:
     did: 410056542
 #   - platform: xiaomi_miio
 #     name: 扫地机
-#     host: Vacuum
+#     host: SaoDiJi
 #     token: !secret vacuum_token
 
 zhiact:
@@ -265,17 +265,17 @@ zhiaqara:
 
 zhibroad:
   - name: 书房遥控
-    host: Remote
+    host: ShuFangYaoKong
   - name: 客厅遥控
-    host: Remote2
-  - name: 餐厅除湿机
-    host: Outlet
+    host: KeTingYaoKong
+  # - name: 客厅插座
+  #   host: KeTingChaZuo
 
 zhibravia:
   - name: 主卧电视
-    host: 192.168.1.6
+    host: ZhuWoDianShi
   - name: 客厅电视
-    host: 192.168.1.7
+    host: KeTingDianShi
 
 zhilace:
 
