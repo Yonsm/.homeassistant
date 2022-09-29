@@ -90,7 +90,7 @@ homekit: !include homekit.yaml
 
 modbus:
   type: rtuovertcp
-  host: KongTiaoWangGuan
+  host: 192.168.1.20
   port: 8899
 
 device_tracker:
@@ -265,17 +265,17 @@ zhiaqara:
 
 zhibroad:
   - name: 书房遥控
-    host: ShuFangYaoKong
+    host: 192.168.1.51
   - name: 客厅遥控
-    host: KeTingYaoKong
+    host: 192.168.1.52
   # - name: 客厅插座
   #   host: KeTingChaZuo
 
 zhibravia:
   - name: 主卧电视
-    host: ZhuWoDianShi
+    host: 192.168.1.6
   - name: 客厅电视
-    host: KeTingDianShi
+    host: 192.168.1.7
 
 zhilace:
 
