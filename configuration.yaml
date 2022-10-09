@@ -103,7 +103,7 @@ device_tracker:
       babashouji: 192.168.1.21
       mamashouji: 192.168.1.22
       nainaishouji: 192.168.1.23
-      # yeyeshouji: 192.168.1.24
+      yeyeshouji: 192.168.1.24
       dabaoshouji: 192.168.1.25
       ayishouji: 192.168.1.26
       dabaopingban: 192.168.1.28
@@ -116,9 +116,9 @@ person:
   - name: 妈妈
     id: mama
     device_trackers: device_tracker.mamashouji
-  # - name: 爷爷
-  #   id: yeye
-  #   device_trackers: device_tracker.yeyeshouji
+  - name: 爷爷
+    id: yeye
+    device_trackers: device_tracker.yeyeshouji
   - name: 奶奶
     id: nainai
     device_trackers: device_tracker.nainaishouji
