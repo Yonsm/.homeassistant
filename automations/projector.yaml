@@ -50,44 +50,13 @@
     - service: cover.open_cover
       entity_id: cover.shu_fang_chuang_lian
 
-# - alias: 书房按钮单击—开关卷帘
-#   trigger:
-#     - platform: event
-#       event_type: xiaomi_aqara.click
-#       event_data:
-#         entity_id: binary_sensor.switch_158d000201a73f
-#         click_type: single
-#   action:
-#     - service: zhimsg.ke_ting_yin_xiang
-#       data:
-#         message: 正在开关卷帘
-
-# - alias: 书房按钮双击—开关播放器
-#   trigger:
-#     - platform: event
-#       event_type: xiaomi_aqara.click
-#       event_data:
-#         entity_id: binary_sensor.switch_158d000201a73f
-#         click_type: double
-#   action:
-#     - service_template: 'switch.turn_{% if is_state("media_player.shu_fang_tou_ying_yi", "on") %}off{% else %}on{% endif %}'
-#       entity_id: switch.shu_fang_yin_xiang
-#     - service: automation.trigger
-#       entity_id: automation.shu_fang_an_niu_chang_an_kai_guan_tou_ying_yi
-
-- alias: 书房按钮长按—开关投影仪
-  initial_state: false
+- alias: 书房按钮单击—开关投影仪
   trigger:
     - platform: event
-      event_type: xiaomi_aqara.cube_action
+      event_type: xiaomi_aqara.click
       event_data:
-        entity_id: binary_sensor.cube_158d0002a66db1
-        action_type: shake_air
-    # - platform: event
-    #   event_type: xiaomi_aqara.click
-    #   event_data:
-    #     entity_id: binary_sensor.switch_158d000201a73f
-    #     click_type: long_click_press
+        entity_id: binary_sensor.switch_158d000201a73f
+        click_type: single
   action:
     - service: zhimsg.ke_ting_yin_xiang
       data_template:
@@ -99,3 +68,21 @@
         entity_id: 'automation.shu_fang_tou_ying_yi_{% if is_state("media_player.shu_fang_tou_ying_yi", "off") %}guan_bi_shou_wei{% else %}kai_qi_zhun_bei{% endif %}_pei_tao'
     - service_template: 'switch.turn_{% if is_state("media_player.shu_fang_tou_ying_yi", "off") %}off{% else %}on{% endif %}'
       entity_id: switch.shu_fang_yin_xiang
+
+- alias: 书房按钮双击—开关播放器
+  trigger:
+    - platform: event
+      event_type: xiaomi_aqara.click
+      event_data:
+        entity_id: binary_sensor.switch_158d000201a73f
+        click_type: double
+    - platform: event
+      event_type: xiaomi_aqara.click
+      event_data:
+        entity_id: binary_sensor.switch_158d000201a73f
+        click_type: long_click_press
+  action:
+    - service_template: 'switch.turn_{% if is_state("media_player.shu_fang_tou_ying_yi", "on") %}off{% else %}on{% endif %}'
+      entity_id: switch.shu_fang_yin_xiang
+    - service: automation.trigger
+      entity_id: automation.shu_fang_an_niu_dan_ji_kai_guan_tou_ying_yi
