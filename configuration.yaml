@@ -142,9 +142,9 @@ fan: !include fans.yaml
 mqtt: !include mqtt.yaml
 
 climate:
-  # - platform: zhisaswell
-  #   username: !secret saswell_username
-  #   password: !secret saswell_password
+  - platform: zhisaswell
+    username: !secret saswell_username
+    password: !secret saswell_password
   - platform: zhimodbus
     name: [餐厅空调, 客厅空调, 主卧空调, 儿童房空调]
     fan_mode: { registers: [6, 10, 14, 18] }
@@ -301,7 +301,7 @@ panel_iframe:
     url: /local/dash.html
 
 shell_command:
-  station_off: 'ssh root@Station shutdown -h now'
+  station_off: 'ssh root@192.168.1.4 shutdown -h now'
   magic_on: "adb connect magic && adb -s magic shell 'input keyevent 82; am start -n com.thanksmister.iot.wallpanel/.ui.activities.WelcomeActivity'"
   magic_off: "adb connect magic && adb -s magic shell 'input keyevent 82; input keyevent 26'"
   x9300d_off: 'adb connect x9300d && adb -s x9300d shell reboot -p'

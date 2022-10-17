@@ -1,7 +1,7 @@
 - platform: wake_on_lan
   name: 网络存储
   mac: 00:11:32:6B:75:F7
-  host: Station
+  host: 192.168.1.4
   turn_off:
     service: shell_command.station_off
 - platform: zhimqtt
