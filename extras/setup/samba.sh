@@ -6,7 +6,8 @@ hdparm -B 127 /dev/sda
 hdparm -S 180 /dev/sda
 hdparm -I /dev/sda
 hdparm -C /dev/sda
-echo -e "LABEL=STORE\t/mnt/STORE\tntfs\t\tdefaults,noatime,nodiratime\t\t\t0 0" >> /etc/fstab
+# Cause Boot Failure: echo "/dev/sda1 /mnt ntfs defaults,noatime,nodiratime 0 0" >> /etc/fstab
+sed -i 's/exit 0/mount \/dev\/sda1 \/mnt\nexit 0/'  /etc/rc.local
 #reboot
 
 apt install samba samba-vfs-modules
@@ -19,8 +20,8 @@ netbios name = Store
 #workgroup = WORKGROUP
 server string = Storage
 unix charset = UTF-8
-interfaces = lo br-lan
-bind interfaces only = yes
+# interfaces = lo eth0
+# bind interfaces only = yes
 
 # Account
 passdb backend = smbpasswd
@@ -77,41 +78,37 @@ fruit:delete_empty_adfiles = yes
 
 
 [Downloads]
-path = /mnt/STORE/Downloads
+path = /mnt/Downloads
 public = yes
 writable = yes
 
 [Public]
-path = /mnt/STORE/Public
+path = /mnt/Public
 public = yes
 write list = admin
 
 [Music]
-path = /mnt/STORE/Music
+path = /mnt/Music
 public = yes
 write list = admin
 
 [Pictures]
-path = /mnt/STORE/Pictures
-public = no
-writable = yes
-valid users = admin
+path = /mnt/Pictures
+public = yes
+write list = admin
 
 [Movies]
-path = /mnt/STORE/Movies
-public = no
-writable = yes
-valid users = admin
+path = /mnt/Movies
+public = yes
+write list = admin
 
 [Documents]
-path = /mnt/STORE/Documents
+path = /mnt/Documents
 public = no
 writable = yes
 valid users = admin
-
-
 
 EOF
 
 #smbd -F --no-process-group -S -d=3
-/etc/init.d/smbd restart
+systemctl restart smbd
