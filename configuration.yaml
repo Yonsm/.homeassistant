@@ -5,6 +5,7 @@ homeassistant:
   elevation: 32
   unit_system: metric
   currency: CNY
+  country: CN
   time_zone: Asia/Shanghai
   external_url: !secret external_url
   internal_url: !secret external_url
@@ -12,8 +13,8 @@ homeassistant:
 
 http:
   server_port: 88
-  ssl_key: ~/.homeassistant/extras/setup/ssl.key
-  ssl_certificate: ~/.homeassistant/extras/setup/ssl.crt
+  ssl_key: /config/ssl.key
+  ssl_certificate: /config/ssl.crt
 
 # default_config:
 
@@ -102,8 +103,6 @@ device_tracker:
       touyingyi: 192.168.1.9
       babashouji: 192.168.1.21
       mamashouji: 192.168.1.22
-      yeyeshouji: 192.168.1.24
-      nainaishouji: 192.168.1.25
       ayishouji: 192.168.1.26
       dabaopingban: 192.168.1.28
       xiaozhipingban: 192.168.1.29
@@ -115,12 +114,6 @@ person:
   - name: 妈妈
     id: mama
     device_trackers: device_tracker.mamashouji
-  - name: 爷爷
-    id: yeye
-    device_trackers: device_tracker.yeyeshouji
-  - name: 奶奶
-    id: nainai
-    device_trackers: device_tracker.nainaishouji
   - name: 大宝
     id: dabao
     device_trackers: device_tracker.dabaopingban
@@ -182,7 +175,7 @@ media_player:
     icon: mdi:projector
     sender: remote.shu_fang_yao_kong
     command: viewsonic_projector
-    sensor: device_tracker.projector
+    sensor: device_tracker.touyingyi
   # - platform: dlna_dmr
   #   name: 天猫精灵
   #   url: http://Magic:49153/description.xml
