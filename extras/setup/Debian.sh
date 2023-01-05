@@ -25,6 +25,7 @@ echo "allow_anonymous true">>/etc/mosquitto/mosquitto.conf
 docker run -d --name homeassistant --privileged --restart=unless-stopped -e TZ=Asia/Shanghai -v /home/hass/config:/config --network=host ghcr.io/home-assistant/home-assistant:stable
 
 # ============================== Samba ==============================
+apt install samba
 cat <<\EOF > /etc/samba/smb.conf
 [global]
 # General
@@ -97,29 +98,27 @@ write list = admin
 EOF
 
 # ============================== KODI ==============================
+# https://blog.d2okkk.net/202104/j1800_setup_2/
 apt-get update
-apt-get install ca-certificates curl gnupg
+#apt-get install ca-certificates curl gnupg
 #curl 'https://basilgello.github.io/kodi-nightly-debian-repo/repository-key.asc' | apt-key add -
 apt-get install --install-recommends kodi kodi-pvr-iptvsimple
-apt-get install software-properties-common xorg xserver-xorg-legacy alsa-utils mesa-utils git-core librtmp1 libmad0 lm-sensors libmpeg2-4 avahi-daemon libva2 vainfo i965-va-driver dbus-x11 samba pastebinit xserver-xorg-video-intel
+apt-get install software-properties-common xorg xserver-xorg-legacy alsa-utils mesa-utils git-core librtmp1 libmad0 lm-sensors libmpeg2-4 avahi-daemon libva2 vainfo i965-va-driver dbus-x11 pastebinit xserver-xorg-video-intel
 apt-get upgrade
 
-#https://blog.d2okkk.net/202104/j1800_setup_2/
-
-#编辑/etc/X11/Xwrapper.config 允许anybody启动Xserver，值得注意的是，在Debian里面还需要needs_root_rights=yes。
-
+cat <<\EOF > /etc/X11/Xwrapper.config
 allowed_users=anybody
 needs_root_rights=yes
+EOF
 
-/etc/systemd/system/kodi.service
-
+cat <<\EOF > /etc/systemd/system/kodi.service
 [Unit]
 Description = kodi-standalone using xinit
 After = remote-fs.target systemd-user-sessions.service mysql.service
 
 [Service]
-User = kodi
-Group = kodi
+#User = kodi
+#Group = kodi
 Type = simple
 ExecStart = /usr/bin/xinit /usr/bin/dbus-launch /usr/bin/kodi-standalone -- :0 -nolisten tcp
 #Restart = always
@@ -127,12 +126,9 @@ ExecStart = /usr/bin/xinit /usr/bin/dbus-launch /usr/bin/kodi-standalone -- :0 -
 
 [Install]
 WantedBy = multi-user.target
-
-开机自动启动kodi
+EOF
 
 systemctl daemon-reload
 systemctl enable kodi
-新建kodi用户，并添加权限
-
 adduser kodi
 usermod -a -G cdrom,audio,video,plugdev,users,dialout,dip,input kodi
