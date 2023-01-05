@@ -1,20 +1,6 @@
 #!/bin/sh
 
 # ============================== N1 Armbian ==============================
-# N1 2020: Pre-Install to EMMC
-# https://www.right.com.cn/forum/thread-4057162-1-1.html
-# https://yadi.sk/d/_rQgn_FosYuW0g
-#dd if=/dev/mmcblk1 of=/root/u-boot-default-aml.img bs=1M count=4 conv=fsync
-# echo '/dev/mmcblk1 0x27400000 0x10000' > /etc/fw_env.config
-
-# fw_setenv ab 0
-# fw_setenv bootcmd 'run start_autoscript; run storeboot'
-# fw_setenv start_autoscript 'if mmcinfo; then run start_mmc_autoscript; fi; if usb start; then run start_usb_autoscript; fi; run start_emmc_autoscript'
-# fw_setenv start_emmc_autoscript 'if fatload mmc 1 1020000 emmc_autoscript; then autoscr 1020000; fi;'
-# fw_setenv start_mmc_autoscript 'if fatload mmc 0 1020000 s905_autoscript; then autoscr 1020000; fi;'
-# fw_setenv start_usb_autoscript 'for usbdev in 0 1 2 3; do if fatload usb ${usbdev} 1020000 s905_autoscript; then autoscr 1020000; fi; done'
-# ./install-aml.sh
-
 # N1 2022
 # https://github.com/ophub/amlogic-s9xxx-armbian
 # https://github.com/ophub/amlogic-s9xxx-armbian/releases/download/Armbian_Aml_jammy_08.30.0225/Armbian_22.08.0_Aml_s905d_jammy_5.15.62_server_2022.08.30.img.gz
@@ -25,21 +11,6 @@
 # sudo dd if=armbian.img of=/dev/rdisk3 bs=1M
 
 # ============================== Basic Config ==============================
-# Raspberry Pi Only
-#ssh pi@hass
-# sudo passwd root
-# sudo passwd --unlock root
-# sudo nano /etc/ssh/sshd_config #PermitRootLogin yes
-# sudo mkdir /root/.ssh
-# mkdir ~/.ssh
-# sudo reboot
-# # Raspberry Pi Only: Rename pi->admin
-# usermod -l admin pi
-# groupmod -n admin pi
-# mv /home/pi /home/admin
-# usermod -d /home/admin admin
-# passwd admin
-
 # tzsleect
 # cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
@@ -230,55 +201,3 @@ EOF
 
 #smbd -F --no-process-group -S -d=3
 /etc/init.d/smbd restart
-
-# ============================== Install on N1 CoreElec ==============================
-# 
-installentware
-opkg update
-opkg install gcc make coreutils-expr
-opkg install python3-pip python3-setuptools
-
-# libffi-dev
-# wget ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz  # 下载包
-# tar -zxvf libffi-3.2.1.tar.gz
-# cd libffi-3.2.1
-# ./configure
-# make
-# cp armv7l-unknown-linux-gnueabi/include/*.h /opt/include
-
-# Install cryptography
-wget http://launchpadlibrarian.net/230019290/libffi-dev_3.2.1-4_arm64.deb # https://launchpad.net/ubuntu/xenial/arm64/libffi-dev/3.2.1-4
-scp usr/include/ffitarget.h none:/opt/include
-scp usr/include/ffitarget.h none:/opt/include
-wget http://launchpadlibrarian.net/413028779/libssl-dev_1.0.2g-1ubuntu4.15_arm64.deb #https://launchpad.net/ubuntu/xenial/arm64/libssl-dev/1.0.2g-1ubuntu4.15
-#copy usr/include/openssl/* none:/opt/include/openssl
-#copy usr/include/aarch64-linux-gnu/openssl/* none:/opt/include/openssl
-
-ln -s /opt/lib/libffi.so.6.0.4 /opt/lib/libffi.so
-ln -s libcrypto.so.1.1 libcrypto.so
-ln -s libssl.so.1.1 libssl.so
-#pip3 install cryptography
-
-pip3 install wheel homeassistant
-
-systemctl mask kodi
-systemctl start kodi
-systemctl stop kodi
-
-
-# docker run -d --name homeassistant --privileged --restart=unless-stopped -e TZ=Asia/Shanghai -v /home/hass/config:/config --network=host ghcr.io/home-assistant/home-assistant:stable
-
-# Home Assistant Core Fix
-sed -i 's/_LOGGER.warning(CUSTOM_WARNING/#LOGGER.warning(CUSTOM_WARNING/' /usr/src/homeassistant/homeassistant/loader.py
-sed -i 's/minutes=30/days=30/' /usr/src/homeassistant/homeassistant/auth/const.py
-sed -i 's/ATTERY_MODELS:/ATTERY_MODELS and False:/' /usr/src/homeassistant/homeassistant/components/xiaomi_aqara/sensor.py
-sed -i 's/await hass.config_entries.async_forward_entry_setups/#wait hass.config_entries.async_forward_entry_setups/' /usr/src/homeassistant/homeassistant/components/mobile_app/__init__.py
-
-sed -i 's/Platform.BUTTON/#latform.BUTTON/' /usr/src/homeassistant/homeassistant/components/braviatv/__init__.py
-sed -i 's/f"{ATTR_MANUFACTURER} {model}"/model/' /usr/src/homeassistant/homeassistant/components/braviatv/entity.py
-#sed -i 's/await self.coordinator.async_turn_off()/await self.coordinator.async_turn_off(); await self.coordinator.async_turn_off()/' /usr/src/homeassistant/homeassistant/components/braviatv/media_player.py
-
-
-#sed -i 's/f"{device.name} Remote"/device.name/' /usr/src/homeassistant/homeassistant/components/broadlink/remote.py
-#sed -i 's/f"{device.name} Switch"/device.name/' /usr/src/homeassistant/homeassistant/components/broadlink/switch.py
-sed -i 's/"RM4PRO", "RM4MINI"/"RM4PRO", "RMPRO", "RM4MINI"/' /usr/src/homeassistant/homeassistant/components/broadlink/sensor.py
