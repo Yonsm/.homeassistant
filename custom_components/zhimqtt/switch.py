@@ -4,7 +4,7 @@ from homeassistant.const import CONF_VALUE_TEMPLATE, CONF_ICON_TEMPLATE
 from homeassistant.core import callback
 import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
-
+from homeassistant.components.mqtt.util import get_mqtt_data
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA_MODERN.extend({
     vol.Required(CONF_PLATFORM): cv.string,
@@ -45,13 +45,13 @@ class ZhiMqttSwitch(MqttSwitch):
 
             payload = self._value_template(msg.payload)
             if payload == self._state_on:
-                self._state = True
+                self._attr_is_on = True
             elif payload == self._state_off:
-                self._state = False
+                self._attr_is_on = False
             elif payload == PAYLOAD_NONE:
-                self._state = None
+                self._attr_is_on = None
 
-            self.async_write_ha_state()
+            get_mqtt_data(self.hass).state_write_requests.write_state_request(self)
 
         if self._config.get(CONF_STATE_TOPIC) is None:
             # Force into optimistic mode.

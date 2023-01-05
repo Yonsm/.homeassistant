@@ -1,9 +1,9 @@
 - alias: 书房投影仪开启-准备配套
   trigger:
     - platform: state
-      entity_id: device_tracker.projector
-      from: not_home
-      to: home
+      entity_id: media_player.shu_fang_tou_ying_yi
+      from: 'off'
+      to: 'on'
   condition:
     - condition: state
       entity_id: cover.shu_fang_mu_bu
@@ -29,9 +29,9 @@
 - alias: 书房投影仪关闭-收尾配套
   trigger:
     - platform: state
-      entity_id: device_tracker.projector
-      from: home
-      to: not_home
+      entity_id: media_player.shu_fang_tou_ying_yi
+      from: 'on'
+      to: 'off'
   condition:
     - condition: state
       entity_id: cover.shu_fang_mu_bu

@@ -75,8 +75,6 @@ logger:
   default: warning
   logs:
     custom_components: debug
-    custom_components.zhimi: debug
-    custom_components.zhimijia: debug
 
 recorder:
   purge_keep_days: 2
