@@ -17,13 +17,13 @@ apt install -y bluez libffi-dev libssl-dev libjpeg-dev zlib1g-dev autoconf build
 # PIP
 cat <<EOF > ~/.pip/pip.conf
 [global]
-index-url = http://mirrors.aliyun.com/pypi/simple/
+index-url = https://mirrors.aliyun.com/pypi/simple/
 [install]
-trusted-host = http://mirrors.aliyun.com
+trusted-host = https://mirrors.aliyun.com
 EOF
 
 # Hass
-pip3 install homeassistant -i http://mirrors.aliyun.com/pypi/simple/
+pip3 install homeassistant
 
 # Auto start
 cat <<EOF > /etc/systemd/system/homeassistant.service
@@ -47,7 +47,7 @@ systemctl enable homeassistant
 
 # Alias
 cat <<\EOF >> ~/.bashrc
-alias l='ls -lA'
+alias l='ls --color=auto -lA'
 alias mqttsub='mqttsub() { mosquitto_sub -v -t "$1#"; }; mqttsub'
 alias mqttre='systemctl stop mosquitto; sleep 2; rm -rf /var/lib/mosquitto/mosquitto.db; systemctl start mosquitto'
 alias hassre='echo .>~/.homeassistant/home-assistant.log; systemctl restart homeassistant'

@@ -103,7 +103,7 @@ write list = admin
 
 EOF
 
-# ============================== KODI ==============================
+# KODI: NOT WORKED on Debian 11!  Worked on PVE 7.5
 # https://blog.d2okkk.net/202104/j1800_setup_2/
 apt-get update
 #apt-get install ca-certificates curl gnupg
