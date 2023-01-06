@@ -1,28 +1,34 @@
 #!/bin/sh
 
-# ============================== Alias ==============================
-cat <<\EOF >> ~/.bashrc
-export LS_OPTIONS='--color=auto'
-#eval "$(dircolors)"
-alias ls='ls $LS_OPTIONS'
-alias ll='ls $LS_OPTIONS -l'
-alias l='ls $LS_OPTIONS -lA'
+# ============================== Bridge ==============================
+sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0"/' /etc/default/grub
+cat <<\EOF > /etc/network/interfaces
+#source /etc/network/interfaces.d/*
 
-alias mqttsub='mqttsub() { mosquitto_sub -v -t "$1#"; }; mqttsub'
-alias mqttre='systemctl stop mosquitto; sleep 2; rm -rf /var/lib/mosquitto/mosquitto.db; systemctl start mosquitto'
-alias hassre='docker restart homeassistant'
-alias hasslog='tail -f /home/hass/config/home-assistant.log'
-alias hasste='docker exec -it homeassistant /bin/bash'
+auto lo
+iface lo inet loopback
 
+#allow-hotplug eth0
+#iface eth0 inet dhcp
+iface eth0 inet manual
+iface eth1 inet manual
+iface eth2 inet manual
+iface eth3 inet manual
+
+auto br0
+#iface br0 inet dhcp
+iface br0 inet static
+	address 192.168.1.2
+	broadcast 192.168.1.255
+	netmask 255.255.255.0
+	gateway 192.168.1.1
+	dns-nameservers 192.168.1.1
+	bridge_ports eth0 eth1 eth2 eth3
+	bridge_stp on
+	bridge_waitport 0
+	bridge_fd 0
 EOF
-
-# ============================== Mosquitto ==============================
-apt install mosquitto mosquitto-clients
-echo "listener 1883">>/etc/mosquitto/mosquitto.conf
-echo "allow_anonymous true">>/etc/mosquitto/mosquitto.conf
-
-# ============================== Docker ==============================
-docker run -d --name homeassistant --privileged --restart=unless-stopped -e TZ=Asia/Shanghai -v /home/hass/config:/config --network=host ghcr.io/home-assistant/home-assistant:stable
+grub-mkconfig -o /boot/grub/grub.cfg
 
 # ============================== Samba ==============================
 apt install samba
