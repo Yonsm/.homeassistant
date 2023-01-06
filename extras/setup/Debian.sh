@@ -1,5 +1,17 @@
 #!/bin/sh
 
+# 
+apt install adb
+mkdir -p /opt/bin; cd /opt/bin
+wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
+tar -xf ffmpeg-release-amd64-static.tar.xz
+mv ffmpeg-5.1.1-amd64-static/ffmpeg .
+mv ffmpeg-5.1.1-amd64-static/ffprobe .
+mv ffmpeg-5.1.1-amd64-static/model .
+mv ffmpeg-5.1.1-amd64-static/qt-faststart .
+rm -rf ffmpeg-5.1.1-amd64-static
+rm ffmpeg-release-amd64-static.tar.xz
+
 # ============================== Bridge ==============================
 sed -i 's/GRUB_CMDLINE_LINUX=""/GRUB_CMDLINE_LINUX="net.ifnames=0 biosdevname=0"/' /etc/default/grub
 cat <<\EOF > /etc/network/interfaces
