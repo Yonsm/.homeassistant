@@ -1,6 +1,6 @@
 #!/bin/sh
 # Docker HASS=/usr/src/homeassistant/homeassistant
-HASS=/usr/local/lib/python3.9/dist-packages/homeassistant
+HASS=/usr/local/lib/python3.10/dist-packages/homeassistant
 
 sed -i 's/_LOGGER.warning(CUSTOM_WARNING/#LOGGER.warning(CUSTOM_WARNING/' $HASS/loader.py
 sed -i 's/minutes=30/days=30/' $HASS/auth/const.py
