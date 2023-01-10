@@ -88,21 +88,21 @@ homekit: !include homekit.yaml
 
 modbus:
   type: rtuovertcp
-  host: 192.168.1.20
+  host: 192.168.1.60
   port: 8899
 
 device_tracker:
   - platform: ping
     scan_interval: 120
     hosts:
-      zhuwodianshi: 192.168.1.6
-      ketingdianshi: 192.168.1.7
-      touyingyi: 192.168.1.9
-      babashouji: 192.168.1.21
-      mamashouji: 192.168.1.22
-      ayishouji: 192.168.1.26
-      dabaopingban: 192.168.1.28
-      xiaozhipingban: 192.168.1.29
+      touyingyi: 192.168.1.7
+      ketingdianshi: 192.168.1.8
+      zhuwodianshi: 192.168.1.9
+      babashouji: 192.168.1.20
+      mamashouji: 192.168.1.21
+      dabaopingban: 192.168.1.24
+      xiaozhipingban: 192.168.1.25
+      ayishouji: 192.168.1.30
 
 person:
   - name: 爸爸
@@ -261,10 +261,10 @@ zhibroad:
   #   host: KeTingChaZuo
 
 zhibravia:
-  - name: 主卧电视
-    host: 192.168.1.6
   - name: 客厅电视
-    host: 192.168.1.7
+    host: 192.168.1.8
+  - name: 主卧电视
+    host: 192.168.1.9
 
 zhilace:
 

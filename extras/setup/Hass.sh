@@ -6,8 +6,10 @@ apt update && apt upgrade -y
 
 # Mosquitto
 apt install mosquitto mosquitto-clients
-echo "listener 1883">>/etc/mosquitto/mosquitto.conf
-echo "allow_anonymous true">>/etc/mosquitto/mosquitto.conf
+cat <<EOF > /etc/mosquitto/mosquitto.conf
+listener 1883
+allow_anonymous true
+EOF
 
 # Depends
 apt install -y python3 python3-dev python3-pip
