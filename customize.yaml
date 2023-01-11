@@ -82,7 +82,8 @@ sensor.guo_dao_wen_du:
 sensor.illumination_34ce0090901a:
   friendly_name: 客厅亮度
 sensor.ke_ting_er_yang_hua_tan:
-  dash_click: /local/iptv.html
+  dash_extra_forced: 路由器
+  dash_click: !secret router_url
 sensor.ke_ting_kong_qi_zhi_liang:
   dash_click: /zhilace-zone
   dash_extra_forced: 分区
@@ -103,6 +104,8 @@ sensor.yang_tai_wen_du:
   dash_click: http://m.nmc.cn/publish/forecast/AZJ/hangzhou.html
   dash_extra_forced: 中央气象台
   dash_order: '1'
+sensor.zhu_wo_kong_er_yang_hua_tan:
+  dash_click: /local/iptv.html
 sensor.zhu_wo_kong_qi_zhi_liang:
   dash_click: /local/aha.html
   dash_extra_forced: 啊哈网校
