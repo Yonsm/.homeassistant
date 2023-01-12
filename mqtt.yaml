@@ -40,13 +40,13 @@ sensor:
   - name: 书房亮度
     device_class: illuminance
     state_topic: NodeMCU2/lux
-    unit_of_measurement: lm
+    unit_of_measurement: lx
     availability_topic: NodeMCU2/status
   - name: 餐厅亮度
     device_class: illuminance
     state_topic: NodeMCU5/analog
     availability_topic: NodeMCU5/status
-    unit_of_measurement: lm
+    unit_of_measurement: lx
   - name: 儿童房温度
     device_class: temperature
     state_topic: NodeMCU6/temperature
