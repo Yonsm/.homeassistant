@@ -19,9 +19,7 @@ apt install -y bluez libffi-dev libssl-dev libjpeg-dev zlib1g-dev autoconf build
 # PIP
 cat <<EOF > ~/.pip/pip.conf
 [global]
-index-url = https://mirrors.aliyun.com/pypi/simple/
-[install]
-trusted-host = https://mirrors.aliyun.com
+index-url = https://pypi.tuna.tsinghua.edu.cn/simple/
 EOF
 
 # Hass
