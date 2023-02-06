@@ -23,10 +23,10 @@ async def async_setup(hass, config):
 
 
 async def bravia_get_mac(hass, host, pin):
-    from homeassistant.components.braviatv.const import CLIENTID_PREFIX, NICKNAME, ATTR_MAC
+    from homeassistant.components.braviatv.const import LEGACY_CLIENT_ID, NICKNAME_PREFIX, ATTR_MAC
     from bravia_tv import BraviaRC
     device = BraviaRC(host)
-    await hass.async_add_executor_job(device.connect, pin, CLIENTID_PREFIX, NICKNAME)
+    await hass.async_add_executor_job(device.connect, pin, LEGACY_CLIENT_ID, NICKNAME_PREFIX)
     if not await hass.async_add_executor_job(device.is_connected):
         return None
 
