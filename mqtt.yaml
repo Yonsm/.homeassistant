@@ -70,43 +70,44 @@ sensor:
 
   - name: 餐厅温度
     device_class: temperature
-    state_topic: device/zm1/b0f8931ea148/sensor
+    state_topic: device/zm1/b0f893249132/sensor
     value_template: '{{ value_json.temperature }}'
     unit_of_measurement: °C
   - name: 餐厅湿度
     device_class: humidity
-    state_topic: device/zm1/b0f8931ea148/sensor
+    state_topic: device/zm1/b0f893249132/sensor
     value_template: '{{ value_json.humidity }}'
     unit_of_measurement: '%'
   - name: 餐厅空气质量
     device_class: pm25
-    state_topic: device/zm1/b0f8931ea148/sensor
+    state_topic: device/zm1/b0f893249132/sensor
     value_template: '{{ value_json.PM25 }}'
     unit_of_measurement: µg/m³
   - name: 餐厅甲醛
     icon: mdi:biohazard
-    state_topic: device/zm1/b0f8931ea148/sensor
+    state_topic: device/zm1/b0f893249132/sensor
     value_template: '{{ value_json.formaldehyde }}'
     unit_of_measurement: mg/m³
-# - name: 过道温度
-#   device_class: temperature
-#   state_topic: device/zm1/b0f893249132/sensor
-#   value_template: '{{ value_json.temperature }}'
-#   unit_of_measurement: °C
-# - name: 过道湿度
-#   device_class: humidity
-#   state_topic: device/zm1/b0f893249132/sensor
-#   value_template: '{{ value_json.humidity }}'
-#   unit_of_measurement: '%'
-# - name: 过道空气质量
-#   icon: mdi:blur
-#   state_topic: device/zm1/b0f893249132/sensor
-#   value_template: '{{ value_json.PM25 }}'
-#   unit_of_measurement: µg/m³
-# - name: 过道甲醛
-#   icon: mdi:biohazard
-#   state_topic: device/zm1/b0f893249132/sensor
-#   value_template: '{{ value_json.formaldehyde }}'
+  # - name: 过道温度
+  #   device_class: temperature
+  #   state_topic: device/zm1/b0f8931ea148/sensor
+  #   value_template: '{{ value_json.temperature }}'
+  #   unit_of_measurement: °C
+  # - name: 过道湿度
+  #   device_class: humidity
+  #   state_topic: device/zm1/b0f8931ea148/sensor
+  #   value_template: '{{ value_json.humidity }}'
+  #   unit_of_measurement: '%'
+  # - name: 过道空气质量
+  #   device_class: pm25
+  #   state_topic: device/zm1/b0f8931ea148/sensor
+  #   value_template: '{{ value_json.PM25 }}'
+  #   unit_of_measurement: µg/m³
+  # - name: 过道甲醛
+  #   icon: mdi:biohazard
+  #   state_topic: device/zm1/b0f8931ea148/sensor
+  #   value_template: '{{ value_json.formaldehyde }}'
+  #   unit_of_measurement: mg/m³
 
 switch:
   - name: 餐厅筒灯

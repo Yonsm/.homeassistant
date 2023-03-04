@@ -132,9 +132,9 @@ fan: !include fans.yaml
 mqtt: !include mqtt.yaml
 
 climate:
-  - platform: zhisaswell
-    username: !secret saswell_username
-    password: !secret saswell_password
+  # - platform: zhisaswell
+  #   username: !secret saswell_username
+  #   password: !secret saswell_password
   - platform: zhimodbus
     name: [餐厅空调, 客厅空调, 主卧空调, 儿童房空调]
     fan_mode: { registers: [6, 10, 14, 18] }
