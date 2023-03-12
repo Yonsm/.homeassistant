@@ -56,3 +56,6 @@ alias hassup='systemctl stop homeassistant; pip3 install homeassistant --upgrade
 alias hasslog='tail -f ~/.homeassistant/home-assistant.log'
 alias hassrl='hassre; hasslog'
 EOF
+
+# Docker
+docker run -d --name homeassistant --privileged --restart=unless-stopped -e TZ=Asia/Shanghai -v /opt/.homeassistant:/config --network=host ghcr.io/home-assistant/home-assistant:stable
