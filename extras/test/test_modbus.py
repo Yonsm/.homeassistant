@@ -19,7 +19,7 @@ ATTR_MAP = {
     'state_is_on': {'registers': [1, 2, 3, 4], 'register_type': 'coil'}
 }
 
-client = ModbusClient(host='ModBus', port=8899, framer=ModbusFramer)
+client = ModbusClient(host='192.168.1.60', port=8899, framer=ModbusFramer)
 kwargs = {'unit': 1}
 
 for key in ATTR_MAP:

@@ -13,8 +13,8 @@ homeassistant:
 
 http:
   server_port: 88
-  ssl_key: /etc/uhttpd.key
-  ssl_certificate: /etc/uhttpd.crt
+  ssl_key: /root/.homeassistant/ssl.key
+  ssl_certificate: /root/.homeassistant/ssl.crt
 
 # default_config:
 
@@ -251,6 +251,7 @@ zhibot:
 zhiaqara:
   name: 小米网关
   key: 3ECB50168D7F4AEB
+  interface: 192.168.1.1
 
 zhibroad:
   - name: 书房遥控
