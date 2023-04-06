@@ -50,7 +50,7 @@
     - platform: time
       at: '00:00:01'
   action:
-    - service: shell_command.magic_off
+    #- service: shell_command.magic_off
     # - service: climate.set_fan_mode
     #   data:
     #     entity_id: climate.zhu_wo_kong_diao
@@ -73,7 +73,7 @@
     - platform: time
       at: '06:00:00'
   action:
-    - service: shell_command.magic_on
+    #- service: shell_command.magic_on
     - service: fan.oscillate
       data:
         entity_id: fan.ke_ting_xin_feng_ji

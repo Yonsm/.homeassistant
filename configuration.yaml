@@ -292,8 +292,8 @@ panel_iframe:
     url: /local/dash.html
 
 shell_command:
-  station_off: 'ssh root@192.168.1.4 shutdown -h now'
-  magic_on: "adb connect magic && adb -s magic shell 'input keyevent 82; am start -n com.thanksmister.iot.wallpanel/.ui.activities.WelcomeActivity'"
-  magic_off: "adb connect magic && adb -s magic shell 'input keyevent 82; input keyevent 26'"
+  #station_off: 'ssh root@192.168.1.4 shutdown -h now'
+  #magic_on: "adb connect magic && adb -s magic shell 'input keyevent 82; am start -n com.thanksmister.iot.wallpanel/.ui.activities.WelcomeActivity'"
+  #magic_off: "adb connect magic && adb -s magic shell 'input keyevent 82; input keyevent 26'"
   x9300d_off: 'adb connect x9300d && adb -s x9300d shell reboot -p'
   x9400d_off: 'adb connect x9400e && adb -s x9400e shell reboot -p'
