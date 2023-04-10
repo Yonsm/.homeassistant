@@ -126,7 +126,7 @@ weather:
     name: 天气
 
 #sensor: !include sensors.yaml
-switch: !include switches.yaml
+#switch: !include switches.yaml
 light: !include lights.yaml
 fan: !include fans.yaml
 mqtt: !include mqtt.yaml

@@ -123,10 +123,12 @@ switch:
     command_topic: Hassmart2/relay/1/set
     availability_topic: Hassmart2/status
     icon: mdi:fan
-  # - name: 浴室排气扇
-  #   state_topic: Hassmart3/relay/0
-  #   command_topic: Hassmart3/relay/0/set
-  #   availability_topic: Hassmart3/status
+  - name: 书房音箱
+    state_topic: NodeMCU2/relay/0
+    command_topic: NodeMCU2/relay/0/set
+    availability_topic: NodeMCU2/status
+    value_template: '{% if value == "关闭" %}OFF{% else %}ON{% endif %}'
+    icon_template: '{% if value == "关闭" %}mdi:speaker-off{% elif value == "蓝牙" %}mdi:speaker-bluetooth{% elif value == "光纤" %}mdi:speaker-wireless{% elif value == "优盘" %}mdi:usb{% elif value == "辅助" %}mdi:video-input-component{% else %}mdi:speaker{% endif %}'
 
 light:
   - name: 客厅筒灯
