@@ -55,8 +55,8 @@
     - platform: event
       event_type: xiaomi_aqara.click
       event_data:
-        entity_id: binary_sensor.switch_158d000201a73f
-        click_type: single
+        entity_id: binary_sensor.switch_158d00083a4207
+        click_type: long_click_press
   action:
     - service: zhimsg.ke_ting_yin_xiang
       data_template:
@@ -74,13 +74,8 @@
     - platform: event
       event_type: xiaomi_aqara.click
       event_data:
-        entity_id: binary_sensor.switch_158d000201a73f
+        entity_id: binary_sensor.switch_158d00083a4207
         click_type: double
-    - platform: event
-      event_type: xiaomi_aqara.click
-      event_data:
-        entity_id: binary_sensor.switch_158d000201a73f
-        click_type: long_click_press
   action:
     - service_template: 'switch.turn_{% if is_state("media_player.shu_fang_tou_ying_yi", "on") %}off{% else %}on{% endif %}'
       entity_id: switch.shu_fang_yin_xiang
