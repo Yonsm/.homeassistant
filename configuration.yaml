@@ -199,7 +199,7 @@ vacuum:
     name: 阳台洗衣机
     did: 410056542
   - platform: zhimijia
-    model: viomi.washer.v53
+    model: viomi.washer.v33
     name: 浴室洗衣机
     did: 619765138
 #   - platform: xiaomi_miio
