@@ -57,7 +57,7 @@ fan.zhu_wo_xin_feng_ji:
 light.er_tong_fang_tai_deng:
   icon: mdi:lamp
 light.gateway_light_34ce0090901a:
-  friendly_name: 客厅壁灯
+  friendly_name: 过道壁灯
   icon: mdi:car-light-high
 sensor.can_ting_kong_qi_zhi_liang:
   dash_click: /zhilace-type

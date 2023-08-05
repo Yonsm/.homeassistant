@@ -17,7 +17,7 @@
     - service: climate.set_temperature
       data:
         entity_id: climate.er_tong_fang_kong_diao
-        temperature: 24
+        temperature: 23
         hvac_mode: cool
     - service: climate.set_fan_mode
       data:
@@ -48,7 +48,7 @@
 - alias: 睡眠深入
   trigger:
     - platform: time
-      at: '00:00:01'
+      at: '23:00:00'
   action:
     - service: shell_command.magic_off
     - service: climate.set_fan_mode
@@ -66,7 +66,7 @@
     - service: climate.set_temperature
       data:
         entity_id: climate.er_tong_fang_kong_diao
-        temperature: 27
+        temperature: 26
 
 - alias: 睡眠早起
   trigger:
