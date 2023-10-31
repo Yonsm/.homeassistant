@@ -59,6 +59,13 @@ zone:
 # map:
 logbook:
 history:
+logger:
+  default: warning
+  logs:
+    custom_components: debug
+
+recorder:
+  purge_keep_days: 2
   exclude:
     domains:
       - sun
@@ -69,14 +76,6 @@ history:
       - input_text
       - input_select
       - input_boolean
-
-logger:
-  default: warning
-  logs:
-    custom_components: debug
-
-recorder:
-  purge_keep_days: 2
 
 # tts:
 #   - platform: baidu

@@ -4,12 +4,14 @@ import struct
 from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 from pymodbus.transaction import ModbusRtuFramer as ModbusFramer
 
-# import socket
-# s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# s.settimeout(5)
-# s.connect(('ModBus', 8899))
-# s.sendall(b'\x55\xAA\x55\x00\x25\x80\x03\xA8') # For USR initialize
-# s.close()
+import socket
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.settimeout(5)
+s.connect(('192.168.1.60', 8899))
+s.sendall(b'\x55\xAA\x55\x00\x25\x80\x03\xA8') # For USR initialize
+s.close()
+
+
 
 ATTR_MAP = {
     'temperature': {'registers': [3, 6, 9, 12], 'register_type': 'input'},
