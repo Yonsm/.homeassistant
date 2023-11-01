@@ -113,10 +113,10 @@
         entity_id: climate.er_tong_fang_kong_diao
         temperature: 24
         hvac_mode: cool
-    - service: fan.turn_off
-      entity_id: fan.er_tong_fang_feng_shan
-    - service: fan.turn_off
-      entity_id: fan.shu_fang_feng_shan
+    # - service: fan.turn_off
+    #   entity_id: fan.er_tong_fang_feng_shan
+    # - service: fan.turn_off
+    #   entity_id: fan.shu_fang_feng_shan
     # - service: fan.turn_off
     #   entity_id: fan.zhu_wo_feng_shan
     - service: climate.turn_off
