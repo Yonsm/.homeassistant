@@ -1,6 +1,5 @@
 #!/bin/sh
-cd /usr/src/homeassistant/homeassistant
-cd /usr/lib/python3.10/site-packages/homeassistant
+cd /usr/src/homeassistant/homeassistant || cd /usr/lib/python3.10/site-packages/homeassistant
 
 sed -i 's/_LOGGER.warning(CUSTOM_WARNING/#LOGGER.warning(CUSTOM_WARNING/' loader.py
 sed -i 's/minutes=30/days=30/' auth/const.py

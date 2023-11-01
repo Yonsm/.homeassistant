@@ -47,7 +47,7 @@ systemctl enable homeassistant
 
 # Alias
 cat <<\EOF >> ~/.bashrc
-alias l='ls --color=auto -lA'
+alias ll='ls --color=auto -lA'
 alias mqttsub='mqttsub() { mosquitto_sub -v -t "$1#"; }; mqttsub'
 alias mqttre='systemctl stop mosquitto; sleep 2; rm -rf /var/lib/mosquitto/mosquitto.db; systemctl start mosquitto'
 alias hassre='echo .>~/.homeassistant/home-assistant.log; systemctl restart homeassistant'
