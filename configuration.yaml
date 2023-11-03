@@ -94,14 +94,14 @@ device_tracker:
   - platform: ping
     scan_interval: 120
     hosts:
-      touyingyi: 192.168.1.7
+      touyingyi: 192.168.1.5
       ketingdianshi: 192.168.1.8
       zhuwodianshi: 192.168.1.9
       babashouji: 192.168.1.20
       mamashouji: 192.168.1.21
       dabaopingban: 192.168.1.24
       xiaozhipingban: 192.168.1.25
-      ayishouji: 192.168.1.30
+      ayishouji: 192.168.1.29
 
 person:
   - name: 爸爸
@@ -258,11 +258,11 @@ zhiaqara:
 
 zhibroad:
   - name: 书房遥控
-    host: 192.168.1.51
+    host: 192.168.1.53
   - name: 客厅遥控
-    host: 192.168.1.52
+    host: 192.168.1.54
   # - name: 客厅插座
-  #   host: KeTingChaZuo
+  #   host: 192.168.1.55
 
 zhibravia:
   - name: 客厅电视
@@ -295,8 +295,8 @@ panel_iframe:
     url: /local/dash.html
 
 shell_command:
-  #station_off: 'ssh root@192.168.1.4 shutdown -h now'
-  magic_on: "adb connect GuoDaoJingLing && adb -s GuoDaoJingLing shell 'input keyevent 82; am start -n com.thanksmister.iot.wallpanel/.ui.activities.WelcomeActivity'"
-  magic_off: "adb connect GuoDaoJingLing && adb -s GuoDaoJingLing shell 'input keyevent 82; input keyevent 26'"
-  x9300d_off: 'adb connect ZhuWoDianShi && adb -s ZhuWoDianShi shell reboot -p'
-  x9400d_off: 'adb connect KeTingDianShi && adb -s KeTingDianShi shell reboot -p'
+  #server_off: 'ssh root@192.168.1.2 shutdown -h now'
+  magic_on: "adb connect 192.168.1.15 && adb -s 192.168.1.15 shell 'input keyevent 82; am start -n com.thanksmister.iot.wallpanel/.ui.activities.WelcomeActivity'"
+  magic_off: "adb connect 192.168.1.15 && adb -s 192.168.1.15 shell 'input keyevent 82; input keyevent 26'"
+  x9300d_off: 'adb connect 192.168.1.9 && adb -s 192.168.1.9 shell reboot -p'
+  x9400d_off: 'adb connect 192.168.1.8 && adb -s 192.168.1.8 shell reboot -p'
