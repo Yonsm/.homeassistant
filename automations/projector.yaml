@@ -50,7 +50,7 @@
     - service: cover.open_cover
       entity_id: cover.shu_fang_chuang_lian
 
-- alias: 书房按钮单击—开关投影仪
+- alias: 书房按钮长按—开关投影仪
   trigger:
     - platform: event
       event_type: xiaomi_aqara.click

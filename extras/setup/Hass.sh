@@ -9,6 +9,7 @@ apt install mosquitto mosquitto-clients
 cat <<EOF > /etc/mosquitto/mosquitto.conf
 listener 1883
 allow_anonymous true
+allow_zero_length_clientid true
 EOF
 
 # Depends
