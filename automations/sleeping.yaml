@@ -50,7 +50,8 @@
     - platform: time
       at: '23:00:00'
   action:
-    - service: shell_command.magic_off
+    - service: media_player.turn_off
+      entity_id: media_player.mo_fa_jing_ling
     - service: climate.set_fan_mode
       data:
         entity_id: climate.zhu_wo_kong_diao
@@ -73,7 +74,8 @@
     - platform: time
       at: '06:00:00'
   action:
-    - service: shell_command.magic_on
+    - service: media_player.turn_on
+      entity_id: media_player.mo_fa_jing_ling
     - service: fan.oscillate
       data:
         entity_id: fan.ke_ting_xin_feng_ji

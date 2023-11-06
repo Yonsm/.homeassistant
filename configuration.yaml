@@ -294,9 +294,9 @@ panel_iframe:
     icon: mdi:microsoft
     url: /local/dash.html
 
-shell_command:
+# shell_command:
   #server_off: 'ssh root@192.168.1.2 shutdown -h now'
-  magic_on: "adb connect 192.168.1.15 && adb -s 192.168.1.15 shell 'input keyevent 82; am start -n com.thanksmister.iot.wallpanel/.ui.activities.WelcomeActivity'"
-  magic_off: "adb connect 192.168.1.15 && adb -s 192.168.1.15 shell 'input keyevent 82; input keyevent 26'"
-  x9300d_off: 'adb connect 192.168.1.9 && adb -s 192.168.1.9 shell reboot -p'
-  x9400d_off: 'adb connect 192.168.1.8 && adb -s 192.168.1.8 shell reboot -p'
+  # magic_on: "adb connect 192.168.1.15 && adb -s 192.168.1.15 shell 'input keyevent 82; am start -n com.thanksmister.iot.wallpanel/.ui.activities.WelcomeActivity'"
+  # magic_off: "adb connect 192.168.1.15 && adb -s 192.168.1.15 shell 'input keyevent 82; input keyevent 26'"
+  # x9300d_off: 'adb connect 192.168.1.9 && adb -s 192.168.1.9 shell reboot -p'
+  # x9400d_off: 'adb connect 192.168.1.8 && adb -s 192.168.1.8 shell reboot -p'
