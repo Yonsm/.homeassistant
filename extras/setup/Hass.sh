@@ -59,4 +59,4 @@ alias hassrl='hassre; hasslog'
 EOF
 
 # Docker
-docker run -d --name homeassistant --privileged --restart=unless-stopped -e TZ=Asia/Shanghai -v /opt/.homeassistant:/config --network=host ghcr.io/home-assistant/home-assistant:stable
+docker run -d --name=homeassistant --privileged --restart=unless-stopped -e TZ=Asia/Shanghai -v /opt/.homeassistant:/config --network=host ghcr.nju.edu.cn/home-assistant/home-assistant:stable
