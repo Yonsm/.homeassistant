@@ -51,7 +51,7 @@
       at: '23:00:00'
   action:
     - service: media_player.turn_off
-      entity_id: media_player.mo_fa_jing_ling
+      entity_id: media_player.tian_mao_jing_ling
     - service: climate.set_fan_mode
       data:
         entity_id: climate.zhu_wo_kong_diao
@@ -75,7 +75,7 @@
       at: '06:00:00'
   action:
     - service: media_player.turn_on
-      entity_id: media_player.mo_fa_jing_ling
+      entity_id: media_player.tian_mao_jing_ling
     - service: fan.oscillate
       data:
         entity_id: fan.ke_ting_xin_feng_ji
