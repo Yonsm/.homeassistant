@@ -13,7 +13,7 @@ async def async_setup(hass, config):
         return True
 
     interface = conf.get(CONF_INTERFACE, 'any')
-    xiaomi = XiaomiGatewayDiscovery(hass.add_job, [], interface)
+    xiaomi = XiaomiGatewayDiscovery(interface)
     await hass.async_add_executor_job(xiaomi.discover_gateways)
     if len(xiaomi.gateways) == 0:
         return False
