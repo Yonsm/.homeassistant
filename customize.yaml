@@ -72,6 +72,9 @@ sensor.ci_wo_kong_qi_zhi_liang:
 sensor.ci_wo_wen_du:
   dash_click: /zhilace-zone/ci_wo
   dash_extra_forced: 次卧
+sensor.er_tong_fang_er_yang_hua_tan:
+  dash_extra_forced: 数字电视
+  dash_click: /local/iptv.html
 sensor.er_tong_fang_kong_qi_zhi_liang:
   dash_click: https://www.lewei50.com/u/g/33981
   dash_relation: fan.er_tong_fang_jing_hua_qi
@@ -92,6 +95,9 @@ sensor.ke_ting_kong_qi_zhi_liang:
 sensor.ke_ting_wen_du:
   dash_click: /zhilace-zone/ke_ting
   dash_extra_forced: 客厅
+sensor.shu_fang_er_yang_hua_tan:
+  dash_extra_forced: 聚合网盘
+  dash_click: !secret wangpan_url
 sensor.shu_fang_wen_du:
   dash_click: /zhilace-zone/shu_fang
   dash_extra_forced: 书房
@@ -106,8 +112,9 @@ sensor.yang_tai_wen_du:
   dash_click: http://m.nmc.cn/publish/forecast/AZJ/hangzhou.html
   dash_extra_forced: 中央气象台
   dash_order: '1'
-sensor.zhu_wo_kong_er_yang_hua_tan:
-  dash_click: /local/iptv.html
+sensor.zhu_wo_er_yang_hua_tan:
+  dash_extra_forced: 小主机
+  dash_click: !secret server_url
 sensor.zhu_wo_kong_qi_zhi_liang:
   dash_click: /local/aha.html
   dash_extra_forced: 啊哈网校
