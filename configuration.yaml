@@ -318,9 +318,17 @@ command_line:
   - switch:
       name: 网心云
       icon: mdi:microsoft-onedrive
-      command_on: docker start wxedge
       command_on: 'ssh -p 222 192.168.1.2 "docker start wxedge"'
       command_off: 'ssh -p 222 192.168.1.2 "docker stop wxedge"'
       command_state: 'ssh -p 222 192.168.1.2 "docker inspect -f {{json\ .State.Running}} wxedge"'
       value_template: '{{ value == "true" }}'
       scan_interval: 300
+  - switch:
+      name: 甜糖云
+      icon: mdi:dropbox
+      command_on: 'ssh -p 222 192.168.1.2 "docker start ttnode; docker start tiptime_wsv"'
+      command_off: 'ssh -p 222 192.168.1.2 "docker stop ttnode; docker stop tiptime_wsv"'
+      command_state: 'ssh -p 222 192.168.1.2 "docker inspect -f {{json\ .State.Running}} ttnode"'
+      value_template: '{{ value == "true" }}'
+      scan_interval: 300
+

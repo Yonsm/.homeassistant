@@ -140,3 +140,6 @@ switch.wang_luo_cun_chu:
 weather.tian_qi:
   dash_click: https://caiyunapp.com/weather
   dash_name: ${temperature}℃ ${humidity}% ${pm25}μg
+switch.ju_he_wang_pan:
+  dash_extra: 查看
+  dash_extra_click: !secret wangpan_url
