@@ -88,36 +88,36 @@ sensor:
     state_topic: device/zm1/b0f893249132/sensor
     value_template: '{{ value_json.formaldehyde }}'
     unit_of_measurement: mg/m³
-  - name: 过道温度
-    device_class: temperature
-    state_topic: device/zm1/b0f8931ea148/sensor
-    value_template: '{{ value_json.temperature }}'
-    unit_of_measurement: °C
-  - name: 过道湿度
-    device_class: humidity
-    state_topic: device/zm1/b0f8931ea148/sensor
-    value_template: '{{ value_json.humidity }}'
-    unit_of_measurement: '%'
-  - name: 过道空气质量
-    device_class: pm25
-    state_topic: device/zm1/b0f8931ea148/sensor
-    value_template: '{{ value_json.PM25 }}'
-    unit_of_measurement: µg/m³
-  - name: 过道甲醛
-    icon: mdi:biohazard
-    state_topic: device/zm1/b0f8931ea148/sensor
-    value_template: '{{ value_json.formaldehyde }}'
-    unit_of_measurement: mg/m³
+  # - name: 过道温度
+  #   device_class: temperature
+  #   state_topic: device/zm1/b0f8931ea148/sensor
+  #   value_template: '{{ value_json.temperature }}'
+  #   unit_of_measurement: °C
+  # - name: 过道湿度
+  #   device_class: humidity
+  #   state_topic: device/zm1/b0f8931ea148/sensor
+  #   value_template: '{{ value_json.humidity }}'
+  #   unit_of_measurement: '%'
+  # - name: 过道空气质量
+  #   device_class: pm25
+  #   state_topic: device/zm1/b0f8931ea148/sensor
+  #   value_template: '{{ value_json.PM25 }}'
+  #   unit_of_measurement: µg/m³
+  # - name: 过道甲醛
+  #   icon: mdi:biohazard
+  #   state_topic: device/zm1/b0f8931ea148/sensor
+  #   value_template: '{{ value_json.formaldehyde }}'
+  #   unit_of_measurement: mg/m³
 
 switch:
-  - name: 餐厅筒灯
-    state_topic: KeTingTongDeng/relay/1
-    command_topic: KeTingTongDeng/relay/1/set
-    availability_topic: KeTingTongDeng/status
-  - name: 客厅筒灯
-    state_topic: KeTingTongDeng/relay/2
-    command_topic: KeTingTongDeng/relay/2/set
-    availability_topic: KeTingTongDeng/status
+  - name: 过道开关1
+    state_topic: GuoDaoGuiDeng/relay/1
+    command_topic: GuoDaoGuiDeng/relay/1/set
+    availability_topic: GuoDaoGuiDeng/status
+  - name: 过道开关2
+    state_topic: GuoDaoGuiDeng/relay/2
+    command_topic: GuoDaoGuiDeng/relay/2/set
+    availability_topic: GuoDaoGuiDeng/status
   - name: 洗手间排气扇
     state_topic: XiShouJianDeng/relay/1
     command_topic: XiShouJianDeng/relay/1/set
@@ -131,16 +131,6 @@ switch:
     icon_template: '{% if value == "关闭" %}mdi:speaker-off{% elif value == "蓝牙" %}mdi:speaker-bluetooth{% elif value == "光纤" %}mdi:speaker-wireless{% elif value == "优盘" %}mdi:usb{% elif value == "辅助" %}mdi:video-input-component{% else %}mdi:speaker{% endif %}'
 
 light:
-  - name: 客厅筒灯
-    icon: mdi:track-light
-    state_topic: CanTingTongDeng/relay/0
-    command_topic: CanTingTongDeng/relay/0/set
-    availability_topic: CanTingTongDeng/status
-  - name: 餐厅筒灯
-    icon: mdi:track-light
-    state_topic: CanTingTongDeng/relay/1
-    command_topic: CanTingTongDeng/relay/1/set
-    availability_topic: CanTingTongDeng/status
   - name: 洗手间灯
     icon: mdi:ceiling-light
     state_topic: XiShouJianDeng/relay/0
@@ -153,14 +143,9 @@ light:
   #   availability_topic: Hassmart3/status
   - name: 过道柜灯
     icon: mdi:car-light-dimmed
-    state_topic: KeTingTongDeng/relay/0
-    command_topic: KeTingTongDeng/relay/0/set
-    availability_topic: KeTingTongDeng/status
-  - name: 过道筒灯
-    icon: mdi:track-light
-    state_topic: GuoDaoTongDeng/relay/0
-    command_topic: GuoDaoTongDeng/relay/0/set
-    availability_topic: GuoDaoTongDeng/status
+    state_topic: GuoDaoGuiDeng/relay/0
+    command_topic: GuoDaoGuiDeng/relay/0/set
+    availability_topic: GuoDaoGuiDeng/status
 # - name: 主卧吸顶灯
 #   state_topic: JingHuaQi3/analog
 #   state_value_template: '{% if (value | int > 1000) or ((value | int > 600) and is_state("sun.sun", "below_horizon")) %}3526,1658,426,418,426,1292,426,420,426,1288,428,418,426,1290,430,418,426,1290,428,418,426,418,426,416,426,1290,428,416,430,1290,428,1290,428,418,428,1288,428,416,428,418,426,418,428,1288,428,1288,428,1290,428,418,428,1290,428,418,428,1290,428,416,428,1290,428,1290,428,416,428,418,426,418,428,416,428,418,426,416,428,418,426,416,428,416,428,418,426,1292,426,418,428,1290,428,416,428,1292,424,1292,424,1294,424,418,426,1290,426,420,424,418,426,420,424,422,424,1294,424,420,424,420,424,1294,424,420,424,422,422,422,422,1298,422,422,422,1296,422,422,422,1,2,38{% else %}3528,1658,426,418,426,1292,380,462,382,1334,382,464,382,1338,380,462,382,1336,382,462,382,462,382,462,382,1336,382,462,382,1336,380,1336,382,464,382,1338,378,462,384,462,382,464,380,1336,382,1336,382,1336,382,462,382,1334,384,464,382,1336,382,462,382,1336,382,1336,382,464,382,462,382,464,382,464,380,462,382,462,382,464,382,464,380,464,382,464,382,464,380,1338,380,462,382,464,382,462,380,464,380,464,380,464,380,1334,382,464,380,464,380,464,380,464,382,1336,382,464,382,462,382,1334,382,464,382,464,382,464,380,1336,382,1336,382,464,382,1338,380,1,2,38{% endif %}'

@@ -148,15 +148,15 @@ climate:
     hvac_off: { registers: [1, 2, 3, 4], register_type: coil }
     target_temperature: { registers: [4, 8, 12, 16] }
     temperature: { registers: [3, 6, 9, 12], register_type: input, scale: 0.1 }
-  - platform: zhiremote
-    name: 书房空调
-    sender: remote.shu_fang_yao_kong
-    command: mitsubishi_climate
-    sensor: sensor.shu_fang_wen_du
+  # - platform: zhiremote
+  #   name: 书房空调
+  #   sender: remote.shu_fang_yao_kong
+  #   command: mitsubishi_climate
+  #   sensor: sensor.shu_fang_wen_du
 
 cover:
   - platform: zhimijia
-    name: 书房晾衣架
+    name: 书房晾衣机
     did: 57379167
   - platform: zhiremote
     name: 书房窗帘
@@ -259,7 +259,7 @@ zhibot:
 zhiaqara:
   name: 小米网关
   key: 3ECB50168D7F4AEB
-  interface: 192.168.1.1
+  #interface: 192.168.1.2
 
 zhibroad:
   - name: 书房遥控
@@ -272,8 +272,10 @@ zhibroad:
 zhibravia:
   - name: 客厅电视
     host: 192.168.1.8
+    mac: 04:5D:4B:3F:8D:93
   - name: 主卧电视
     host: 192.168.1.9
+    mac: 10:4F:A8:EF:7F:86
 
 zhilace:
 
@@ -305,3 +307,21 @@ shell_command:
   magic_off: "adb connect 192.168.1.15 && adb -s 192.168.1.15 shell 'input keyevent 82; input keyevent 26'"
   x9300d_off: 'adb connect 192.168.1.9 && adb -s 192.168.1.9 shell reboot -p'
   x9400d_off: 'adb connect 192.168.1.8 && adb -s 192.168.1.8 shell reboot -p'
+
+command_line:
+  - switch:
+      name: 聚合网盘
+      icon: mdi:google-drive
+      command_on: 'ssh -p 222 192.168.1.2 "docker start xiaoya"'
+      command_off: 'ssh -p 222 192.168.1.2 "docker stop xiaoya"'
+      command_state: 'ssh -p 222 192.168.1.2 "docker inspect -f {{json\ .State.Running}} xiaoya"'
+      value_template: '{{ value == "true" }}'
+      scan_interval: 600
+  - switch:
+      name: 网心云
+      icon: mdi:microsoft-onedrive
+      command_on: 'ssh -p 222 192.168.1.2 "docker start wxedge"'
+      command_off: 'ssh -p 222 192.168.1.2 "docker stop wxedge"'
+      command_state: 'ssh -p 222 192.168.1.2 "docker inspect -f {{json\ .State.Running}} wxedge"'
+      value_template: '{{ value == "true" }}'
+      scan_interval: 600

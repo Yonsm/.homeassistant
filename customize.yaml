@@ -126,9 +126,9 @@ sun.sun:
   friendly_name: 日照
 switch.can_ting_chu_shi_ji:
   device_class: outlet
-switch.can_ting_tong_deng:
+switch.guo_dao_kai_guan_1:
   hidden: true
-switch.ke_ting_tong_deng:
+switch.guo_dao_kai_guan_2:
   hidden: true
 switch.plug_158d0003a58422:
   friendly_name: 过道插座
@@ -140,3 +140,6 @@ switch.wang_luo_cun_chu:
 weather.tian_qi:
   dash_click: https://caiyunapp.com/weather
   dash_name: ${temperature}℃ ${humidity}% ${pm25}μg
+switch.ju_he_wang_pan:
+  dash_extra: 查看
+  dash_extra_click: !secret wangpan_url
