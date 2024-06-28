@@ -1,5 +1,5 @@
 - alias: 餐厅空气质量变化-调控净化器
-  mode: restart  
+  mode: restart
   trigger:
     - platform: state
       entity_id: sensor.can_ting_kong_qi_zhi_liang
@@ -15,7 +15,7 @@
         # condition_values: [false]
 
 - alias: 次卧空气质量变化-调控净化器
-  mode: restart  
+  mode: restart
   trigger:
     - platform: state
       entity_id: sensor.ci_wo_kong_qi_zhi_liang
@@ -30,10 +30,10 @@
         service_attr: percentage
         entity_values: [20, 30, 40, 50, 60, 70, 80, 90, 100]
         condition_attr: mode
-        condition_values: [idle, favorite]
+        condition_values: [idle, auto, favorite]
 
 - alias: 儿童房空气质量变化-调控净化器
-  mode: restart  
+  mode: restart
   trigger:
     - platform: state
       entity_id: sensor.er_tong_fang_kong_qi_zhi_liang
