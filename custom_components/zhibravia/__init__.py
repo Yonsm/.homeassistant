@@ -23,14 +23,16 @@ async def async_setup(hass, config):
 
 
 async def bravia_get_mac(hass, host, pin):
-    from homeassistant.components.braviatv.const import LEGACY_CLIENT_ID, NICKNAME_PREFIX, ATTR_MAC
-    from bravia_tv import BraviaRC
-    device = BraviaRC(host)
-    await hass.async_add_executor_job(device.connect, pin, LEGACY_CLIENT_ID, NICKNAME_PREFIX)
-    if not await hass.async_add_executor_job(device.is_connected):
-        return None
-
-    info = await hass.async_add_executor_job(device.get_system_info)
+    from aiohttp import CookieJar
+    from pybravia import BraviaClient
+    from homeassistant.components.braviatv.const import ATTR_MAC
+    from homeassistant.helpers.aiohttp_client import async_create_clientsession
+    session = async_create_clientsession(hass, cookie_jar=CookieJar(unsafe=True, quote_cookie=False),)
+    client = BraviaClient(host=host, session=session)
+    await client.connect(psk=pin)
+    await client.set_wol_mode(True)
+    info = await client.get_system_info()
+    # info = await hass.async_add_executor_job(client.get_system_info)
     if not info:
         return None
     return info[ATTR_MAC]
