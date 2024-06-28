@@ -1,0 +1,17 @@
+- alias: 过道开关1同步调控
+  trigger:
+    - platform: state
+      entity_id: switch.guo_dao_kai_guan_1, light.guo_dao_gui_deng
+  action:
+    - service_template: '{% if trigger.to_state.state == "on" %}homeassistant.turn_on{% else %}light.turn_off{% endif %}'
+      data_template:
+        entity_id: '{% if trigger.entity_id == "switch.guo_dao_kai_guan_1" %}light.guo_dao_gui_deng{% else %}switch.guo_dao_kai_guan_1{% endif %}'
+
+- alias: 过道开关2同步调控
+  trigger:
+    - platform: state
+      entity_id: switch.guo_dao_kai_guan_2, light.guo_dao_gui_deng
+  action:
+    - service_template: '{% if trigger.to_state.state == "on" %}homeassistant.turn_on{% else %}light.turn_off{% endif %}'
+      data_template:
+        entity_id: '{% if trigger.entity_id == "switch.guo_dao_kai_guan_2" %}light.guo_dao_gui_deng{% else %}switch.guo_dao_kai_guan_2{% endif %}'

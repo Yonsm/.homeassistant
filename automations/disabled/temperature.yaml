@@ -1,41 +1,41 @@
-# - alias: 客厅温度高-开空调
-#   initial_state: false
-#   trigger:
-#     # - platform: state
-#     #   entity_id: binary_sensor.motion_sensor_158d0001d66ce9
-#     #   to: 'on'
-#     - platform: state
-#       entity_id: binary_sensor.door_window_sensor_158d000228a52b
-#       to: 'off'
-#     # - platform: numeric_state
-#     #   entity_id: sensor.ke_ting_wen_du
-#     #   above: 29
-#     #   for:
-#     #     minutes: 3
-#   condition:
-#     - condition: time
-#       after: '08:00'
-#       before: '21:00'
-#     - condition: numeric_state
-#       entity_id: sensor.ke_ting_wen_du
-#       above: 29
-#     - condition: state
-#       entity_id: binary_sensor.door_window_sensor_158d000228a52b
-#       state: 'off'
-#     - condition: state
-#       entity_id: climate.ke_ting_kong_diao
-#       state: 'off'
-#     - condition: or
-#       conditions:
-#         - condition: state
-#           entity_id: sun.sun
-#           state: above_horizon
-#         - condition: state
-#           entity_id: light.living_light
-#           state: 'on'
-#   action:
-#     - service: climate.turn_on
-#       entity_id: climate.ke_ting_kong_diao
+- alias: 客厅温度高-开空调
+  initial_state: false
+  trigger:
+    # - platform: state
+    #   entity_id: binary_sensor.motion_sensor_158d0001d66ce9
+    #   to: 'on'
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_158d000228a52b
+      to: 'off'
+    # - platform: numeric_state
+    #   entity_id: sensor.ke_ting_wen_du
+    #   above: 29
+    #   for:
+    #     minutes: 3
+  condition:
+    - condition: time
+      after: '08:00'
+      before: '21:00'
+    - condition: numeric_state
+      entity_id: sensor.ke_ting_wen_du
+      above: 29
+    - condition: state
+      entity_id: binary_sensor.door_window_sensor_158d000228a52b
+      state: 'off'
+    - condition: state
+      entity_id: climate.ke_ting_kong_diao
+      state: 'off'
+    - condition: or
+      conditions:
+        - condition: state
+          entity_id: sun.sun
+          state: above_horizon
+        - condition: state
+          entity_id: light.living_light
+          state: 'on'
+  action:
+    - service: climate.turn_on
+      entity_id: climate.ke_ting_kong_diao
 
 - alias: 客厅温度正常-关空调
   initial_state: false
@@ -84,7 +84,7 @@
       entity_id: climate.can_ting_kong_diao
 
 - alias: 主卧温度变化-调控空调
-  mode: restart  
+  mode: restart
   initial_state: false
   trigger:
     - platform: time
@@ -113,7 +113,7 @@
         entity_values: [四档, 五档]
 
 - alias: 儿童房温度变化-调控空调
-  mode: restart  
+  mode: restart
   initial_state: false
   trigger:
     - platform: time
@@ -140,34 +140,34 @@
         entity_id: climate.er_tong_fang_kong_diao
         entity_attr: fan_mode
         entity_values: [一档, 二档, 三档, 四档, 五档]
-
-- alias: 书房温度变化-调控空调
-  mode: restart  
-  initial_state: false
-  trigger:
-    - platform: time
-      at: '21:30:01'
-    - platform: time
-      at: '02:00:01'
-    - platform: state
-      entity_id: sensor.shu_fang_wen_du
-  condition:
-    - condition: time
-      after: '20:30'
-      before: '07:30'
-  action:
-    - service: zhiact.actuate
-      data:
-        sensor_id: sensor.shu_fang_wen_du
-        sensor_values: [29.5, 30, 30.5, 31]
-        alt_sensor_values: [31, 32, 33, 34]
-        alt_time_range: [1, 8]
-        entity_id: climate.shu_fang_kong_diao
-        entity_attr: fan_mode
-        entity_values: [低档, 中档, 高档, 超高]
+#
+# - alias: 书房温度变化-调控空调
+#   mode: restart
+#   initial_state: false
+#   trigger:
+#     - platform: time
+#       at: '21:30:01'
+#     - platform: time
+#       at: '02:00:01'
+#     - platform: state
+#       entity_id: sensor.shu_fang_wen_du
+#   condition:
+#     - condition: time
+#       after: '20:30'
+#       before: '07:30'
+#   action:
+#     - service: zhiact.actuate
+#       data:
+#         sensor_id: sensor.shu_fang_wen_du
+#         sensor_values: [29.5, 30, 30.5, 31]
+#         alt_sensor_values: [31, 32, 33, 34]
+#         alt_time_range: [1, 8]
+#         entity_id: climate.shu_fang_kong_diao
+#         entity_attr: fan_mode
+#         entity_values: [低档, 中档, 高档, 超高]
 
 # - alias: 书房温度变化-调控风扇
-#   mode: restart  
+#   mode: restart
 #   initial_state: false
 #   trigger:
 #     - platform: time
@@ -189,49 +189,49 @@
 #         entity_attr: preset_mode
 #         entity_values: [1档, 2档, 3档, 4档]
 
-# - alias: 儿童房温度变化-调控风扇
-#   mode: restart  
-#   initial_state: false
-#   trigger:
-#     - platform: time
-#       at: '20:00:01'
-#     - platform: state
-#       entity_id: sensor.er_tong_fang_wen_du
-#   condition:
-#     - condition: time
-#       after: '20:00'
-#       before: '07:58'
-#   action:
-#     - service: zhiact.actuate
-#       data:
-#         sensor_id: fan.er_tong_fang_feng_shan
-#         sensor_attr: temperature
-#         sensor_values: [24, 25, 28, 31]
-#         alt_sensor_values: [25, 27, 32, 34]
-#         alt_time_range: [1, 8]
-#         entity_id: fan.er_tong_fang_feng_shan
-#         entity_attr: preset_mode
-#         entity_values: [1档, 2档, 3档, 4档]
+- alias: 儿童房温度变化-调控风扇
+  mode: restart
+  initial_state: false
+  trigger:
+    - platform: time
+      at: '20:00:01'
+    - platform: state
+      entity_id: sensor.er_tong_fang_wen_du
+  condition:
+    - condition: time
+      after: '20:00'
+      before: '07:58'
+  action:
+    - service: zhiact.actuate
+      data:
+        sensor_id: fan.er_tong_fang_feng_shan
+        sensor_attr: temperature
+        sensor_values: [24, 25, 28, 31]
+        alt_sensor_values: [25, 27, 32, 34]
+        alt_time_range: [1, 8]
+        entity_id: fan.er_tong_fang_feng_shan
+        entity_attr: preset_mode
+        entity_values: [1档, 2档, 3档, 4档]
 
-# - alias: 主卧温度变化-调控风扇
-#   mode: restart  
-#   initial_state: false
-#   trigger:
-#     - platform: time
-#       at: '20:00:01'
-#     - platform: state
-#       entity_id: sensor.zhu_wo_wen_du
-#   condition:
-#     - condition: time
-#       after: '20:00'
-#       before: '07:58'
-#   action:
-#     - service: zhiact.actuate
-#       data:
-#         sensor_id: sensor.zhu_wo_wen_du
-#         sensor_values: [24, 26, 29, 30]
-#         alt_sensor_values: [25, 27, 30, 32]
-#         alt_time_range: [1, 8]
-#         entity_id: fan.zhu_wo_feng_shan
-#         entity_attr: preset_mode
-#         entity_values: [档位1, 档位2, 档位3, 档位4]
+- alias: 主卧温度变化-调控风扇
+  mode: restart
+  initial_state: false
+  trigger:
+    - platform: time
+      at: '20:00:01'
+    - platform: state
+      entity_id: sensor.zhu_wo_wen_du
+  condition:
+    - condition: time
+      after: '20:00'
+      before: '07:58'
+  action:
+    - service: zhiact.actuate
+      data:
+        sensor_id: sensor.zhu_wo_wen_du
+        sensor_values: [24, 26, 29, 30]
+        alt_sensor_values: [25, 27, 30, 32]
+        alt_time_range: [1, 8]
+        entity_id: fan.zhu_wo_feng_shan
+        entity_attr: preset_mode
+        entity_values: [档位1, 档位2, 档位3, 档位4]

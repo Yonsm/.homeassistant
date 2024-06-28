@@ -1,19 +1,19 @@
-# - alias: 儿童房魔方摇一摇-召唤神龙爸爸
-#   trigger:
-#     - platform: event
-#       event_type: xiaomi_aqara.cube_action
-#       event_data:
-#         entity_id: binary_sensor.cube_158d0002a66db1
-#         action_type: shake_air
-#   action:
-#     - service: zhimsg.ding
-#       data:
-#         message: 召唤神龙爸爸
-#     - service: xiaomi_aqara.play_ringtone
-#       data:
-#         gw_mac: 34CE0090901A
-#         ringtone_id: 10016
-#         ringtone_vol: 60
+- alias: 儿童房魔方摇一摇-召唤神龙爸爸
+  trigger:
+    - platform: event
+      event_type: xiaomi_aqara.cube_action
+      event_data:
+        entity_id: binary_sensor.cube_158d0002a66db1
+        action_type: shake_air
+  action:
+    - service: zhimsg.ding
+      data:
+        message: 召唤神龙爸爸
+    - service: xiaomi_aqara.play_ringtone
+      data:
+        gw_mac: 34CE0090901A
+        ringtone_id: 10016
+        ringtone_vol: 60
 
 # - alias: 儿童房魔方翻转九十度
 #   trigger:

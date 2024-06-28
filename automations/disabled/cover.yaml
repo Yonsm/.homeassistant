@@ -69,15 +69,15 @@
         entity_id: fan.zhu_wo_xin_feng_ji
         oscillating: '{% if is_state("cover.curtain_158d000405d535", "closed") %}false{% else %}true{% endif %}'
 
-# - alias: 儿童房窗帘开关-调整风扇
-#   initial_state: false
-#   trigger:
-#     - platform: state
-#       entity_id: cover.curtain_158d00042cf265
-#       to: closed
-#     - platform: state
-#       entity_id: cover.curtain_158d00042cf265
-#       to: open
-#   action:
-#     - service_template: 'fan.turn_{% if is_state("cover.curtain_158d00042cf265", "closed") %}on{% else %}off{% endif %}'
-#       entity_id: fan.er_tong_fang_feng_shan
+- alias: 儿童房窗帘开关-调整风扇
+  initial_state: false
+  trigger:
+    - platform: state
+      entity_id: cover.curtain_158d00042cf265
+      to: closed
+    - platform: state
+      entity_id: cover.curtain_158d00042cf265
+      to: open
+  action:
+    - service_template: 'fan.turn_{% if is_state("cover.curtain_158d00042cf265", "closed") %}on{% else %}off{% endif %}'
+      entity_id: fan.er_tong_fang_feng_shan

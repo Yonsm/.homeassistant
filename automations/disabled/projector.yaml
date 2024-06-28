@@ -66,8 +66,6 @@
     - service: automation.trigger
       data_template:
         entity_id: 'automation.shu_fang_tou_ying_yi_{% if is_state("media_player.shu_fang_tou_ying_yi", "off") %}guan_bi_shou_wei{% else %}kai_qi_zhun_bei{% endif %}_pei_tao'
-    - service_template: 'switch.turn_{% if is_state("media_player.shu_fang_tou_ying_yi", "off") %}off{% else %}on{% endif %}'
-      entity_id: switch.shu_fang_yin_xiang
 
 - alias: 书房按钮双击—开关播放器
   trigger:

@@ -46,7 +46,7 @@
     - service: vacuum.send_command
       data:
         entity_id: vacuum.yu_shi_xi_yi_ji
-        command: turn_on;Mode=0;sleep;appoint
+        command: turn_on;Mode=0;sleep;sleep;appoint
 
 - alias: 浴室按钮长按—预约洗烘
   trigger:
@@ -59,7 +59,7 @@
     - service: vacuum.send_command
       data:
         entity_id: vacuum.yu_shi_xi_yi_ji
-        command: turn_on;Mode=2;sleep;appoint
+        command: turn_on;Mode=2;sleep;sleep;appoint
 
 - alias: 浴室按钮双击—取消预约
   trigger:

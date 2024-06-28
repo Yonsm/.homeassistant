@@ -5,10 +5,6 @@
   action:
     - service: cover.close_cover
       entity_id: cover.shu_fang_chuang_lian
-    - service: fan.set_preset_mode
-      data:
-        entity_id: fan.zhu_wo_xin_feng_ji
-        preset_mode: 静音
     - service: climate.set_temperature
       data:
         entity_id: climate.zhu_wo_kong_diao
@@ -69,23 +65,15 @@
         entity_id: climate.er_tong_fang_kong_diao
         temperature: 26
 
-- alias: 睡眠早起
-  trigger:
-    - platform: time
-      at: '06:00:00'
-  action:
-    # - service: media_player.turn_on
-    #   entity_id: media_player.tian_mao_jing_ling
-    - service: fan.oscillate
-      data:
-        entity_id: fan.ke_ting_xin_feng_ji
-        oscillating: true
-
 - alias: 睡眠完成
   trigger:
     - platform: time
       at: '08:00:00'
   action:
+    - service: fan.oscillate
+      data:
+        entity_id: fan.ke_ting_xin_feng_ji
+        oscillating: true
     - service: fan.oscillate
       data:
         entity_id: fan.zhu_wo_xin_feng_ji
@@ -115,37 +103,11 @@
         entity_id: climate.er_tong_fang_kong_diao
         temperature: 24
         hvac_mode: cool
-    # - service: fan.turn_off
-    #   entity_id: fan.er_tong_fang_feng_shan
-    # - service: fan.turn_off
-    #   entity_id: fan.shu_fang_feng_shan
-    # - service: fan.turn_off
-    #   entity_id: fan.zhu_wo_feng_shan
     - service: climate.turn_off
       entity_id: climate.zhu_wo_kong_diao
     - service: climate.turn_off
       entity_id: climate.er_tong_fang_kong_diao
     # - service: climate.turn_off
     #   entity_id: climate.shu_fang_kong_diao
-    - condition: time
-      weekday:
-        - mon
-        - tue
-        - wed
-        - thu
-        - fri
-        - sat
-    - service: automation.trigger
-      entity_id: automation.shui_mian_yan_chang
-
-- alias: 睡眠延长
-  trigger:
-    - platform: time
-      at: '09:00:00'
-  condition:
-    - condition: time
-      weekday:
-        - sun
-  action:
     - service: cover.open_cover
       entity_id: cover.shu_fang_chuang_lian
