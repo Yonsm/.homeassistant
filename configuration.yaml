@@ -18,10 +18,6 @@ http:
 
 # default_config:
 
-automation: !include_dir_merge_list automations
-# scene: !include scenes.yaml
-# script: !include scripts.yaml
-
 # usb:
 # bluetooth:
 
@@ -30,27 +26,27 @@ automation: !include_dir_merge_list automations
 config:
 # energy:
 frontend:
-mobile_app:
+# mobile_app:
 system_health:
 # homeassistant_alerts:
-webhook:
+# webhook:
 # updater:
 
 # dhcp:
 # ssdp:
 # zeroconf:
 
-input_boolean:
-input_button:
-input_datetime:
-input_number:
-input_select:
+# input_boolean:
+# input_button:
+# input_datetime:
+# input_number:
+# input_select:
 input_text:
-counter:
-timer:
+# counter:
+# timer:
 
 #my:
-tag:
+# tag:
 sun:
 zone:
 # stream:
@@ -65,7 +61,7 @@ logger:
     custom_components: debug
 
 recorder:
-  purge_keep_days: 2
+  purge_keep_days: 4
   exclude:
     domains:
       - sun
@@ -77,18 +73,35 @@ recorder:
       - input_select
       - input_boolean
 
-# tts:
-#   - platform: baidu
-#     app_id: !secret baidu_app_id
-#     api_key: !secret baidu_api_key
-#     secret_key: !secret baidu_secret_key
+# modbus:
+#   - type: rtuovertcp
+#     host: 192.168.1.60
+#     port: 8899
+#     switches:
+#       - name: 餐厅空调
+#         address: 1
+#         command_on: 1
+#         command_off: 0
+#         write_type: coil
+#       - name: 客厅空调
+#         address: 2
+#         command_on: 1
+#         command_off: 0
+#         write_type: coil
+#       - name: 主卧空调
+#         address: 3
+#         command_on: 1
+#         command_off: 0
+#         write_type: coil
+#       - name: 儿童房空调
+#         address: 4
+#         command_on: 1
+#         command_off: 0
+#         write_type: coil
 
-homekit: !include homekit.yaml
-
-modbus:
-  type: rtuovertcp
-  host: 192.168.1.60
-  port: 8899
+zhimi:
+  username: !secret zhimi_username
+  password: !secret zhimi_password
 
 device_tracker:
   - platform: ping
@@ -124,12 +137,6 @@ weather:
   - platform: zhicaiyun
     name: 天气
 
-#sensor: !include sensors.yaml
-#switch: !include switches.yaml
-light: !include lights.yaml
-fan: !include fans.yaml
-mqtt: !include mqtt.yaml
-
 climate:
   - platform: zhisaswell
     name: 客厅地暖
@@ -139,15 +146,15 @@ climate:
     name: 主卧地暖
     host: 192.168.1.57
     device: 10382435CC059F72
-  - platform: zhimodbus
-    name: [餐厅空调, 客厅空调, 主卧空调, 儿童房空调]
-    fan_mode: { registers: [6, 10, 14, 18] }
-    fan_modes: { 自动: 0, 一档: 1, 二档: 2, 三档: 3, 四档: 4, 五档: 5 }
-    hvac_mode: { registers: [5, 9, 13, 17] }
-    hvac_modes: { 'off': 0, cool: 1, heat: 2, dry: 3, fan_only: 4 }
-    hvac_off: { registers: [1, 2, 3, 4], register_type: coil }
-    target_temperature: { registers: [4, 8, 12, 16] }
-    temperature: { registers: [3, 6, 9, 12], register_type: input, scale: 0.1 }
+  # - platform: zhimodbus
+  #   name: [餐厅空调, 客厅空调, 主卧空调, 儿童房空调]
+  #   fan_mode: { registers: [6, 10, 14, 18] }
+  #   fan_modes: { 自动: 0, 一档: 1, 二档: 2, 三档: 3, 四档: 4, 五档: 5 }
+  #   hvac_mode: { registers: [5, 9, 13, 17] }
+  #   hvac_modes: { 'off': 0, cool: 1, heat: 2, dry: 3, fan_only: 4 }
+  #   hvac_off: { registers: [1, 2, 3, 4], register_type: coil }
+  #   target_temperature: { registers: [4, 8, 12, 16] }
+  #   temperature: { registers: [3, 6, 9, 12], register_type: input, scale: 0.1 }
   # - platform: zhiremote
   #   name: 书房空调
   #   sender: remote.shu_fang_yao_kong
@@ -177,25 +184,6 @@ media_player:
     sender: remote.shu_fang_yao_kong
     command: viewsonic_projector
     sensor: device_tracker.touyingyi
-  # - platform: dlna_dmr
-  #   name: 天猫精灵
-  #   url: http://Magic:49153/description.xml
-
-# camera:
-#   - platform: ffmpeg
-#     name: 书房摄像机
-#     input: !secret rtsp_camera6
-#   - platform: generic
-#     name: 餐厅摄像机
-#     still_image_url: http://Camera1/last.cgi
-#     #stream_source: rtsp://Camera1/live/ch00_0
-#   - platform: ffmpeg
-#     name: 过道摄像机
-#     input: rtsp://Camera2/ch0_1.h264
-#  - platform: generic
-#    name: 主卧摄像机
-#    still_image_url: http://Camera5/last.cgi
-#    #stream_source: rtsp://Camera5/live/ch00_0
 
 vacuum:
   - platform: zhimijia
@@ -212,10 +200,6 @@ vacuum:
 #     token: !secret vacuum_token
 
 zhiact:
-
-zhimi:
-  username: !secret zhimi_username
-  password: !secret zhimi_password
 
 zhimsg:
   - platform: ding
@@ -236,8 +220,6 @@ zhimsg:
     model: lx04
 
 zhibot:
-  # - platform: genie
-  #   token: !secret zhibot_token
   - platform: genie2
     file: !secret genie2bot_file
     text: !secret genie2bot_text
@@ -259,15 +241,15 @@ zhibot:
 zhiaqara:
   name: 小米网关
   key: 3ECB50168D7F4AEB
-  #interface: 192.168.1.2
+  interface: 192.168.1.2
 
 zhibroad:
+#   - name: 客厅遥控
+#     host: 192.168.1.54
   - name: 书房遥控
     host: 192.168.1.53
-  - name: 客厅遥控
-    host: 192.168.1.54
-  # - name: 客厅插座
-  #   host: 192.168.1.55
+  - name: 客厅插座
+    host: 192.168.1.55
 
 zhibravia:
   - name: 客厅电视
@@ -294,19 +276,19 @@ lovelace:
       icon: mdi:home-floor-b
       show_in_sidebar: true
       filename: zhilace-type.yaml
+    zhilace-dash:
+      mode: yaml
+      title: 面板
+      icon: mdi:microsoft
+      show_in_sidebar: true
+      filename: zhilace-dash.yaml
 
-panel_iframe:
-  dash:
-    title: 面板
-    icon: mdi:microsoft
-    url: /local/dash.html
-
-shell_command:
+# shell_command:
   #server_off: 'ssh root@192.168.1.2 shutdown -h now'
-  magic_on: "adb connect 192.168.1.15 && adb -s 192.168.1.15 shell 'input keyevent 82; am start -n com.thanksmister.iot.wallpanel/.ui.activities.WelcomeActivity'"
-  magic_off: "adb connect 192.168.1.15 && adb -s 192.168.1.15 shell 'input keyevent 82; input keyevent 26'"
-  x9300d_off: 'adb connect 192.168.1.9 && adb -s 192.168.1.9 shell reboot -p'
-  x9400d_off: 'adb connect 192.168.1.8 && adb -s 192.168.1.8 shell reboot -p'
+  # magic_on: "adb connect 192.168.1.15 && adb -s 192.168.1.15 shell 'input keyevent 82; am start -n com.thanksmister.iot.wallpanel/.ui.activities.WelcomeActivity'"
+  # magic_off: "adb connect 192.168.1.15 && adb -s 192.168.1.15 shell 'input keyevent 82; input keyevent 26'"
+  # x9300d_off: 'adb connect 192.168.1.9 && adb -s 192.168.1.9 shell reboot -p'
+  # x9400d_off: 'adb connect 192.168.1.8 && adb -s 192.168.1.8 shell reboot -p'
 
 command_line:
   - switch:
@@ -317,11 +299,14 @@ command_line:
       command_state: 'ssh -p 222 192.168.1.2 "docker inspect -f {{json\ .State.Running}} xiaoya"'
       value_template: '{{ value == "true" }}'
       scan_interval: 600
-  - switch:
-      name: 网心云
-      icon: mdi:microsoft-onedrive
-      command_on: 'ssh -p 222 192.168.1.2 "docker start wxedge"'
-      command_off: 'ssh -p 222 192.168.1.2 "docker stop wxedge"'
-      command_state: 'ssh -p 222 192.168.1.2 "docker inspect -f {{json\ .State.Running}} wxedge"'
-      value_template: '{{ value == "true" }}'
-      scan_interval: 600
+
+fan: !include fans.yaml
+mqtt: !include mqtt.yaml
+light: !include lights.yaml
+#sensor: !include sensors.yaml
+#switch: !include switches.yaml
+
+# scene: !include scenes.yaml
+# script: !include scripts.yaml
+homekit: !include homekit.yaml
+automation: !include_dir_merge_list automations

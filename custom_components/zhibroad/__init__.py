@@ -21,8 +21,17 @@ async def async_setup(hass, config):
                 CONF_TYPE: device.devtype,
                 CONF_TIMEOUT: device.timeout,
             }
-            await hass.config_entries.async_add(ConfigEntry(1, 'broadlink', name, data, SOURCE_USER, unique_id=unique_id, entry_id=unique_id))
+            await hass.config_entries.async_add(ConfigEntry(
+                version=1, 
+                minor_version=0,
+                options={},
+                domain='broadlink',
+                title=name,
+                data=data, 
+                source=SOURCE_USER, 
+                unique_id=unique_id,
+                entry_id=unique_id))
         except Exception as e:
             import logging
-            logging.getLogger(__name__).error("Could not find %s", name)
+            logging.getLogger(__name__).error("Could not find %s, %s", name, e)
     return True

@@ -18,7 +18,16 @@ async def async_setup(hass, config):
             CONF_MAC: conf.get(CONF_MAC) or await bravia_get_mac(hass, host, pin),
             CONF_PIN: pin
         }
-        await hass.config_entries.async_add(ConfigEntry(1, 'braviatv', name, data, SOURCE_USER, unique_id=unique_id, entry_id=unique_id))
+        await hass.config_entries.async_add(ConfigEntry(
+            version=1, 
+            minor_version=0,
+            options={},
+            domain='braviatv', 
+            title=name, 
+            data=data, 
+            source=SOURCE_USER, 
+            unique_id=unique_id, 
+            entry_id=unique_id))
     return True
 
 

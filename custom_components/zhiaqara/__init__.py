@@ -28,5 +28,14 @@ async def async_setup(hass, config):
         CONF_KEY: conf.get(CONF_KEY),
         CONF_SID: gateway.sid,
     }
-    await hass.config_entries.async_add(ConfigEntry(1, DOMAIN, name, data, SOURCE_USER, unique_id=unique_id, entry_id=unique_id))
+    await hass.config_entries.async_add(ConfigEntry(
+        version=1, 
+        minor_version=0,
+        options={},
+        domain=DOMAIN, 
+        title=name, 
+        data= data,
+        source=SOURCE_USER, 
+        unique_id=unique_id, 
+        entry_id=unique_id))
     return True

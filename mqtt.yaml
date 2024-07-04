@@ -128,7 +128,7 @@ switch:
     command_topic: YinXiang/relay/0/set
     availability_topic: YinXiang/status
     value_template: '{% if value == "关闭" %}OFF{% else %}ON{% endif %}'
-    icon_template: '{% if value == "关闭" %}mdi:speaker-off{% elif value == "蓝牙" %}mdi:speaker-bluetooth{% elif value == "光纤" %}mdi:speaker-wireless{% elif value == "优盘" %}mdi:usb{% elif value == "辅助" %}mdi:video-input-component{% else %}mdi:speaker{% endif %}'
+    #icon_template: '{% if value == "关闭" %}mdi:speaker-off{% elif value == "蓝牙" %}mdi:speaker-bluetooth{% elif value == "光纤" %}mdi:speaker-wireless{% elif value == "优盘" %}mdi:usb{% elif value == "辅助" %}mdi:video-input-component{% else %}mdi:speaker{% endif %}'
 
 light:
   - name: 洗手间灯
