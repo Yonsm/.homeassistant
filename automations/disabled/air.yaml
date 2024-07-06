@@ -25,7 +25,7 @@
           entity_id: sensor.ke_ting_er_yang_hua_tan
           above: 800
   action:
-    - service: zhimsg.ke_ting_yin_xiang
+    - service: zhimsg.guo_dao_xiao_ai
       data:
         message: 外面空气很好，可以打开门窗
 
@@ -42,7 +42,7 @@
       after: '06:00'
       before: '23:00'
   action:
-    - service: zhimsg.ke_ting_yin_xiang
+    - service: zhimsg.guo_dao_xiao_ai
       data_template:
         message: '客厅PM2.5为{{ states("sensor.can_ting_kong_qi_zhi_liang") }}，空气不好。{% if is_state("binary_sensor.door_window_sensor_158d0001f3d2d1", "on") or is_state("binary_sensor.door_window_sensor_158d0003cf4735", "on") or is_state("binary_sensor.door_window_sensor_158d000228a52b", "on") %}请关好{% if is_state("binary_sensor.door_window_sensor_158d0001f3d2d1", "on") %}厨房门、{% endif %}{% if is_state("binary_sensor.door_window_sensor_158d0003cf4735", "on") %}洗手间门、{% endif %}{% if is_state("binary_sensor.door_window_sensor_158d000228a52b", "on") %}阳台门{% endif %}{% endif %}'
     - delay: 600

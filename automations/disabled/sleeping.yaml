@@ -37,7 +37,7 @@
       data:
         entity_id: fan.zhu_wo_xin_feng_ji
         oscillating: false
-    - service: zhimsg.ke_ting_yin_xiang
+    - service: zhimsg.guo_dao_xiao_ai
       data:
         message: 音量30
 
@@ -78,7 +78,7 @@
       data:
         entity_id: fan.zhu_wo_xin_feng_ji
         oscillating: true
-    - service: zhimsg.ke_ting_yin_xiang
+    - service: zhimsg.guo_dao_xiao_ai
       data:
         message: 音量70
     - service: fan.set_preset_mode

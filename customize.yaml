@@ -1,23 +1,50 @@
+person.ba_ba:
+  dash_extra_forced: 客厅摄像机
+  dash_click: mihome://device?did=1029782073&uid=8816080&server=cn
+person.ma_ma:
+  dash_extra_forced: 主卧摄像机
+  dash_click: mihome://device?did=63538723&uid=8816080&server=cn
+person.da_bao:
+  dash_extra_forced: 儿童房摄像机
+  dash_click: mihome://device?did=130040912&uid=8816080&server=cn
+person.xiao_zhi:
+  dash_extra_forced: 过道摄像机
+  dash_click: hejiaqin://
+person.a_yi:
+  dash_extra_forced: 厨房摄像机
+  dash_click: mihome://device?did=449689101&uid=8816080&server=cn
 binary_sensor.cube_158d0002a66db1:
   friendly_name: 儿童房魔方
-binary_sensor.door_window_sensor_158d0001f3d2d1:
-  friendly_name: 厨房门
 binary_sensor.door_window_sensor_158d0001f3e5be:
   friendly_name: 入户门
-binary_sensor.door_window_sensor_158d000228a52b:
-  friendly_name: 阳台门
-binary_sensor.door_window_sensor_158d0003cf4735:
-  friendly_name: 洗手间门
+  dash_extra_forced: 老家摄像机
+  dash_click: jooancloud.com://
+binary_sensor.door_window_sensor_158d0001f3d2d1:
+  friendly_name: 厨房门
+  dash_extra_forced: 定南小阳台
+  dash_click: smarthome.cloud.189.cn://
 binary_sensor.door_window_sensor_158d00041c74da:
   friendly_name: 过道门
+  dash_extra_forced: 定南客厅
+  dash_click: mihome://device?did=1039136862&uid=8816080&server=cn
+binary_sensor.door_window_sensor_158d0003cf4735:
+  friendly_name: 洗手间门
+  dash_extra_forced: 定南儿童房
+  dash_click: mihome://device?did=yunyi.BSYZ92EXT4NRDJSK111A&uid=8816080&server=cn
 binary_sensor.door_window_sensor_158d0004611461:
   friendly_name: 浴室门
+  dash_extra_forced: 定南主卧
+  dash_click: mihome://device?did=79750727&uid=8816080&server=cn
+binary_sensor.door_window_sensor_158d000228a52b:
+  friendly_name: 阳台门
+  dash_extra_forced: 定南大阳台
+  dash_click: videogo://
 binary_sensor.motion_sensor_158d0001d66ce9:
   friendly_name: 过道感应
 binary_sensor.motion_sensor_158d0001f4a238:
-  friendly_name: 洗手间感应
+  friendly_name: 厨房感应
 binary_sensor.motion_sensor_158d0003d0d46e:
-  friendly_name: 浴室感应
+  friendly_name: 衣柜感应
 binary_sensor.switch_158d0001e59b33:
   friendly_name: 阳台按钮
 binary_sensor.switch_158d000201a73f:
@@ -26,16 +53,6 @@ binary_sensor.switch_158d00054e98b0:
   friendly_name: 主卧按钮
 binary_sensor.switch_158d00083a4207:
   friendly_name: 书房按钮
-camera.can_ting_she_xiang_ji:
-  dash_click: mihome://device?did=79750727&uid=8816080&server=cn
-camera.er_tong_fang_she_xiang_ji:
-  dash_click: mihome://device?did=130040912&uid=8816080&server=cn
-camera.guo_dao_she_xiang_ji:
-  dash_click: mihome://device?did=yunyi.BSYZ92EXT4NRDJSK111A&uid=8816080&server=cn
-camera.shu_fang_she_xiang_ji:
-  dash_click: videogo://
-camera.zhu_wo_she_xiang_ji:
-  dash_click: mihome://device?did=63538723&uid=8816080&server=cn
 cover.curtain_158d0003f7951d:
   friendly_name: 过道卷帘
 cover.curtain_158d000405d535:
@@ -81,11 +98,10 @@ sensor.er_tong_fang_kong_qi_zhi_liang:
 sensor.er_tong_fang_wen_du:
   dash_click: /zhilace-zone/er_tong_fang
   dash_extra_forced: 儿童房
-sensor.guo_dao_wen_du:
+sensor.illumination_34ce0090901a:
+  friendly_name: 过道亮度
   dash_click: /zhilace-zone/guo_dao
   dash_extra_forced: 过道
-sensor.illumination_34ce0090901a:
-  friendly_name: 客厅亮度
 sensor.ke_ting_er_yang_hua_tan:
   dash_extra_forced: 路由器
   dash_click: !secret router_url
@@ -124,17 +140,20 @@ sensor.zhu_wo_wen_du:
   dash_extra_forced: 主卧
 sun.sun:
   friendly_name: 日照
-switch.can_ting_chu_shi_ji:
+switch.zhu_wo_cha_zuo:
   device_class: outlet
+  icon: mdi:head-flash
+switch.zhu_wo_kong_tiao_kai_guan:
+  hidden: true
 switch.guo_dao_kai_guan_1:
   hidden: true
 switch.guo_dao_kai_guan_2:
   hidden: true
 switch.plug_158d0003a58422:
-  friendly_name: 过道插座
-switch.shu_fang_yin_xiang:
-  dash_extra: original_state
-  dash_extra_click: mqttPublish("NodeMCU2/relay/0/set", "toggle")
+  friendly_name: 客厅插座
+light.shu_fang_yin_xiang:
+  dash_extra: effect
+  dash_extra_click: mqttPublish("YinXiang/relay/0/set", "toggle")
 switch.wang_luo_cun_chu:
   icon: mdi:nas
 weather.tian_qi:

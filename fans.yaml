@@ -4,7 +4,7 @@
   did: 63038010
 - platform: zhimijia
   model: zhimi.fan.fa1
-  name: 书房风扇
+  name: 主卧风扇
   did: 242978949
 # - platform: zhimijia
 #   model: zhimi.fan.za3

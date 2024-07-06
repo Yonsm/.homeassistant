@@ -73,36 +73,6 @@ recorder:
       - input_select
       - input_boolean
 
-# modbus:
-#   - type: rtuovertcp
-#     host: 192.168.1.60
-#     port: 8899
-#     switches:
-#       - name: 餐厅空调
-#         address: 1
-#         command_on: 1
-#         command_off: 0
-#         write_type: coil
-#       - name: 客厅空调
-#         address: 2
-#         command_on: 1
-#         command_off: 0
-#         write_type: coil
-#       - name: 主卧空调
-#         address: 3
-#         command_on: 1
-#         command_off: 0
-#         write_type: coil
-#       - name: 儿童房空调
-#         address: 4
-#         command_on: 1
-#         command_off: 0
-#         write_type: coil
-
-zhimi:
-  username: !secret zhimi_username
-  password: !secret zhimi_password
-
 device_tracker:
   - platform: ping
     scan_interval: 120
@@ -133,9 +103,27 @@ person:
     id: ayi
     device_trackers: device_tracker.ayishouji
 
-weather:
-  - platform: zhicaiyun
-    name: 天气
+zhimi:
+  username: !secret zhimi_username
+  password: !secret zhimi_password
+
+modbus:
+  - type: rtuovertcp
+    host: 192.168.1.60
+    port: 8899
+    switches:
+      # - name: 餐厅空调开关
+      #   address: 5
+        # verify:
+      # - name: 客厅空调开关
+      #   address: 9
+        # verify:
+      - name: 主卧空调开关
+        address: 13
+        # verify:
+      # - name: 儿童房空调开关
+      #   address: 17
+        # verify:
 
 climate:
   - platform: zhisaswell
@@ -146,15 +134,15 @@ climate:
     name: 主卧地暖
     host: 192.168.1.57
     device: 10382435CC059F72
-  # - platform: zhimodbus
-  #   name: [餐厅空调, 客厅空调, 主卧空调, 儿童房空调]
-  #   fan_mode: { registers: [6, 10, 14, 18] }
-  #   fan_modes: { 自动: 0, 一档: 1, 二档: 2, 三档: 3, 四档: 4, 五档: 5 }
-  #   hvac_mode: { registers: [5, 9, 13, 17] }
-  #   hvac_modes: { 'off': 0, cool: 1, heat: 2, dry: 3, fan_only: 4 }
-  #   hvac_off: { registers: [1, 2, 3, 4], register_type: coil }
-  #   target_temperature: { registers: [4, 8, 12, 16] }
-  #   temperature: { registers: [3, 6, 9, 12], register_type: input, scale: 0.1 }
+  - platform: zhimodbus
+    name: [餐厅空调, 客厅空调, 主卧空调, 儿童房空调]
+    fan_mode: { registers: [6, 10, 14, 18] }
+    fan_modes: { 自动: 0, 一档: 1, 二档: 2, 三档: 3, 四档: 4, 五档: 5 }
+    hvac_mode: { registers: [5, 9, 13, 17] }
+    hvac_modes: { 'off': 0, cool: 1, heat: 2, dry: 3, fan_only: 4 }
+    hvac_off: { registers: [1, 2, 3, 4], register_type: coil }
+    target_temperature: { registers: [4, 8, 12, 16] }
+    temperature: { registers: [3, 6, 9, 12], register_type: input, scale: 0.1 }
   # - platform: zhiremote
   #   name: 书房空调
   #   sender: remote.shu_fang_yao_kong
@@ -199,6 +187,10 @@ vacuum:
 #     host: SaoDiJi
 #     token: !secret vacuum_token
 
+weather:
+  - platform: zhicaiyun
+    name: 天气
+
 zhiact:
 
 zhimsg:
@@ -207,15 +199,15 @@ zhimsg:
     token: !secret dingbot_token
     secret: !secret dingbot_secret
   - platform: miai
-    name: 客厅音箱
+    name: 过道小爱
     did: 380205692
     model: x08c
   - platform: miai
-    name: 次卧音箱
+    name: 次卧小爱
     did: 89463074
     model: lx01
   - platform: miai
-    name: 儿童房音箱
+    name: 儿童房小爱
     did: 267090026
     model: lx04
 
@@ -229,13 +221,13 @@ zhibot:
   - platform: ding
     token: !secret zhibot_token
   - platform: ding
-    name: 过道音箱
+    name: 过道小爱
     token: !secret zhibot_token
   - platform: ding
-    name: 客厅音箱
+    name: 次卧小爱
     token: !secret zhibot_token
   - platform: ding
-    name: 儿童房音箱
+    name: 儿童房小爱
     token: !secret zhibot_token
 
 zhiaqara:
@@ -248,7 +240,7 @@ zhibroad:
 #     host: 192.168.1.54
   - name: 书房遥控
     host: 192.168.1.53
-  - name: 客厅插座
+  - name: 主卧插座
     host: 192.168.1.55
 
 zhibravia:
