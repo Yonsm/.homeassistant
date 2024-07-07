@@ -85,7 +85,6 @@
 
 - alias: 主卧温度变化-调控空调
   mode: restart
-  initial_state: false
   trigger:
     - platform: time
       at: '21:00:01'
@@ -101,8 +100,8 @@
     - service: zhiact.actuate
       data:
         sensor_id: sensor.zhu_wo_wen_du
-        sensor_values: [28, 28.5]
-        alt_sensor_values: [28.5, 29]
+        sensor_values: [28.5, 29]
+        alt_sensor_values: [29, 29.5]
         # sensor_id: climate.zhu_wo_kong_diao
         # sensor_attr: current_temperature
         # sensor_values: [29, 30, 31, 32, 33]
@@ -114,7 +113,6 @@
 
 - alias: 儿童房温度变化-调控空调
   mode: restart
-  initial_state: false
   trigger:
     - platform: time
       at: '21:00:01'
@@ -130,8 +128,8 @@
     - service: zhiact.actuate
       data:
         sensor_id: sensor.er_tong_fang_wen_du
-        sensor_values: [22.5, 23, 23.5, 24, 24.5]
-        alt_sensor_values: [24, 24.5, 25, 25.5, 26]
+        sensor_values: [23, 23.2, 23.5, 24, 24.5]
+        alt_sensor_values: [23.5, 24, 24.5, 25, 25.5]
         # sensor_id: climate.er_tong_fang_kong_diao
         # sensor_attr: current_temperature
         # sensor_values: [29, 30, 31, 32, 33]
@@ -191,7 +189,6 @@
 
 - alias: 儿童房温度变化-调控风扇
   mode: restart
-  initial_state: false
   trigger:
     - platform: time
       at: '20:00:01'
@@ -215,7 +212,6 @@
 
 - alias: 主卧温度变化-调控风扇
   mode: restart
-  initial_state: false
   trigger:
     - platform: time
       at: '20:00:01'
