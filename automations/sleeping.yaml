@@ -3,8 +3,8 @@
     - platform: time
       at: '20:30:00'
   action:
-    - service: cover.close_cover
-      entity_id: cover.shu_fang_chuang_lian
+    # - service: cover.close_cover
+    #   entity_id: cover.shu_fang_chuang_lian
     - service: climate.set_temperature
       data:
         entity_id: climate.zhu_wo_kong_diao
@@ -24,22 +24,22 @@
         entity_id: climate.er_tong_fang_kong_diao
         fan_mode: 五档
 
-- alias: 睡眠开始
-  trigger:
-    - platform: time
-      at: '21:30:00'
-  action:
-    - service: fan.oscillate
-      data:
-        entity_id: fan.ke_ting_xin_feng_ji
-        oscillating: false
-    - service: fan.oscillate
-      data:
-        entity_id: fan.zhu_wo_xin_feng_ji
-        oscillating: false
-    - service: zhimsg.guo_dao_xiao_ai
-      data:
-        message: 音量30
+# - alias: 睡眠开始
+#   trigger:
+#     - platform: time
+#       at: '21:30:00'
+#   action:
+#     - service: fan.oscillate
+#       data:
+#         entity_id: fan.ke_ting_xin_feng_ji
+#         oscillating: false
+#     - service: fan.oscillate
+#       data:
+#         entity_id: fan.zhu_wo_xin_feng_ji
+#         oscillating: false
+#     - service: zhimsg.guo_dao_xiao_ai
+#       data:
+#         message: 音量30
 
 - alias: 睡眠深入
   trigger:
@@ -70,21 +70,21 @@
     - platform: time
       at: '08:00:00'
   action:
-    - service: fan.oscillate
-      data:
-        entity_id: fan.ke_ting_xin_feng_ji
-        oscillating: true
-    - service: fan.oscillate
-      data:
-        entity_id: fan.zhu_wo_xin_feng_ji
-        oscillating: true
-    - service: zhimsg.guo_dao_xiao_ai
-      data:
-        message: 音量70
-    - service: fan.set_preset_mode
-      data:
-        entity_id: fan.zhu_wo_xin_feng_ji
-        preset_mode: 中档
+    # - service: fan.oscillate
+    #   data:
+    #     entity_id: fan.ke_ting_xin_feng_ji
+    #     oscillating: true
+    # - service: fan.oscillate
+    #   data:
+    #     entity_id: fan.zhu_wo_xin_feng_ji
+    #     oscillating: true
+    # - service: zhimsg.guo_dao_xiao_ai
+    #   data:
+    #     message: 音量70
+    # - service: fan.set_preset_mode
+    #   data:
+    #     entity_id: fan.zhu_wo_xin_feng_ji
+    #     preset_mode: 中档
     - service: climate.set_fan_mode
       data:
         entity_id: climate.zhu_wo_kong_diao
@@ -109,5 +109,5 @@
       entity_id: climate.er_tong_fang_kong_diao
     # - service: climate.turn_off
     #   entity_id: climate.shu_fang_kong_diao
-    - service: cover.open_cover
-      entity_id: cover.shu_fang_chuang_lian
+    # - service: cover.open_cover
+    #   entity_id: cover.shu_fang_chuang_lian

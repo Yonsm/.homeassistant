@@ -100,16 +100,16 @@
     - service: zhiact.actuate
       data:
         sensor_id: sensor.zhu_wo_wen_du
-        sensor_values: [28.5, 29]
-        alt_sensor_values: [29, 29.5]
+        sensor_values: [29, 29.2, 29.5, 29.7, 30]
+        alt_sensor_values: [29.5, 29.8, 30, 30.5, 31]
         # sensor_id: climate.zhu_wo_kong_diao
         # sensor_attr: current_temperature
         # sensor_values: [29, 30, 31, 32, 33]
         # alt_sensor_values: [30, 31, 32, 33, 34]
-        alt_time_range: [1, 8]
+        alt_time_range: [0, 8]
         entity_id: climate.zhu_wo_kong_diao
         entity_attr: fan_mode
-        entity_values: [四档, 五档]
+        entity_values: [一档, 二档, 三档, 四档, 五档]
 
 - alias: 儿童房温度变化-调控空调
   mode: restart
@@ -128,13 +128,13 @@
     - service: zhiact.actuate
       data:
         sensor_id: sensor.er_tong_fang_wen_du
-        sensor_values: [23, 23.2, 23.5, 24, 24.5]
-        alt_sensor_values: [23.5, 24, 24.5, 25, 25.5]
+        sensor_values: [23.2, 23.4, 23.8, 24, 24.5]
+        alt_sensor_values: [23.6, 23.8, 24, 24.5, 25]
         # sensor_id: climate.er_tong_fang_kong_diao
         # sensor_attr: current_temperature
         # sensor_values: [29, 30, 31, 32, 33]
         # alt_sensor_values: [30, 31, 32, 33, 34]
-        alt_time_range: [1, 8]
+        alt_time_range: [0, 8]
         entity_id: climate.er_tong_fang_kong_diao
         entity_attr: fan_mode
         entity_values: [一档, 二档, 三档, 四档, 五档]
@@ -159,7 +159,7 @@
 #         sensor_id: sensor.shu_fang_wen_du
 #         sensor_values: [29.5, 30, 30.5, 31]
 #         alt_sensor_values: [31, 32, 33, 34]
-#         alt_time_range: [1, 8]
+#         alt_time_range: [0, 8]
 #         entity_id: climate.shu_fang_kong_diao
 #         entity_attr: fan_mode
 #         entity_values: [低档, 中档, 高档, 超高]
@@ -182,7 +182,7 @@
 #         sensor_id: sensor.shu_fang_wen_du
 #         sensor_values: [26, 27, 30, 32]
 #         alt_sensor_values: [27, 29, 32, 34]
-#         alt_time_range: [1, 8]
+#         alt_time_range: [0, 8]
 #         entity_id: fan.shu_fang_feng_shan
 #         entity_attr: preset_mode
 #         entity_values: [1档, 2档, 3档, 4档]
@@ -205,7 +205,7 @@
         sensor_attr: temp_dec
         sensor_values: [24, 25, 28, 31]
         alt_sensor_values: [25, 27, 32, 34]
-        alt_time_range: [1, 8]
+        alt_time_range: [0, 8]
         entity_id: fan.er_tong_fang_feng_shan
         entity_attr: preset_mode
         entity_values: [1档, 2档, 3档, 4档]
@@ -225,9 +225,9 @@
     - service: zhiact.actuate
       data:
         sensor_id: sensor.zhu_wo_wen_du
-        sensor_values: [24, 26, 29, 30, 32]
-        alt_sensor_values: [25, 27, 30, 32, 34]
-        alt_time_range: [1, 8]
+        sensor_values: [25, 27, 29.5, 31, 32]
+        alt_sensor_values: [26, 29.5, 31, 33, 34]
+        alt_time_range: [0, 8]
         entity_id: fan.zhu_wo_feng_shan
         entity_attr: preset_mode
         entity_values: [1档, 2档, 3档, 4档, 5档]
